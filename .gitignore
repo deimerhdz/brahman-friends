@@ -1,0 +1,31 @@
+# Secrets
+.env
+.env.local
+.env.*.local
+
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+next-env.d.ts
+
+# Build artifacts
+dist/
+build/
+
+# Testing / coverage
+coverage/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# TypeScript
+*.tsbuildinfo

@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand: #1f2937;
+  --color-brand-accent: #b45309;
+}
+
+html,
+body {
+  min-width: 320px;
+}
+
+body {
+  -webkit-tap-highlight-color: transparent;
+}
