@@ -10,6 +10,7 @@ import {
   componentTranslation,
   technique,
   techniqueTranslation,
+  modelView,
 } from "@/lib/db/schema";
 
 /**
@@ -46,6 +47,38 @@ export function capModelConNombre() {
     .innerJoin(
       capModelEn,
       and(eq(capModelEn.modelId, capModel.id), eq(capModelEn.locale, "en")),
+    );
+}
+
+/**
+ * Modelos publicados con su nombre/descripción por idioma y la URL de la
+ * vista "front" para usar como portada de tarjeta en la página de inicio
+ * (data-model.md#TarjetaModelo). `frontImageUrl` queda en `null` si el
+ * modelo todavía no tiene esa vista cargada (FR-009/FR-010).
+ */
+export function capModelConNombreYPortada() {
+  return db
+    .select({
+      id: capModel.id,
+      publishedAt: capModel.publishedAt,
+      nameEs: capModelEs.name,
+      nameEn: capModelEn.name,
+      descriptionEs: capModelEs.description,
+      descriptionEn: capModelEn.description,
+      frontImageUrl: modelView.baseImageUrl,
+    })
+    .from(capModel)
+    .innerJoin(
+      capModelEs,
+      and(eq(capModelEs.modelId, capModel.id), eq(capModelEs.locale, "es")),
+    )
+    .innerJoin(
+      capModelEn,
+      and(eq(capModelEn.modelId, capModel.id), eq(capModelEn.locale, "en")),
+    )
+    .leftJoin(
+      modelView,
+      and(eq(modelView.modelId, capModel.id), eq(modelView.view, "front")),
     );
 }
 

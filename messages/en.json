@@ -28,7 +28,9 @@
     "logout": "Log out",
     "languageSelector": "Language",
     "spanish": "Spanish",
-    "english": "English"
+    "english": "English",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
   },
   "errors": {
     "formato_no_permitido": "That file format isn't allowed.",
@@ -75,6 +77,53 @@
   "home": {
     "title": "Design your cap",
     "empty": "No models published yet. Check back soon."
+  },
+  "landing": {
+    "hero": {
+      "title": "Architectural Precision.",
+      "subtitle": "Design and manufacture premium custom headwear with our bespoke 3D configurator. For discerning collectors and corporate clients.",
+      "ctaPrimary": "Start Designing",
+      "ctaSecondary": "View Collections",
+      "dragToRotate": "DRAG TO ROTATE"
+    },
+    "collection": {
+      "eyebrow": "SILHOUETTES",
+      "title": "The Collection",
+      "exploreAll": "Explore All"
+    },
+    "b2b": {
+      "eyebrow": "ENTERPRISE",
+      "title": "B2B Services & Bulk Orders",
+      "description": "Elevate your brand with uncompromising quality. Our dedicated B2B portal offers streamlined bulk ordering, custom labeling, and dedicated account management for professional volume requirements.",
+      "feature1Title": "Minimum Order Quantity: 50 units",
+      "feature1Body": "Scale your production efficiently without compromising on bespoke details.",
+      "feature2Title": "Wholesale Tier Pricing",
+      "feature2Body": "Transparent, algorithmic volume discounts applied instantly at checkout.",
+      "cta": "Inquire for Wholesale",
+      "embroideryLabel": "PRECISION EMBROIDERY",
+      "embroideryBody": "Industry-leading stitch density for flawless brand reproduction on every piece."
+    },
+    "process": {
+      "eyebrow": "METHODOLOGY",
+      "title": "The Process",
+      "description": "A streamlined, technically robust progression from concept to physical manifestation, utilizing our proprietary 3D rendering engine.",
+      "step1Title": "Select Base",
+      "step1Body": "Choose your silhouette, fabric weight, and base color from our premium catalog.",
+      "step2Title": "Configure 3D",
+      "step2Body": "Upload assets, define embroidery coordinates, and preview in real-time 3D space.",
+      "step3Title": "Precision Build",
+      "step3Body": "Order submitted to our facility for exacting manufacture and quality assurance.",
+      "cta": "Launch Configurator"
+    },
+    "footer": {
+      "support": "Support",
+      "trackOrder": "Track Order",
+      "b2bBulk": "B2B Bulk",
+      "sustainability": "Sustainability",
+      "terms": "Terms",
+      "tagline": "ARCHITECTURAL PRECISION IN EVERY STITCH",
+      "copyright": "© {{year}} {{siteName}}. {{tagline}}"
+    }
   },
   "configurador": {
     "unavailableTitle": "Some colors from your previous design are no longer available and were switched to the default color:",

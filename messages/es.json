@@ -28,7 +28,9 @@
     "logout": "Cerrar sesión",
     "languageSelector": "Idioma",
     "spanish": "Español",
-    "english": "Inglés"
+    "english": "Inglés",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú"
   },
   "errors": {
     "formato_no_permitido": "Ese formato de archivo no está permitido.",
@@ -75,6 +77,53 @@
   "home": {
     "title": "Elegí tu gorra",
     "empty": "Todavía no hay modelos publicados. Volvé pronto."
+  },
+  "landing": {
+    "hero": {
+      "title": "Precisión Arquitectónica.",
+      "subtitle": "Diseñá y fabricá gorras premium personalizadas con nuestro configurador 3D a medida. Para coleccionistas exigentes y clientes corporativos.",
+      "ctaPrimary": "Empezar a diseñar",
+      "ctaSecondary": "Ver colecciones",
+      "dragToRotate": "ARRASTRÁ PARA ROTAR"
+    },
+    "collection": {
+      "eyebrow": "SILUETAS",
+      "title": "La Colección",
+      "exploreAll": "Ver todo"
+    },
+    "b2b": {
+      "eyebrow": "EMPRESAS",
+      "title": "Servicios B2B y pedidos al por mayor",
+      "description": "Elevá tu marca con una calidad sin concesiones. Nuestro portal B2B dedicado ofrece pedidos al por mayor simplificados, etiquetado personalizado y gestión de cuenta dedicada para necesidades de volumen profesional.",
+      "feature1Title": "Cantidad mínima de pedido: 50 unidades",
+      "feature1Body": "Escalá tu producción de forma eficiente sin resignar los detalles a medida.",
+      "feature2Title": "Precios por niveles al por mayor",
+      "feature2Body": "Descuentos por volumen transparentes y automáticos, aplicados al instante.",
+      "cta": "Consultar por mayoristas",
+      "embroideryLabel": "BORDADO DE PRECISIÓN",
+      "embroideryBody": "Densidad de puntada líder en la industria para una reproducción impecable de tu marca en cada pieza."
+    },
+    "process": {
+      "eyebrow": "METODOLOGÍA",
+      "title": "El Proceso",
+      "description": "Un recorrido simplificado y técnicamente robusto desde el concepto hasta la pieza física, usando nuestro motor propio de renderizado 3D.",
+      "step1Title": "Elegí la base",
+      "step1Body": "Elegí tu silueta, el peso de la tela y el color base de nuestro catálogo premium.",
+      "step2Title": "Configurá en 3D",
+      "step2Body": "Subí tus archivos, definí las coordenadas del bordado y previsualizá en 3D en tiempo real.",
+      "step3Title": "Fabricación de precisión",
+      "step3Body": "Tu pedido se envía a nuestra planta para una fabricación exacta y control de calidad.",
+      "cta": "Abrir el configurador"
+    },
+    "footer": {
+      "support": "Soporte",
+      "trackOrder": "Seguir pedido",
+      "b2bBulk": "Mayoristas B2B",
+      "sustainability": "Sustentabilidad",
+      "terms": "Términos",
+      "tagline": "PRECISIÓN ARQUITECTÓNICA EN CADA PUNTADA",
+      "copyright": "© {{year}} {{siteName}}. {{tagline}}"
+    }
   },
   "configurador": {
     "unavailableTitle": "Algunos colores de tu diseño anterior ya no están disponibles y se cambiaron por el color por defecto:",

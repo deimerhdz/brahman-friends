@@ -1,8 +1,12 @@
-import Link from "next/link";
 import { desc, eq } from "drizzle-orm";
 import { capModel } from "@/lib/db/schema";
-import { capModelConNombre } from "@/lib/catalogo/consultas-traducidas";
+import { capModelConNombreYPortada } from "@/lib/catalogo/consultas-traducidas";
 import { getT, type Locale } from "@/lib/i18n/t";
+import { Hero } from "@/app/_components/landing/Hero";
+import { Collection, type TarjetaModelo } from "@/app/_components/landing/Collection";
+import { B2BSection } from "@/app/_components/landing/B2BSection";
+import { ProcessSection } from "@/app/_components/landing/ProcessSection";
+import { Footer } from "@/app/_components/landing/Footer";
 
 // La portada depende de qué modelos están publicados en este momento
 // (FR-014, RN1): nunca se genera estáticamente.
@@ -16,34 +20,25 @@ export default async function HomePage({
   const { locale } = await params;
   const t = getT(locale);
 
-  const models = await capModelConNombre()
+  const rows = await capModelConNombreYPortada()
     .where(eq(capModel.status, "published"))
     .orderBy(desc(capModel.publishedAt));
 
+  const models: TarjetaModelo[] = rows.map((m) => ({
+    id: m.id,
+    name: locale === "es" ? m.nameEs : m.nameEn,
+    description: locale === "es" ? m.descriptionEs : m.descriptionEn,
+    frontImageUrl: m.frontImageUrl,
+    href: `/${locale}/configurador/${m.id}`,
+  }));
+
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8">
-      <h1 className="mb-6 text-2xl font-semibold">{t("home.title")}</h1>
-
-      {models.length === 0 && (
-        <p className="text-gray-500">{t("home.empty")}</p>
-      )}
-
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {models.map((m) => (
-          <Link
-            key={m.id}
-            href={`/${locale}/configurador/${m.id}`}
-            className="rounded border border-gray-200 p-4 hover:bg-gray-50"
-          >
-            <h2 className="font-medium text-brand">
-              {locale === "es" ? m.nameEs : m.nameEn}
-            </h2>
-            <p className="mt-1 text-sm text-gray-600">
-              {locale === "es" ? m.descriptionEs : m.descriptionEn}
-            </p>
-          </Link>
-        ))}
-      </div>
+    <div className="bg-surface text-on-surface">
+      <Hero t={t} />
+      <Collection t={t} models={models} />
+      <B2BSection t={t} />
+      <ProcessSection t={t} />
+      <Footer t={t} />
     </div>
   );
 }
