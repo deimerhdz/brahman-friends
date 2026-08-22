@@ -39,7 +39,7 @@ export function Anonimizar({
       <button
         type="button"
         onClick={() => setConfirming(true)}
-        className="text-sm text-red-600 underline"
+        className="w-fit font-body-md text-body-md text-error underline hover:no-underline"
       >
         {labels.anonymize}
       </button>
@@ -47,22 +47,22 @@ export function Anonimizar({
   }
 
   return (
-    <div className="rounded border border-red-300 bg-red-50 p-3 text-sm">
-      <p className="mb-2 font-medium text-red-700">{labels.confirmIrreversible}</p>
-      {error && <p className="mb-2 text-red-600">{error}</p>}
+    <div className="rounded-lg border border-error/30 bg-error-container p-4 font-body-md text-body-md">
+      <p className="mb-2 font-semibold text-on-error-container">{labels.confirmIrreversible}</p>
+      {error && <p className="mb-2 text-error">{error}</p>}
       <div className="flex gap-2">
         <button
           type="button"
           disabled={busy}
           onClick={confirm}
-          className="rounded bg-red-600 px-3 py-1 text-white disabled:opacity-50"
+          className="rounded bg-error px-4 py-2 font-button text-button text-on-error disabled:opacity-50"
         >
           {labels.confirm}
         </button>
         <button
           type="button"
           onClick={() => setConfirming(false)}
-          className="rounded bg-gray-200 px-3 py-1"
+          className="rounded border border-outline-variant px-4 py-2 font-button text-button text-on-surface-variant transition-colors hover:border-on-surface hover:text-on-surface"
         >
           {labels.cancel}
         </button>

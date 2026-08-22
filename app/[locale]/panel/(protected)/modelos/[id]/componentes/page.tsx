@@ -8,6 +8,7 @@ import {
 } from "@/lib/catalogo/consultas-traducidas";
 import { getT, type Locale } from "@/lib/i18n/t";
 import { ComponentesManager } from "./_ComponentesManager";
+import { PanelHeader } from "../../../_PanelHeader";
 
 export default async function ComponentesPage({
   params,
@@ -33,7 +34,7 @@ export default async function ComponentesPage({
 
   return (
     <div>
-      <h1 className="mb-6 text-xl font-semibold">{t("panel.modelos.components")}</h1>
+      <PanelHeader eyebrow={t("nav.models")} title={t("panel.modelos.components")} />
       <ComponentesManager
         locale={locale}
         modelId={id}

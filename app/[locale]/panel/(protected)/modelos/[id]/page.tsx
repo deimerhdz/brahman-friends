@@ -10,6 +10,15 @@ import {
 import { getT, type Locale } from "@/lib/i18n/t";
 import { EstadoPublicacion } from "./_components/EstadoPublicacion";
 import { TecnicasModelo } from "./_components/TecnicasModelo";
+import { PanelHeader } from "../../_PanelHeader";
+
+const SECTION_ICONS: Record<string, string> = {
+  vistas: "photo_camera",
+  componentes: "widgets",
+  imagenes: "image",
+  zonas: "crop_free",
+  tallas: "straighten",
+};
 
 export default async function ModeloHubPage({
   params,
@@ -37,10 +46,10 @@ export default async function ModeloHubPage({
 
   return (
     <div>
-      <h1 className="mb-2 text-xl font-semibold">
-        {locale === "es" ? model.nameEs : model.nameEn}
-      </h1>
-      <p className="mb-6 text-sm text-gray-500">{model.code}</p>
+      <PanelHeader
+        eyebrow={`${t("panel.modelos.code")}: ${model.code}`}
+        title={locale === "es" ? model.nameEs : model.nameEn}
+      />
 
       <EstadoPublicacion
         modelId={id}
@@ -56,14 +65,19 @@ export default async function ModeloHubPage({
         }}
       />
 
-      <div className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-3">
+      <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-3">
         {sections.map((s) => (
           <Link
             key={s.href}
             href={`/${locale}/panel/modelos/${id}/${s.href}`}
-            className="rounded border border-gray-200 p-4 text-center text-brand hover:bg-gray-50"
+            className="flex flex-col items-center gap-2 rounded-lg border border-outline-variant/60 bg-surface-container-lowest p-6 text-center ambient-shadow transition-colors hover:border-primary hover:text-primary"
           >
-            {s.label}
+            <span className="material-symbols-outlined text-on-surface-variant">
+              {SECTION_ICONS[s.href]}
+            </span>
+            <span className="font-body-md text-body-md font-semibold text-on-surface">
+              {s.label}
+            </span>
           </Link>
         ))}
       </div>

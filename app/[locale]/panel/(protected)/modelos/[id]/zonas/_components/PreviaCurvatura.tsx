@@ -58,7 +58,7 @@ export function PreviaCurvatura({
   return (
     <canvas
       ref={canvasRef}
-      className="w-full max-w-md rounded border border-gray-200"
+      className="w-full max-w-md rounded-lg border border-outline-variant/60"
     />
   );
 }

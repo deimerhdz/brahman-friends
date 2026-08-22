@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { PublicacionResultado } from "@/lib/catalogo/publicacion";
+import { EstadoBadge } from "../../../_EstadoBadge";
 
 // Lista exacta de combinaciones faltantes al intentar publicar (FR-012, SC-023).
 export function EstadoPublicacion({
@@ -41,23 +42,18 @@ export function EstadoPublicacion({
   }
 
   return (
-    <div className="mb-6 rounded border border-gray-200 p-4">
+    <div className="mb-6 rounded-lg border border-outline-variant/60 bg-surface-container-lowest p-6 ambient-shadow">
       <div className="flex items-center justify-between">
-        <span
-          className={`rounded px-2 py-1 text-sm ${
-            status === "published"
-              ? "bg-green-100 text-green-800"
-              : "bg-gray-100 text-gray-600"
-          }`}
-        >
-          {labels[`status_${status}`]}
-        </span>
+        <EstadoBadge
+          label={labels[`status_${status}`]}
+          tone={status === "published" ? "success" : "neutral"}
+        />
         {status === "draft" ? (
           <button
             type="button"
             onClick={publicar}
             disabled={busy}
-            className="rounded bg-brand px-4 py-2 text-sm text-white disabled:opacity-50"
+            className="rounded bg-on-surface px-4 py-2 font-button text-button text-on-primary transition-colors duration-200 hover:bg-primary disabled:opacity-50"
           >
             {labels.publish}
           </button>
@@ -66,7 +62,7 @@ export function EstadoPublicacion({
             type="button"
             onClick={despublicar}
             disabled={busy}
-            className="rounded bg-gray-200 px-4 py-2 text-sm disabled:opacity-50"
+            className="rounded border border-outline-variant px-4 py-2 font-button text-button text-on-surface-variant transition-colors hover:border-on-surface hover:text-on-surface disabled:opacity-50"
           >
             {labels.unpublish}
           </button>
@@ -74,8 +70,8 @@ export function EstadoPublicacion({
       </div>
 
       {result && (
-        <div className="mt-4 rounded border border-red-300 bg-red-50 p-3 text-sm text-red-700">
-          <p className="mb-2 font-medium">{labels.incomplete}</p>
+        <div className="mt-4 rounded-lg border border-error/30 bg-error-container p-4 font-body-md text-body-md text-on-error-container">
+          <p className="mb-2 font-semibold">{labels.incomplete}</p>
           {result.missingBaseViews.length > 0 && (
             <p>
               {labels.missingBaseViews}: {result.missingBaseViews.join(", ")}

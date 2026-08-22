@@ -101,8 +101,11 @@ export function ComponentesManager({
   }
 
   return (
-    <div className="flex flex-col gap-8">
-      <form onSubmit={createComponent} className="flex flex-wrap items-end gap-3 rounded border border-gray-200 p-4">
+    <div className="flex flex-col gap-6">
+      <form
+        onSubmit={createComponent}
+        className="flex flex-wrap items-end gap-3 rounded-lg border border-outline-variant/60 bg-surface-container-lowest p-6 ambient-shadow"
+      >
         <CampoTraducible
           label={labels.name}
           value={name}
@@ -112,8 +115,14 @@ export function ComponentesManager({
           switchLabels={{ es: labels.switchEs, en: labels.switchEn }}
         />
         <label className="flex flex-col gap-1">
-          <span>{labels.material}</span>
-          <select name="material" required className="rounded border border-gray-300 px-2 py-1">
+          <span className="font-label-caps text-label-caps text-on-surface-variant">
+            {labels.material}
+          </span>
+          <select
+            name="material"
+            required
+            className="rounded border border-outline-variant bg-surface px-3 py-2 font-body-md text-body-md text-on-surface focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+          >
             {MATERIALS.map((m) => (
               <option key={m} value={m}>
                 {MATERIAL_LABELS[m as Material][locale]}
@@ -122,37 +131,47 @@ export function ComponentesManager({
           </select>
         </label>
         <label className="flex flex-col gap-1">
-          <span>{labels.layerOrder}</span>
+          <span className="font-label-caps text-label-caps text-on-surface-variant">
+            {labels.layerOrder}
+          </span>
           <input
             name="layerOrder"
             type="number"
             defaultValue={0}
-            className="w-20 rounded border border-gray-300 px-2 py-1"
+            className="w-20 rounded border border-outline-variant bg-surface px-3 py-2 font-body-md text-body-md text-on-surface focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
           />
         </label>
-        <label className="flex items-center gap-2">
-          <input name="customizable" type="checkbox" defaultChecked />
+        <label className="flex items-center gap-2 font-body-md text-body-md text-on-surface">
+          <input name="customizable" type="checkbox" defaultChecked className="accent-primary" />
           <span>{labels.customizable}</span>
         </label>
-        <button type="submit" className="rounded bg-brand px-3 py-2 text-sm text-white">
+        <button
+          type="submit"
+          className="rounded bg-on-surface px-4 py-2 font-button text-button text-on-primary transition-colors duration-200 hover:bg-primary"
+        >
           {labels.add}
         </button>
       </form>
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="font-body-md text-body-md text-error">{error}</p>}
 
       {components.map((comp) => {
         const enabled = enabledByComponent[comp.id] ?? [];
         return (
-          <div key={comp.id} className="rounded border border-gray-200 p-4">
-            <h2 className="font-medium">
+          <div
+            key={comp.id}
+            className="rounded-lg border border-outline-variant/60 bg-surface-container-lowest p-6 ambient-shadow"
+          >
+            <h2 className="font-body-md text-body-md font-semibold text-on-surface">
               {locale === "es" ? comp.nameEs : comp.nameEn}{" "}
-              <span className="text-sm text-gray-500">
+              <span className="font-label-caps text-label-caps text-on-surface-variant">
                 ({MATERIAL_LABELS[comp.material as Material]?.[locale] ?? comp.material})
               </span>
             </h2>
             {!comp.customizable && (
-              <p className="text-sm text-gray-500">{labels.notCustomizable}</p>
+              <p className="mt-1 font-body-md text-body-md text-on-surface-variant">
+                {labels.notCustomizable}
+              </p>
             )}
             {comp.customizable && (
               <div className="mt-3 flex flex-col gap-2">
@@ -160,21 +179,23 @@ export function ComponentesManager({
                   const isEnabled = enabled.includes(c.id);
                   return (
                     <div key={c.id} className="flex items-center gap-3">
-                      <label className="flex items-center gap-2">
+                      <label className="flex items-center gap-2 font-body-md text-body-md text-on-surface">
                         <input
                           type="checkbox"
                           checked={isEnabled}
                           onChange={(e) => toggleColor(comp.id, c.id, e.target.checked)}
+                          className="accent-primary"
                         />
                         <span>{locale === "es" ? c.nameEs : c.nameEn}</span>
                       </label>
                       {isEnabled && (
-                        <label className="flex items-center gap-1 text-sm text-gray-500">
+                        <label className="flex items-center gap-1 font-label-caps text-label-caps text-on-surface-variant">
                           <input
                             type="radio"
                             name={`default-${comp.id}`}
                             checked={comp.defaultColorId === c.id}
                             onChange={() => setDefaultColor(comp.id, c.id)}
+                            className="accent-primary"
                           />
                           {labels.default}
                         </label>

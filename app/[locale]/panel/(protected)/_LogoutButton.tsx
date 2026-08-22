@@ -19,7 +19,11 @@ export function LogoutButton({
   }
 
   return (
-    <button type="button" onClick={onClick} className="mt-4 text-left text-sm text-gray-500">
+    <button
+      type="button"
+      onClick={onClick}
+      className="text-left font-label-caps text-label-caps text-on-surface-variant transition-colors hover:text-primary"
+    >
       {label}
     </button>
   );

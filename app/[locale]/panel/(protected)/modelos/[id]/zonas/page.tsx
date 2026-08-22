@@ -5,6 +5,7 @@ import { capModel, modelView, decorationZone } from "@/lib/db/schema";
 import { getT, type Locale } from "@/lib/i18n/t";
 import { env } from "@/lib/config/env";
 import { ZonasEditor, type ZonaValue } from "./_ZonasEditor";
+import { PanelHeader } from "../../../_PanelHeader";
 
 export default async function ZonasPage({
   params,
@@ -45,7 +46,7 @@ export default async function ZonasPage({
 
   return (
     <div>
-      <h1 className="mb-6 text-xl font-semibold">{t("panel.modelos.zones")}</h1>
+      <PanelHeader eyebrow={t("nav.models")} title={t("panel.modelos.zones")} />
       <ZonasEditor
         modelId={id}
         baseImagesByView={baseImagesByView}

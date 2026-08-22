@@ -4,6 +4,7 @@ import { color } from "@/lib/db/schema";
 import { colorConNombre } from "@/lib/catalogo/consultas-traducidas";
 import { getT, type Locale } from "@/lib/i18n/t";
 import { ColorForm, type ColorFormValue } from "./_ColorForm";
+import { PanelHeader } from "../../_PanelHeader";
 
 export default async function ColorFormPage({
   params,
@@ -30,9 +31,10 @@ export default async function ColorFormPage({
 
   return (
     <div>
-      <h1 className="mb-6 text-xl font-semibold">
-        {id === "nuevo" ? t("panel.colores.new") : t("panel.colores.editTitle")}
-      </h1>
+      <PanelHeader
+        eyebrow={t("nav.colors")}
+        title={id === "nuevo" ? t("panel.colores.new") : t("panel.colores.editTitle")}
+      />
       <ColorForm
         locale={locale}
         initial={initial}

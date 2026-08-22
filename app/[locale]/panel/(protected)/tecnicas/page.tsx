@@ -1,6 +1,7 @@
 import { techniqueConNombre } from "@/lib/catalogo/consultas-traducidas";
 import { getT, type Locale } from "@/lib/i18n/t";
 import { TecnicasForm } from "./_TecnicasForm";
+import { PanelHeader } from "../_PanelHeader";
 
 export default async function TecnicasPage({
   params,
@@ -13,7 +14,7 @@ export default async function TecnicasPage({
 
   return (
     <div>
-      <h1 className="mb-6 text-xl font-semibold">{t("nav.techniques")}</h1>
+      <PanelHeader eyebrow={t("nav.panel")} title={t("nav.techniques")} />
       <TecnicasForm
         locale={locale}
         techniques={techniques}

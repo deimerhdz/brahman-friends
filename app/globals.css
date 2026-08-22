@@ -102,6 +102,11 @@
   --text-button--line-height: 1.0;
   --text-button--letter-spacing: 0.02em;
   --text-button--font-weight: 600;
+
+  --radius-DEFAULT: 0.125rem;
+  --radius-lg: 0.25rem;
+  --radius-xl: 0.5rem;
+  --radius-full: 0.75rem;
 }
 
 .ambient-shadow {

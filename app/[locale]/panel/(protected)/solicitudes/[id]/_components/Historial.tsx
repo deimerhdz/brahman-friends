@@ -53,14 +53,14 @@ export function Historial({
             type="button"
             disabled={busy}
             onClick={() => changeTo(status)}
-            className="rounded bg-brand px-3 py-1 text-sm text-white disabled:opacity-50"
+            className="rounded bg-on-surface px-4 py-2 font-button text-button text-on-primary transition-colors duration-200 hover:bg-primary disabled:opacity-50"
           >
             {labels[`status_${status}`]}
           </button>
         ))}
       </div>
-      {error && <p className="text-sm text-red-600">{error}</p>}
-      <ul className="flex flex-col gap-1 text-sm text-gray-600">
+      {error && <p className="font-body-md text-body-md text-error">{error}</p>}
+      <ul className="flex flex-col gap-1 font-body-md text-body-md text-on-surface-variant">
         {history.map((h, i) => (
           <li key={i}>
             {h.fromStatus ? `${labels[`status_${h.fromStatus}`]} → ` : ""}

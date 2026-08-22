@@ -38,26 +38,32 @@ export function TallasForm({
   }
 
   return (
-    <div className="flex max-w-sm flex-col gap-4">
+    <div className="flex max-w-sm flex-col gap-6">
       <form onSubmit={add} className="flex gap-2">
         <input
           name="label"
           required
           placeholder={labels.placeholder}
-          className="flex-1 rounded border border-gray-300 px-2 py-1"
+          className="flex-1 rounded border border-outline-variant bg-surface px-3 py-2 font-body-md text-body-md text-on-surface focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
         />
-        <button type="submit" className="rounded bg-brand px-3 py-1 text-white">
+        <button
+          type="submit"
+          className="rounded bg-on-surface px-4 py-2 font-button text-button text-on-primary transition-colors duration-200 hover:bg-primary"
+        >
           {labels.add}
         </button>
       </form>
-      <ul className="flex flex-col gap-1">
+      <ul className="divide-y divide-outline-variant/20 overflow-hidden rounded-lg border border-outline-variant/60 bg-surface-container-lowest ambient-shadow">
         {sizes.map((s) => (
-          <li key={s.label} className="flex items-center justify-between">
+          <li
+            key={s.label}
+            className="flex items-center justify-between px-6 py-3 font-body-md text-body-md text-on-surface"
+          >
             <span>{s.label}</span>
             <button
               type="button"
               onClick={() => remove(s.label)}
-              className="text-sm text-red-600"
+              className="font-label-caps text-label-caps text-error hover:underline"
             >
               {labels.remove}
             </button>

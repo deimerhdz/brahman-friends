@@ -10,6 +10,7 @@ import {
 import { findMismatched, type ImageDimensions } from "@/lib/media/dimensiones";
 import { leerArchivosSoltados } from "./_lib/leer-carpeta";
 import { leerDimensiones } from "./_lib/leer-dimensiones";
+import { EstadoBadge } from "../../../_EstadoBadge";
 
 type View = "front" | "side" | "back";
 
@@ -228,7 +229,7 @@ export function CargaMasiva({
       <div
         onDrop={onDrop}
         onDragOver={(e) => e.preventDefault()}
-        className="flex flex-col items-center gap-2 rounded border-2 border-dashed border-gray-300 p-10 text-center"
+        className="flex flex-col items-center gap-2 rounded-lg border-2 border-dashed border-outline-variant bg-surface-container-lowest p-10 text-center font-body-md text-body-md text-on-surface-variant"
       >
         <p>{labels.dropHere}</p>
         <input
@@ -243,22 +244,24 @@ export function CargaMasiva({
         />
       </div>
 
-      {estado.fase === "leyendo" && <p>{labels.reading}</p>}
+      {estado.fase === "leyendo" && (
+        <p className="font-body-md text-body-md text-on-surface-variant">{labels.reading}</p>
+      )}
 
       {estado.fase === "listo" && (
         <div className="flex flex-col gap-4">
-          <p>
+          <p className="font-body-md text-body-md text-on-surface">
             {labels.matchedCount.replace(
               "{{n}}",
               String(estado.resueltos.length),
             )}
           </p>
           {estado.conDimensionDistinta.length > 0 && (
-            <div className="rounded border border-red-300 bg-red-50 p-3">
-              <p className="font-medium text-red-700">
+            <div className="rounded-lg border border-error/30 bg-error-container p-4">
+              <p className="font-semibold text-on-error-container">
                 {labels.dimensionMismatch}
               </p>
-              <ul className="list-inside list-disc text-sm text-red-700">
+              <ul className="list-inside list-disc font-body-md text-body-md text-on-error-container">
                 {estado.conDimensionDistinta.map((f) => (
                   <li key={f.name}>{f.name}</li>
                 ))}
@@ -266,9 +269,9 @@ export function CargaMasiva({
             </div>
           )}
           {estado.sinAsignar.length > 0 && (
-            <div className="rounded border border-yellow-300 bg-yellow-50 p-3">
-              <p className="font-medium text-yellow-800">{labels.unmatched}</p>
-              <ul className="list-inside list-disc text-sm text-yellow-800">
+            <div className="rounded-lg border border-[#F5E39A] bg-[#FFF8E1] p-4">
+              <p className="font-semibold text-[#8D6E00]">{labels.unmatched}</p>
+              <ul className="list-inside list-disc font-body-md text-body-md text-[#8D6E00]">
                 {estado.sinAsignar.map((f) => (
                   <li key={f.name}>{f.name}</li>
                 ))}
@@ -279,7 +282,7 @@ export function CargaMasiva({
             type="button"
             onClick={subir}
             disabled={estado.resueltos.length === 0}
-            className="w-fit rounded bg-brand px-4 py-2 text-white disabled:opacity-50"
+            className="w-fit rounded bg-on-surface px-6 py-2 font-button text-button text-on-primary transition-colors duration-200 hover:bg-primary disabled:opacity-50"
           >
             {labels.upload}
           </button>
@@ -287,44 +290,60 @@ export function CargaMasiva({
       )}
 
       {estado.fase === "subiendo" && (
-        <p>
+        <p className="font-body-md text-body-md text-on-surface-variant">
           {labels.uploading} {estado.progreso}/{estado.total}
         </p>
       )}
 
       {estado.fase === "hecho" && (
-        <p className="text-green-700">
+        <p className="font-body-md text-body-md text-[#2E7D32]">
           {labels.done.replace("{{n}}", String(estado.subidas))}
         </p>
       )}
 
-      <div>
-        <h2 className="mb-2 font-medium">{labels.matrixTitle}</h2>
+      <div className="overflow-hidden rounded-lg border border-outline-variant/60 bg-surface-container-lowest ambient-shadow">
+        <h2 className="border-b border-outline-variant/30 px-6 py-4 font-body-md text-body-md font-semibold text-on-surface">
+          {labels.matrixTitle}
+        </h2>
         <div className="overflow-x-auto">
-          <table className="min-w-full text-sm">
-            <thead>
-              <tr className="text-left text-gray-500">
-                <th className="pr-4">{labels.component}</th>
-                <th className="pr-4">{labels.color}</th>
-                <th className="pr-4">{labels.view}</th>
-                <th>{labels.status}</th>
+          <table className="w-full border-collapse text-left">
+            <thead className="border-b border-outline-variant/30">
+              <tr>
+                <th className="px-6 py-3 text-label-caps font-label-caps text-on-surface-variant">
+                  {labels.component}
+                </th>
+                <th className="px-6 py-3 text-label-caps font-label-caps text-on-surface-variant">
+                  {labels.color}
+                </th>
+                <th className="px-6 py-3 text-label-caps font-label-caps text-on-surface-variant">
+                  {labels.view}
+                </th>
+                <th className="px-6 py-3 text-label-caps font-label-caps text-on-surface-variant">
+                  {labels.status}
+                </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-outline-variant/20">
               {matriz.map((row) => (
-                <tr key={row.key} className="border-t border-gray-100">
-                  <td className="pr-4 py-1">{row.componentName}</td>
-                  <td className="pr-4 py-1">{row.colorName}</td>
-                  <td className="pr-4 py-1">{row.view}</td>
-                  <td className="py-1">
+                <tr key={row.key}>
+                  <td className="px-6 py-2 font-body-md text-body-md text-on-surface">
+                    {row.componentName}
+                  </td>
+                  <td className="px-6 py-2 font-body-md text-body-md text-on-surface">
+                    {row.colorName}
+                  </td>
+                  <td className="px-6 py-2 font-body-md text-body-md text-on-surface">
+                    {row.view}
+                  </td>
+                  <td className="px-6 py-2">
                     {row.estadoCelda === "cargada" && (
-                      <span className="text-green-700">{labels.loaded}</span>
+                      <EstadoBadge label={labels.loaded} tone="success" />
                     )}
                     {row.estadoCelda === "pendiente" && (
-                      <span className="text-blue-700">{labels.pending}</span>
+                      <EstadoBadge label={labels.pending} tone="neutral" />
                     )}
                     {row.estadoCelda === "faltante" && (
-                      <span className="text-red-700">{labels.missing}</span>
+                      <EstadoBadge label={labels.missing} tone="danger" />
                     )}
                   </td>
                 </tr>
@@ -333,7 +352,9 @@ export function CargaMasiva({
           </table>
         </div>
         {faltantes.length === 0 && matriz.length > 0 && (
-          <p className="mt-2 text-green-700">{labels.allLoaded}</p>
+          <p className="border-t border-outline-variant/30 px-6 py-3 font-body-md text-body-md text-[#2E7D32]">
+            {labels.allLoaded}
+          </p>
         )}
       </div>
     </div>

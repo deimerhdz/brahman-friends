@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { capModel, modelSize } from "@/lib/db/schema";
 import { getT, type Locale } from "@/lib/i18n/t";
 import { TallasForm } from "./_TallasForm";
+import { PanelHeader } from "../../../_PanelHeader";
 
 export default async function TallasPage({
   params,
@@ -24,7 +25,7 @@ export default async function TallasPage({
 
   return (
     <div>
-      <h1 className="mb-6 text-xl font-semibold">{t("panel.modelos.sizes")}</h1>
+      <PanelHeader eyebrow={t("nav.models")} title={t("panel.modelos.sizes")} />
       <TallasForm
         modelId={id}
         sizes={sizes}

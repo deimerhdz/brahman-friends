@@ -88,34 +88,44 @@ export function VistasForm({
       {VIEWS.map((view) => {
         const active = view in images && images[view] !== undefined;
         return (
-          <div key={view} className="rounded border border-gray-200 p-4">
-            <label className="flex items-center gap-2">
+          <div
+            key={view}
+            className="rounded-lg border border-outline-variant/60 bg-surface-container-lowest p-6 ambient-shadow"
+          >
+            <label className="flex items-center gap-2 font-body-md text-body-md text-on-surface">
               <input
                 type="checkbox"
                 checked={active}
                 disabled={view === "front"}
                 onChange={(e) => toggle(view, e.target.checked)}
+                className="accent-primary"
               />
-              <span className="font-medium">{labels[`view_${view}`]}</span>
+              <span className="font-semibold">{labels[`view_${view}`]}</span>
               {view === "front" && (
-                <span className="text-xs text-gray-500">
+                <span className="font-label-caps text-label-caps text-on-surface-variant">
                   {labels.frontRequired}
                 </span>
               )}
             </label>
             {active && (
-              <div className="mt-2 flex items-center gap-3">
+              <div className="mt-3 flex items-center gap-3">
                 <input
                   type="file"
                   accept="image/png,image/jpeg,image/webp"
                   onChange={(e) => onFile(view, e.target.files?.[0])}
+                  className="font-body-md text-body-md text-on-surface"
                 />
-                {busy === view && <span>{labels.uploading}</span>}
+                {busy === view && (
+                  <span className="font-body-md text-body-md text-on-surface-variant">
+                    {labels.uploading}
+                  </span>
+                )}
                 {images[view] && (
+                  // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={images[view]}
                     alt=""
-                    className="h-14 w-14 rounded object-cover"
+                    className="h-14 w-14 rounded border border-outline-variant/60 object-cover"
                   />
                 )}
               </div>
@@ -123,7 +133,7 @@ export function VistasForm({
           </div>
         );
       })}
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="font-body-md text-body-md text-error">{error}</p>}
     </div>
   );
 }

@@ -14,6 +14,7 @@ import type { DesignSnapshot } from "@/lib/solicitud/snapshot";
 import type { RequestStatus } from "@/lib/solicitud/estados";
 import { Historial } from "./_components/Historial";
 import { Anonimizar } from "./_components/Anonimizar";
+import { PanelHeader } from "../../_PanelHeader";
 
 export default async function SolicitudDetallePage({
   params,
@@ -47,15 +48,14 @@ export default async function SolicitudDetallePage({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold">{req.code}</h1>
+      <PanelHeader eyebrow={t("nav.requests")} title={req.code}>
         <a
           href={`/api/panel/solicitudes/${id}/ficha.pdf`}
-          className="rounded bg-gray-100 px-3 py-1 text-sm"
+          className="rounded border border-outline-variant px-4 py-2 font-button text-button text-on-surface-variant transition-colors hover:border-on-surface hover:text-on-surface"
         >
           {t("panel.solicitudes.downloadPdf")}
         </a>
-      </div>
+      </PanelHeader>
 
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
         {images.map((img) => (
@@ -64,13 +64,15 @@ export default async function SolicitudDetallePage({
             key={img.view}
             src={img.imageUrl}
             alt={img.view}
-            className="rounded border border-gray-200"
+            className="rounded-lg border border-outline-variant/60"
           />
         ))}
       </div>
 
-      <section className="rounded border border-gray-200 p-4 text-sm">
-        <h2 className="mb-2 font-medium">{t("panel.solicitudes.technicalSheet")}</h2>
+      <section className="rounded-lg border border-outline-variant/60 bg-surface-container-lowest p-6 font-body-md text-body-md text-on-surface ambient-shadow">
+        <h2 className="mb-3 font-body-md text-body-md font-semibold text-on-surface">
+          {t("panel.solicitudes.technicalSheet")}
+        </h2>
         <p>
           {locale === "es" ? snapshot.model.nameEs : snapshot.model.nameEn} (
           {snapshot.model.code})
@@ -114,8 +116,10 @@ export default async function SolicitudDetallePage({
       </section>
 
       {!req.anonymizedAt && (
-        <section className="rounded border border-gray-200 p-4 text-sm">
-          <h2 className="mb-2 font-medium">{t("panel.solicitudes.contact")}</h2>
+        <section className="rounded-lg border border-outline-variant/60 bg-surface-container-lowest p-6 font-body-md text-body-md text-on-surface ambient-shadow">
+          <h2 className="mb-3 font-body-md text-body-md font-semibold text-on-surface">
+            {t("panel.solicitudes.contact")}
+          </h2>
           <p>{req.contactName}</p>
           <p>{req.contactEmail}</p>
           <p>{req.contactPhone}</p>
@@ -123,7 +127,7 @@ export default async function SolicitudDetallePage({
           {logos.length > 0 && (
             <a
               href={`/api/panel/solicitudes/${id}/logo`}
-              className="mt-2 inline-block text-brand underline"
+              className="mt-2 inline-block text-primary underline hover:no-underline"
             >
               {t("panel.solicitudes.downloadLogo")}
             </a>
@@ -131,8 +135,10 @@ export default async function SolicitudDetallePage({
         </section>
       )}
 
-      <section className="rounded border border-gray-200 p-4">
-        <h2 className="mb-2 text-sm font-medium">{t("panel.solicitudes.statusHistory")}</h2>
+      <section className="rounded-lg border border-outline-variant/60 bg-surface-container-lowest p-6 ambient-shadow">
+        <h2 className="mb-3 font-body-md text-body-md font-semibold text-on-surface">
+          {t("panel.solicitudes.statusHistory")}
+        </h2>
         <Historial
           requestId={id}
           currentStatus={req.status as RequestStatus}
@@ -166,7 +172,9 @@ export default async function SolicitudDetallePage({
         />
       )}
       {req.anonymizedAt && (
-        <p className="text-sm text-gray-500">{t("panel.solicitudes.anonymized")}</p>
+        <p className="font-body-md text-body-md text-on-surface-variant">
+          {t("panel.solicitudes.anonymized")}
+        </p>
       )}
     </div>
   );

@@ -50,8 +50,14 @@ export function NuevoModeloForm({
   return (
     <form onSubmit={onSubmit} className="flex max-w-lg flex-col gap-4">
       <label className="flex flex-col gap-1">
-        <span>{labels.code}</span>
-        <input name="code" required className="rounded border border-gray-300 px-3 py-2" />
+        <span className="font-label-caps text-label-caps text-on-surface-variant">
+          {labels.code}
+        </span>
+        <input
+          name="code"
+          required
+          className="rounded border border-outline-variant bg-surface px-3 py-2 font-body-md text-body-md text-on-surface focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+        />
       </label>
       <CampoTraducible
         label={labels.name}
@@ -69,11 +75,11 @@ export function NuevoModeloForm({
         defaultLocale={locale}
         switchLabels={{ es: labels.switchEs, en: labels.switchEn }}
       />
-      {error && <p className="text-sm text-red-600">{labels.error}</p>}
+      {error && <p className="font-body-md text-body-md text-error">{labels.error}</p>}
       <button
         type="submit"
         disabled={saving}
-        className="rounded bg-brand px-4 py-2 text-white disabled:opacity-50"
+        className="w-fit rounded bg-on-surface px-6 py-2 font-button text-button text-on-primary transition-colors duration-200 hover:bg-primary disabled:opacity-50"
       >
         {labels.save}
       </button>

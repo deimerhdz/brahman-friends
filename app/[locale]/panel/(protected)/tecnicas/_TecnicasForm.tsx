@@ -38,8 +38,11 @@ export function TecnicasForm({
   }
 
   return (
-    <div className="flex max-w-md flex-col gap-4">
-      <form onSubmit={add} className="flex flex-col gap-2">
+    <div className="flex max-w-md flex-col gap-6">
+      <form
+        onSubmit={add}
+        className="flex flex-col gap-3 rounded-lg border border-outline-variant/60 bg-surface-container-lowest p-6 ambient-shadow"
+      >
         <CampoTraducible
           label={labels.name}
           value={name}
@@ -48,14 +51,20 @@ export function TecnicasForm({
           defaultLocale={locale}
           switchLabels={{ es: labels.switchEs, en: labels.switchEn }}
         />
-        <button type="submit" className="w-fit rounded bg-brand px-3 py-1 text-white">
+        <button
+          type="submit"
+          className="w-fit rounded bg-on-surface px-6 py-2 font-button text-button text-on-primary transition-colors duration-200 hover:bg-primary"
+        >
           {labels.add}
         </button>
-        {error && <p className="text-sm text-red-600">{labels.error}</p>}
+        {error && <p className="font-body-md text-body-md text-error">{labels.error}</p>}
       </form>
-      <ul className="divide-y divide-gray-200">
+      <ul className="divide-y divide-outline-variant/20 overflow-hidden rounded-lg border border-outline-variant/60 bg-surface-container-lowest ambient-shadow">
         {techniques.map((tech) => (
-          <li key={tech.id} className="py-2">
+          <li
+            key={tech.id}
+            className="px-6 py-3 font-body-md text-body-md text-on-surface"
+          >
             {locale === "es" ? tech.nameEs : tech.nameEn}
           </li>
         ))}

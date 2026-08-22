@@ -93,16 +93,18 @@ export function ZonasEditor({
 
   return (
     <div className="flex flex-col gap-6 md:flex-row">
-      <div className="flex max-w-sm flex-col gap-4">
-        <div className="flex gap-2">
+      <div className="flex max-w-sm flex-col gap-4 rounded-lg border border-outline-variant/60 bg-surface-container-lowest p-6 ambient-shadow">
+        <div className="flex flex-wrap gap-2">
           {POSITIONS.map((p) => (
             <button
               key={p}
               type="button"
               onClick={() => setSelected(p)}
-              className={`rounded px-3 py-1 text-sm ${
-                selected === p ? "bg-brand text-white" : "bg-gray-100"
-              }`}
+              className={
+                selected === p
+                  ? "rounded-full border border-primary bg-surface-container-high px-3 py-1 font-label-caps text-label-caps font-bold text-primary"
+                  : "rounded-full border border-outline-variant px-3 py-1 font-label-caps text-label-caps text-on-surface-variant hover:bg-surface-container-low"
+              }
             >
               {labels[`position_${p}`]}
             </button>
@@ -110,42 +112,48 @@ export function ZonasEditor({
         </div>
 
         <label className="flex flex-col gap-1">
-          <span>{labels.maxWidthCm}</span>
+          <span className="font-label-caps text-label-caps text-on-surface-variant">
+            {labels.maxWidthCm}
+          </span>
           <input
             type="number"
             step="0.1"
             value={value.maxWidthCm}
             onChange={(e) => update({ maxWidthCm: Number(e.target.value) })}
-            className="rounded border border-gray-300 px-2 py-1"
+            className="rounded border border-outline-variant bg-surface px-3 py-2 font-body-md text-body-md text-on-surface focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
           />
         </label>
         <label className="flex flex-col gap-1">
-          <span>{labels.maxHeightCm}</span>
+          <span className="font-label-caps text-label-caps text-on-surface-variant">
+            {labels.maxHeightCm}
+          </span>
           <input
             type="number"
             step="0.1"
             value={value.maxHeightCm}
             onChange={(e) => update({ maxHeightCm: Number(e.target.value) })}
-            className="rounded border border-gray-300 px-2 py-1"
+            className="rounded border border-outline-variant bg-surface px-3 py-2 font-body-md text-body-md text-on-surface focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
           />
         </label>
 
         <div className="grid grid-cols-2 gap-2">
           {(["boxX", "boxY", "boxW", "boxH"] as const).map((field) => (
             <label key={field} className="flex flex-col gap-1">
-              <span>{labels[field]}</span>
+              <span className="font-label-caps text-label-caps text-on-surface-variant">
+                {labels[field]}
+              </span>
               <input
                 type="number"
                 value={value[field]}
                 onChange={(e) => update({ [field]: Number(e.target.value) })}
-                className="rounded border border-gray-300 px-2 py-1"
+                className="rounded border border-outline-variant bg-surface px-3 py-2 font-body-md text-body-md text-on-surface focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
               />
             </label>
           ))}
         </div>
 
         <label className="flex flex-col gap-1">
-          <span>
+          <span className="font-label-caps text-label-caps text-on-surface-variant">
             {labels.arc}: {value.arc.toFixed(2)}
           </span>
           <input
@@ -155,10 +163,11 @@ export function ZonasEditor({
             step={0.05}
             value={value.arc}
             onChange={(e) => update({ arc: Number(e.target.value) })}
+            className="accent-primary"
           />
         </label>
         <label className="flex flex-col gap-1">
-          <span>
+          <span className="font-label-caps text-label-caps text-on-surface-variant">
             {labels.tilt}: {value.tilt.toFixed(2)}
           </span>
           <input
@@ -168,10 +177,11 @@ export function ZonasEditor({
             step={0.05}
             value={value.tilt}
             onChange={(e) => update({ tilt: Number(e.target.value) })}
+            className="accent-primary"
           />
         </label>
         <label className="flex flex-col gap-1">
-          <span>
+          <span className="font-label-caps text-label-caps text-on-surface-variant">
             {labels.taper}: {value.taper.toFixed(2)}
           </span>
           <input
@@ -181,16 +191,19 @@ export function ZonasEditor({
             step={0.05}
             value={value.taper}
             onChange={(e) => update({ taper: Number(e.target.value) })}
+            className="accent-primary"
           />
         </label>
 
         <label className="flex flex-col gap-1">
-          <span>{labels.maxTextChars}</span>
+          <span className="font-label-caps text-label-caps text-on-surface-variant">
+            {labels.maxTextChars}
+          </span>
           <input
             type="number"
             value={value.maxTextChars}
             onChange={(e) => update({ maxTextChars: Number(e.target.value) })}
-            className="rounded border border-gray-300 px-2 py-1"
+            className="rounded border border-outline-variant bg-surface px-3 py-2 font-body-md text-body-md text-on-surface focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
           />
         </label>
 
@@ -198,7 +211,7 @@ export function ZonasEditor({
           type="button"
           onClick={save}
           disabled={saving}
-          className="rounded bg-brand px-4 py-2 text-white disabled:opacity-50"
+          className="w-fit rounded bg-on-surface px-6 py-2 font-button text-button text-on-primary transition-colors duration-200 hover:bg-primary disabled:opacity-50"
         >
           {labels.save}
         </button>

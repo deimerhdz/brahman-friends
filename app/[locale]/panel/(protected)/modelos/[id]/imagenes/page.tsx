@@ -14,6 +14,7 @@ import {
 } from "@/lib/catalogo/consultas-traducidas";
 import { getT, type Locale } from "@/lib/i18n/t";
 import { CargaMasiva } from "./_CargaMasiva";
+import { PanelHeader } from "../../../_PanelHeader";
 
 export default async function ImagenesPage({
   params,
@@ -49,7 +50,7 @@ export default async function ImagenesPage({
 
   return (
     <div>
-      <h1 className="mb-6 text-xl font-semibold">{t("panel.modelos.images")}</h1>
+      <PanelHeader eyebrow={t("nav.models")} title={t("panel.modelos.images")} />
       <CargaMasiva
         modelId={id}
         activeViews={views.map((v) => v.view)}

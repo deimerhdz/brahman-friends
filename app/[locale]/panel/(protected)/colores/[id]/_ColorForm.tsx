@@ -83,25 +83,25 @@ export function ColorForm({
         switchLabels={{ es: labels.switchEs, en: labels.switchEn }}
       />
       <label className="flex flex-col gap-1">
-        <span>{labels.supplierRef}</span>
+        <span className="font-label-caps text-label-caps text-on-surface-variant">{labels.supplierRef}</span>
         <input
           required
           value={value.supplierRef}
           onChange={(e) =>
             setValue((v) => ({ ...v, supplierRef: e.target.value }))
           }
-          className="rounded border border-gray-300 px-3 py-2"
+          className="rounded border border-outline-variant bg-surface px-3 py-2 font-body-md text-body-md text-on-surface focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
         />
       </label>
       <label className="flex flex-col gap-1">
-        <span>{labels.material}</span>
+        <span className="font-label-caps text-label-caps text-on-surface-variant">{labels.material}</span>
         <select
           required
           value={value.material}
           onChange={(e) =>
             setValue((v) => ({ ...v, material: e.target.value }))
           }
-          className="rounded border border-gray-300 px-3 py-2"
+          className="rounded border border-outline-variant bg-surface px-3 py-2 font-body-md text-body-md text-on-surface focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
         >
           <option value="" disabled>
             {labels.selectMaterial}
@@ -114,7 +114,7 @@ export function ColorForm({
         </select>
       </label>
       <label className="flex flex-col gap-1">
-        <span>{labels.status}</span>
+        <span className="font-label-caps text-label-caps text-on-surface-variant">{labels.status}</span>
         <select
           value={value.status}
           onChange={(e) =>
@@ -123,7 +123,7 @@ export function ColorForm({
               status: e.target.value as ColorFormValue["status"],
             }))
           }
-          className="rounded border border-gray-300 px-3 py-2"
+          className="rounded border border-outline-variant bg-surface px-3 py-2 font-body-md text-body-md text-on-surface focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
         >
           <option value="available">{labels.statusAvailable}</option>
           <option value="out_of_stock">{labels.statusOutOfStock}</option>
@@ -131,28 +131,32 @@ export function ColorForm({
         </select>
       </label>
       <label className="flex flex-col gap-1">
-        <span>{labels.sampleImage}</span>
+        <span className="font-label-caps text-label-caps text-on-surface-variant">{labels.sampleImage}</span>
         <input
           type="file"
           accept="image/png,image/jpeg,image/webp"
           onChange={(e) => onFileChange(e.target.files?.[0])}
+          className="font-body-md text-body-md text-on-surface"
         />
-        {uploading && <p className="text-sm text-gray-500">{labels.uploading}</p>}
+        {uploading && (
+          <p className="font-body-md text-body-md text-on-surface-variant">{labels.uploading}</p>
+        )}
         {value.sampleImageUrl && (
+          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={value.sampleImageUrl}
             alt=""
-            className="h-16 w-16 rounded object-cover"
+            className="h-16 w-16 rounded border border-outline-variant/60 object-cover"
           />
         )}
       </label>
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="font-body-md text-body-md text-error">{error}</p>}
 
       <button
         type="submit"
         disabled={saving || uploading || !value.sampleImageUrl}
-        className="rounded bg-brand px-4 py-2 text-white disabled:opacity-50"
+        className="w-fit rounded bg-on-surface px-6 py-2 font-button text-button text-on-primary transition-colors duration-200 hover:bg-primary disabled:opacity-50"
       >
         {labels.save}
       </button>

@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { capModel, modelView } from "@/lib/db/schema";
 import { getT, type Locale } from "@/lib/i18n/t";
 import { VistasForm } from "./_VistasForm";
+import { PanelHeader } from "../../../_PanelHeader";
 
 export default async function VistasPage({
   params,
@@ -36,7 +37,7 @@ export default async function VistasPage({
 
   return (
     <div>
-      <h1 className="mb-6 text-xl font-semibold">{t("panel.modelos.views")}</h1>
+      <PanelHeader eyebrow={t("nav.models")} title={t("panel.modelos.views")} />
       <VistasForm
         modelId={id}
         initial={initial}

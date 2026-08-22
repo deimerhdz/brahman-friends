@@ -4,6 +4,16 @@ import { db } from "@/lib/db";
 import { request as requestTable } from "@/lib/db/schema";
 import { getT, type Locale } from "@/lib/i18n/t";
 import { REQUEST_STATUSES } from "@/lib/solicitud/estados";
+import { PanelHeader } from "../_PanelHeader";
+import { EstadoBadge } from "../_EstadoBadge";
+
+const TONE_BY_STATUS = {
+  new: "warning",
+  in_review: "warning",
+  quoted: "success",
+  closed: "neutral",
+  rejected: "danger",
+} as const;
 
 export default async function SolicitudesPage({
   params,
@@ -31,67 +41,115 @@ export default async function SolicitudesPage({
 
   return (
     <div>
-      <h1 className="mb-4 text-xl font-semibold">{t("nav.requests")}</h1>
-
-      <form className="mb-4 flex flex-wrap gap-2 text-sm">
-        <select name="estado" defaultValue={estado ?? ""} className="rounded border border-gray-300 px-2 py-1">
-          <option value="">{t("panel.solicitudes.allStatuses")}</option>
-          {REQUEST_STATUSES.map((s) => (
-            <option key={s} value={s}>
-              {t(`panel.solicitudes.status.${s}`)}
-            </option>
-          ))}
-        </select>
-        <input type="date" name="desde" defaultValue={desde ?? ""} className="rounded border border-gray-300 px-2 py-1" />
-        <input type="date" name="hasta" defaultValue={hasta ?? ""} className="rounded border border-gray-300 px-2 py-1" />
-        <button type="submit" className="rounded bg-brand px-3 py-1 text-white">
-          {t("panel.solicitudes.filter")}
-        </button>
-        <a
-          href={`/api/panel/solicitudes.csv?estado=${estado ?? ""}&desde=${desde ?? ""}&hasta=${hasta ?? ""}`}
-          className="ml-auto rounded bg-gray-100 px-3 py-1"
-        >
-          {t("panel.solicitudes.exportCsv")}
-        </a>
-      </form>
-
-      <div className="overflow-x-auto">
-        <table className="min-w-full text-sm">
-          <thead>
-            <tr className="text-left text-gray-500">
-              <th className="pr-4">{t("panel.solicitudes.code")}</th>
-              <th className="pr-4">{t("panel.solicitudes.date")}</th>
-              <th className="pr-4">{t("solicitud.name")}</th>
-              <th className="pr-4">{t("solicitud.quantity")}</th>
-              <th className="pr-4">{t("panel.modelos.status.label")}</th>
-              <th>{t("panel.solicitudes.notification")}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {requests.map((r) => (
-              <tr key={r.id} className="border-t border-gray-100">
-                <td className="pr-4 py-2">
-                  <Link href={`/${locale}/panel/solicitudes/${r.id}`} className="text-brand">
-                    {r.code}
-                  </Link>
-                </td>
-                <td className="pr-4 py-2">{r.createdAt.toISOString().slice(0, 10)}</td>
-                <td className="pr-4 py-2">{r.contactName ?? "—"}</td>
-                <td className="pr-4 py-2">{r.quantity}</td>
-                <td className="pr-4 py-2">{t(`panel.solicitudes.status.${r.status}`)}</td>
-                <td className="py-2">
-                  {r.notificationStatus !== "sent" && (
-                    <span className="rounded bg-yellow-100 px-2 py-1 text-xs text-yellow-800">
-                      {t("panel.solicitudes.notificationPendingBadge")}
-                    </span>
-                  )}
-                </td>
-              </tr>
+      <PanelHeader eyebrow={t("nav.panel")} title={t("nav.requests")}>
+        <form className="flex flex-wrap items-center gap-2">
+          <select
+            name="estado"
+            defaultValue={estado ?? ""}
+            className="rounded border border-outline-variant bg-surface px-3 py-2 font-body-md text-body-md text-on-surface focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+          >
+            <option value="">{t("panel.solicitudes.allStatuses")}</option>
+            {REQUEST_STATUSES.map((s) => (
+              <option key={s} value={s}>
+                {t(`panel.solicitudes.status.${s}`)}
+              </option>
             ))}
-          </tbody>
-        </table>
+          </select>
+          <input
+            type="date"
+            name="desde"
+            defaultValue={desde ?? ""}
+            className="rounded border border-outline-variant bg-surface px-3 py-2 font-body-md text-body-md text-on-surface focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+          />
+          <input
+            type="date"
+            name="hasta"
+            defaultValue={hasta ?? ""}
+            className="rounded border border-outline-variant bg-surface px-3 py-2 font-body-md text-body-md text-on-surface focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+          />
+          <button
+            type="submit"
+            className="rounded bg-on-surface px-4 py-2 font-button text-button text-on-primary transition-colors duration-200 hover:bg-primary"
+          >
+            {t("panel.solicitudes.filter")}
+          </button>
+          <a
+            href={`/api/panel/solicitudes.csv?estado=${estado ?? ""}&desde=${desde ?? ""}&hasta=${hasta ?? ""}`}
+            className="rounded border border-outline-variant px-4 py-2 font-button text-button text-on-surface-variant transition-colors hover:border-on-surface hover:text-on-surface"
+          >
+            {t("panel.solicitudes.exportCsv")}
+          </a>
+        </form>
+      </PanelHeader>
+
+      <div className="overflow-hidden rounded-lg border border-outline-variant/60 bg-surface-container-lowest ambient-shadow">
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse text-left">
+            <thead className="border-b border-outline-variant/30 bg-surface-container-lowest">
+              <tr>
+                <th className="px-6 py-4 text-label-caps font-label-caps text-on-surface-variant">
+                  {t("panel.solicitudes.code")}
+                </th>
+                <th className="px-6 py-4 text-label-caps font-label-caps text-on-surface-variant">
+                  {t("panel.solicitudes.date")}
+                </th>
+                <th className="px-6 py-4 text-label-caps font-label-caps text-on-surface-variant">
+                  {t("solicitud.name")}
+                </th>
+                <th className="px-6 py-4 text-label-caps font-label-caps text-on-surface-variant">
+                  {t("solicitud.quantity")}
+                </th>
+                <th className="px-6 py-4 text-label-caps font-label-caps text-on-surface-variant">
+                  {t("panel.modelos.status.label")}
+                </th>
+                <th className="px-6 py-4 text-label-caps font-label-caps text-on-surface-variant">
+                  {t("panel.solicitudes.notification")}
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-outline-variant/20">
+              {requests.map((r) => (
+                <tr key={r.id} className="transition-colors hover:bg-surface-container-low/50">
+                  <td className="px-6 py-4">
+                    <Link
+                      href={`/${locale}/panel/solicitudes/${r.id}`}
+                      className="font-body-md text-body-md font-semibold text-on-surface hover:text-primary"
+                    >
+                      {r.code}
+                    </Link>
+                  </td>
+                  <td className="px-6 py-4 font-body-md text-body-md text-on-surface-variant">
+                    {r.createdAt.toISOString().slice(0, 10)}
+                  </td>
+                  <td className="px-6 py-4 font-body-md text-body-md text-on-surface-variant">
+                    {r.contactName ?? "—"}
+                  </td>
+                  <td className="px-6 py-4 font-body-md text-body-md text-on-surface-variant">
+                    {r.quantity}
+                  </td>
+                  <td className="px-6 py-4">
+                    <EstadoBadge
+                      label={t(`panel.solicitudes.status.${r.status}`)}
+                      tone={TONE_BY_STATUS[r.status]}
+                    />
+                  </td>
+                  <td className="px-6 py-4">
+                    {r.notificationStatus !== "sent" && (
+                      <EstadoBadge
+                        label={t("panel.solicitudes.notificationPendingBadge")}
+                        tone="warning"
+                      />
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
         {requests.length === 0 && (
-          <p className="py-4 text-gray-500">{t("panel.solicitudes.empty")}</p>
+          <p className="p-6 text-body-md font-body-md text-on-surface-variant">
+            {t("panel.solicitudes.empty")}
+          </p>
         )}
       </div>
     </div>
