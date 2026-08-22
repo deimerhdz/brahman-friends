@@ -50,6 +50,8 @@ export const errors = {
   yaAnonimizada: () => apiError(409, "ya_anonimizada"),
   logoEliminado: () => apiError(410, "logo_eliminado"),
   credencialesInvalidas: () => apiError(401, "credenciales_invalidas"),
+  correoYaRegistrado: () => apiError(409, "correo_ya_registrado"),
+  datosInvalidos: (detail?: unknown) => apiError(400, "datos_invalidos", detail),
 };
 
 export function handleApiError(error: unknown): NextResponse {

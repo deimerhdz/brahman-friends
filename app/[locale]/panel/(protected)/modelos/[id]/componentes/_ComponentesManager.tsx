@@ -4,6 +4,10 @@ import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { MATERIALS, MATERIAL_LABELS, type Material } from "@/lib/catalogo/materiales";
 import type { Locale } from "@/lib/i18n/t";
+import {
+  CampoTraducible,
+  type ValorTraducido,
+} from "@/app/[locale]/panel/_components/CampoTraducible";
 
 interface ComponentRow {
   id: string;
@@ -40,6 +44,7 @@ export function ComponentesManager({
 }) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
+  const [name, setName] = useState<ValorTraducido>({ es: "", en: "" });
 
   async function createComponent(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -49,8 +54,7 @@ export function ComponentesManager({
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        nameEs: form.get("nameEs"),
-        nameEn: form.get("nameEn"),
+        name,
         material: form.get("material"),
         customizable: form.get("customizable") === "on",
         layerOrder: Number(form.get("layerOrder") ?? 0),
@@ -61,6 +65,7 @@ export function ComponentesManager({
       return;
     }
     event.currentTarget.reset();
+    setName({ es: "", en: "" });
     router.refresh();
   }
 
@@ -98,14 +103,14 @@ export function ComponentesManager({
   return (
     <div className="flex flex-col gap-8">
       <form onSubmit={createComponent} className="flex flex-wrap items-end gap-3 rounded border border-gray-200 p-4">
-        <label className="flex flex-col gap-1">
-          <span>{labels.nameEs}</span>
-          <input name="nameEs" required className="rounded border border-gray-300 px-2 py-1" />
-        </label>
-        <label className="flex flex-col gap-1">
-          <span>{labels.nameEn}</span>
-          <input name="nameEn" required className="rounded border border-gray-300 px-2 py-1" />
-        </label>
+        <CampoTraducible
+          label={labels.name}
+          value={name}
+          onChange={setName}
+          required
+          defaultLocale={locale}
+          switchLabels={{ es: labels.switchEs, en: labels.switchEn }}
+        />
         <label className="flex flex-col gap-1">
           <span>{labels.material}</span>
           <select name="material" required className="rounded border border-gray-300 px-2 py-1">

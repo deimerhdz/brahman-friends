@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { color } from "@/lib/db/schema";
+import { color, colorTranslation } from "@/lib/db/schema";
 import { getSession } from "@/lib/auth/session";
 import { errors, apiError, handleApiError } from "@/lib/http/errors";
 import { isMaterial } from "@/lib/catalogo/materiales";
+import { validarNombreTraducido } from "@/lib/catalogo/traduccion";
 
 export async function PATCH(
   request: NextRequest,
@@ -18,8 +19,17 @@ export async function PATCH(
     const body = await request.json();
     const patch: Partial<typeof color.$inferInsert> = {};
 
-    if (body.nameEs !== undefined) patch.nameEs = body.nameEs;
-    if (body.nameEn !== undefined) patch.nameEn = body.nameEn;
+    // `name` es opcional en el PATCH, igual que el resto de los campos: se
+    // puede seguir editando solo la disponibilidad sin tocar el nombre. Si
+    // se envía, debe traer ambos idiomas (FR-011).
+    let name: { es: string; en: string } | null = null;
+    if (body.name !== undefined) {
+      name = validarNombreTraducido(body.name);
+      if (!name) {
+        return errors.datosInvalidos();
+      }
+    }
+
     if (body.supplierRef !== undefined) patch.supplierRef = body.supplierRef;
     if (body.sampleImageUrl !== undefined)
       patch.sampleImageUrl = body.sampleImageUrl;
@@ -31,17 +41,35 @@ export async function PATCH(
     }
     if (body.status !== undefined) patch.status = body.status;
 
-    const [updated] = await db
-      .update(color)
-      .set(patch)
-      .where(eq(color.id, id))
-      .returning();
+    // `name` vive en `color_translation`, no en `color`: si es el único
+    // campo enviado, `patch` queda vacío y no hay nada que actualizar en
+    // esta tabla (Drizzle rechaza un `.set({})` vacío).
+    const [updated] =
+      Object.keys(patch).length > 0
+        ? await db.update(color).set(patch).where(eq(color.id, id)).returning()
+        : await db.select().from(color).where(eq(color.id, id)).limit(1);
 
     if (!updated) {
       return NextResponse.json({ error: "no_encontrado" }, { status: 404 });
     }
 
-    return NextResponse.json(updated);
+    if (name) {
+      await Promise.all([
+        db
+          .update(colorTranslation)
+          .set({ name: name.es })
+          .where(and(eq(colorTranslation.colorId, id), eq(colorTranslation.locale, "es"))),
+        db
+          .update(colorTranslation)
+          .set({ name: name.en })
+          .where(and(eq(colorTranslation.colorId, id), eq(colorTranslation.locale, "en"))),
+      ]);
+    }
+
+    return NextResponse.json({
+      ...updated,
+      ...(name ? { nameEs: name.es, nameEn: name.en } : {}),
+    });
   } catch (error) {
     return handleApiError(error);
   }

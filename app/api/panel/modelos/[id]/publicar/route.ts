@@ -6,9 +6,12 @@ import {
   modelView,
   component,
   componentColor,
-  color,
   componentImage,
 } from "@/lib/db/schema";
+import {
+  componentConNombre,
+  colorConNombre,
+} from "@/lib/catalogo/consultas-traducidas";
 import { getSession } from "@/lib/auth/session";
 import { errors, handleApiError, apiError } from "@/lib/http/errors";
 import { checkPublicacion, canPublish } from "@/lib/catalogo/publicacion";
@@ -16,9 +19,9 @@ import { checkPublicacion, canPublish } from "@/lib/catalogo/publicacion";
 async function loadPublicacionInput(modelId: string) {
   const [views, components, links, colors, images] = await Promise.all([
     db.select().from(modelView).where(eq(modelView.modelId, modelId)),
-    db.select().from(component).where(eq(component.modelId, modelId)),
+    componentConNombre().where(eq(component.modelId, modelId)),
     db.select().from(componentColor),
-    db.select().from(color),
+    colorConNombre(),
     db.select().from(componentImage).where(eq(componentImage.modelId, modelId)),
   ]);
 

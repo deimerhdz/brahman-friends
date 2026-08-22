@@ -1,5 +1,4 @@
-import { db } from "@/lib/db";
-import { technique } from "@/lib/db/schema";
+import { techniqueConNombre } from "@/lib/catalogo/consultas-traducidas";
 import { getT, type Locale } from "@/lib/i18n/t";
 import { TecnicasForm } from "./_TecnicasForm";
 
@@ -10,7 +9,7 @@ export default async function TecnicasPage({
 }) {
   const { locale } = await params;
   const t = getT(locale);
-  const techniques = await db.select().from(technique);
+  const techniques = await techniqueConNombre();
 
   return (
     <div>
@@ -19,8 +18,9 @@ export default async function TecnicasPage({
         locale={locale}
         techniques={techniques}
         labels={{
-          nameEs: t("panel.colores.nameEs"),
-          nameEn: t("panel.colores.nameEn"),
+          name: t("common.name"),
+          switchEs: t("panel.switchIdioma.es"),
+          switchEn: t("panel.switchIdioma.en"),
           add: t("common.save"),
           error: t("errors.generic"),
         }}

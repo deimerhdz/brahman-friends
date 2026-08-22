@@ -53,6 +53,10 @@ export const notificationStatusEnum = pgEnum("notification_status", [
   "failed",
 ]);
 
+// Idiomas soportados (mismo conjunto que lib/i18n/t.ts#locales), usado por
+// las tablas de traducción independientes de cada entidad (FR-011).
+export const localeEnum = pgEnum("locale", ["es", "en"]);
+
 // admin_user — FR-057, FR-062
 export const adminUser = pgTable("admin_user", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -65,11 +69,23 @@ export const adminUser = pgTable("admin_user", {
     .defaultNow(),
 });
 
+// customer — Cuenta de cliente, separada de admin_user (FR-002, FR-008, FR-009, FR-010c)
+export const customer = pgTable("customer", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: text("name").notNull(),
+  email: text("email").notNull().unique(),
+  passwordHash: text("password_hash").notNull(),
+  active: boolean("active").notNull().default(true),
+  failedLoginAttempts: integer("failed_login_attempts").notNull().default(0),
+  lockedUntil: timestamp("locked_until", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
 // color — FR-016 a FR-023
 export const color = pgTable("color", {
   id: uuid("id").primaryKey().defaultRandom(),
-  nameEs: text("name_es").notNull(),
-  nameEn: text("name_en").notNull(),
   supplierRef: text("supplier_ref").notNull(),
   material: text("material").notNull(),
   sampleImageUrl: text("sample_image_url").notNull(),
@@ -79,14 +95,23 @@ export const color = pgTable("color", {
     .defaultNow(),
 });
 
+// color_translation — nombre del color por idioma (FR-011)
+export const colorTranslation = pgTable(
+  "color_translation",
+  {
+    colorId: uuid("color_id")
+      .notNull()
+      .references(() => color.id, { onDelete: "cascade" }),
+    locale: localeEnum("locale").notNull(),
+    name: text("name").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.colorId, t.locale] })],
+);
+
 // cap_model — FR-005, FR-011, FR-013
 export const capModel = pgTable("cap_model", {
   id: uuid("id").primaryKey().defaultRandom(),
   code: text("code").notNull().unique(),
-  nameEs: text("name_es").notNull(),
-  nameEn: text("name_en").notNull(),
-  descriptionEs: text("description_es").notNull().default(""),
-  descriptionEn: text("description_en").notNull().default(""),
   status: modelStatusEnum("status").notNull().default("draft"),
   imageWidth: integer("image_width"),
   imageHeight: integer("image_height"),
@@ -95,6 +120,20 @@ export const capModel = pgTable("cap_model", {
     .notNull()
     .defaultNow(),
 });
+
+// cap_model_translation — nombre y descripción del modelo por idioma (FR-011)
+export const capModelTranslation = pgTable(
+  "cap_model_translation",
+  {
+    modelId: uuid("model_id")
+      .notNull()
+      .references(() => capModel.id, { onDelete: "cascade" }),
+    locale: localeEnum("locale").notNull(),
+    name: text("name").notNull(),
+    description: text("description").notNull().default(""),
+  },
+  (t) => [primaryKey({ columns: [t.modelId, t.locale] })],
+);
 
 // model_view — FR-006, FR-008
 export const modelView = pgTable(
@@ -115,13 +154,24 @@ export const component = pgTable("component", {
   modelId: uuid("model_id")
     .notNull()
     .references(() => capModel.id, { onDelete: "cascade" }),
-  nameEs: text("name_es").notNull(),
-  nameEn: text("name_en").notNull(),
   material: text("material").notNull(),
   customizable: boolean("customizable").notNull().default(true),
   layerOrder: integer("layer_order").notNull().default(0),
   defaultColorId: uuid("default_color_id").references(() => color.id),
 });
+
+// component_translation — nombre del componente por idioma (FR-011)
+export const componentTranslation = pgTable(
+  "component_translation",
+  {
+    componentId: uuid("component_id")
+      .notNull()
+      .references(() => component.id, { onDelete: "cascade" }),
+    locale: localeEnum("locale").notNull(),
+    name: text("name").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.componentId, t.locale] })],
+);
 
 // component_color — FR-019, FR-020
 export const componentColor = pgTable(
@@ -211,10 +261,21 @@ export const decorationZone = pgTable(
 // technique / model_technique — FR-036, FR-047
 export const technique = pgTable("technique", {
   id: uuid("id").primaryKey().defaultRandom(),
-  nameEs: text("name_es").notNull(),
-  nameEn: text("name_en").notNull(),
   active: boolean("active").notNull().default(true),
 });
+
+// technique_translation — nombre de la técnica por idioma (FR-011)
+export const techniqueTranslation = pgTable(
+  "technique_translation",
+  {
+    techniqueId: uuid("technique_id")
+      .notNull()
+      .references(() => technique.id, { onDelete: "cascade" }),
+    locale: localeEnum("locale").notNull(),
+    name: text("name").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.techniqueId, t.locale] })],
+);
 
 export const modelTechnique = pgTable(
   "model_technique",

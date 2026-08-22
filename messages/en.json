@@ -14,7 +14,9 @@
     "close": "Close",
     "retry": "Retry",
     "optional": "optional",
-    "required": "required"
+    "required": "required",
+    "name": "Name",
+    "description": "Description"
   },
   "nav": {
     "home": "Home",
@@ -52,6 +54,23 @@
     "password": "Password",
     "loginButton": "Sign in",
     "loginFailed": "Incorrect email or password."
+  },
+  "cuenta": {
+    "loginTitle": "Sign in",
+    "registerTitle": "Create account",
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "loginButton": "Sign in",
+    "registerButton": "Create account",
+    "loginFailed": "Incorrect email or password.",
+    "registerFailed": "We couldn't create the account. Please try again.",
+    "emailTaken": "An account with that email already exists.",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "registerLink": "Sign up",
+    "loginLink": "Sign in",
+    "logout": "Sign out"
   },
   "home": {
     "title": "Design your cap",
@@ -130,12 +149,14 @@
     "anonymizationBody": "Write to us with your request's code and ask for anonymization. The team applies it from the panel; the action can't be undone."
   },
   "panel": {
+    "switchIdioma": {
+      "es": "ES",
+      "en": "EN"
+    },
     "colores": {
       "new": "New color",
       "empty": "No colors yet. Create the first one.",
       "editTitle": "Edit color",
-      "nameEs": "Name in Spanish",
-      "nameEn": "Name in English",
       "supplierRef": "Supplier reference",
       "material": "Material",
       "selectMaterial": "Choose a material",
@@ -153,8 +174,6 @@
       "new": "New model",
       "empty": "No models yet. Create the first one.",
       "code": "Internal code",
-      "descriptionEs": "Description in Spanish",
-      "descriptionEn": "Description in English",
       "status": {
         "draft": "Draft",
         "published": "Published",

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { desc } from "drizzle-orm";
-import { db } from "@/lib/db";
 import { color } from "@/lib/db/schema";
+import { colorConNombre } from "@/lib/catalogo/consultas-traducidas";
 import { getT, type Locale } from "@/lib/i18n/t";
 import { MATERIAL_LABELS, isMaterial } from "@/lib/catalogo/materiales";
 
@@ -12,7 +12,7 @@ export default async function ColoresPage({
 }) {
   const { locale } = await params;
   const t = getT(locale);
-  const colors = await db.select().from(color).orderBy(desc(color.createdAt));
+  const colors = await colorConNombre().orderBy(desc(color.createdAt));
 
   return (
     <div>

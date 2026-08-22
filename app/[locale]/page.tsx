@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { desc, eq } from "drizzle-orm";
-import { db } from "@/lib/db";
 import { capModel } from "@/lib/db/schema";
+import { capModelConNombre } from "@/lib/catalogo/consultas-traducidas";
 import { getT, type Locale } from "@/lib/i18n/t";
 
 // La portada depende de qué modelos están publicados en este momento
@@ -16,9 +16,7 @@ export default async function HomePage({
   const { locale } = await params;
   const t = getT(locale);
 
-  const models = await db
-    .select()
-    .from(capModel)
+  const models = await capModelConNombre()
     .where(eq(capModel.status, "published"))
     .orderBy(desc(capModel.publishedAt));
 

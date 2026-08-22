@@ -14,7 +14,9 @@
     "close": "Cerrar",
     "retry": "Reintentar",
     "optional": "opcional",
-    "required": "obligatorio"
+    "required": "obligatorio",
+    "name": "Nombre",
+    "description": "Descripción"
   },
   "nav": {
     "home": "Inicio",
@@ -52,6 +54,23 @@
     "password": "Contraseña",
     "loginButton": "Ingresar",
     "loginFailed": "Correo o contraseña incorrectos."
+  },
+  "cuenta": {
+    "loginTitle": "Iniciar sesión",
+    "registerTitle": "Crear cuenta",
+    "name": "Nombre",
+    "email": "Correo",
+    "password": "Contraseña",
+    "loginButton": "Ingresar",
+    "registerButton": "Crear cuenta",
+    "loginFailed": "Correo o contraseña incorrectos.",
+    "registerFailed": "No se pudo crear la cuenta. Intentá de nuevo.",
+    "emailTaken": "Ya existe una cuenta con ese correo.",
+    "noAccount": "¿No tenés cuenta?",
+    "hasAccount": "¿Ya tenés cuenta?",
+    "registerLink": "Registrarme",
+    "loginLink": "Ingresar",
+    "logout": "Cerrar sesión"
   },
   "home": {
     "title": "Elegí tu gorra",
@@ -130,12 +149,14 @@
     "anonymizationBody": "Escribinos indicando el código de tu solicitud y pedí la anonimización. El equipo la aplica desde el panel; la acción no se puede revertir."
   },
   "panel": {
+    "switchIdioma": {
+      "es": "ES",
+      "en": "EN"
+    },
     "colores": {
       "new": "Nuevo color",
       "empty": "Todavía no hay colores. Creá el primero.",
       "editTitle": "Editar color",
-      "nameEs": "Nombre en español",
-      "nameEn": "Nombre en inglés",
       "supplierRef": "Referencia del proveedor",
       "material": "Material",
       "selectMaterial": "Elegí un material",
@@ -153,8 +174,6 @@
       "new": "Nuevo modelo",
       "empty": "Todavía no hay modelos. Creá el primero.",
       "code": "Código interno",
-      "descriptionEs": "Descripción en español",
-      "descriptionEn": "Descripción en inglés",
       "status": {
         "draft": "Borrador",
         "published": "Publicado",

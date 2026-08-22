@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { upload } from "@vercel/blob/client";
 import type { Locale } from "@/lib/i18n/t";
 import { MATERIALS, MATERIAL_LABELS } from "@/lib/catalogo/materiales";
+import { CampoTraducible } from "@/app/[locale]/panel/_components/CampoTraducible";
 
 export interface ColorFormValue {
   id?: string;
@@ -53,12 +54,13 @@ export function ColorForm({
     setSaving(true);
     setError(null);
     const isNew = !value.id;
+    const { nameEs, nameEn, ...rest } = value;
     const response = await fetch(
       isNew ? "/api/panel/colores" : `/api/panel/colores/${value.id}`,
       {
         method: isNew ? "POST" : "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(value),
+        body: JSON.stringify({ ...rest, name: { es: nameEs, en: nameEn } }),
       },
     );
     setSaving(false);
@@ -72,24 +74,14 @@ export function ColorForm({
 
   return (
     <form onSubmit={onSubmit} className="flex max-w-lg flex-col gap-4">
-      <label className="flex flex-col gap-1">
-        <span>{labels.nameEs}</span>
-        <input
-          required
-          value={value.nameEs}
-          onChange={(e) => setValue((v) => ({ ...v, nameEs: e.target.value }))}
-          className="rounded border border-gray-300 px-3 py-2"
-        />
-      </label>
-      <label className="flex flex-col gap-1">
-        <span>{labels.nameEn}</span>
-        <input
-          required
-          value={value.nameEn}
-          onChange={(e) => setValue((v) => ({ ...v, nameEn: e.target.value }))}
-          className="rounded border border-gray-300 px-3 py-2"
-        />
-      </label>
+      <CampoTraducible
+        label={labels.name}
+        value={{ es: value.nameEs, en: value.nameEn }}
+        onChange={(v) => setValue((prev) => ({ ...prev, nameEs: v.es, nameEn: v.en }))}
+        required
+        defaultLocale={locale}
+        switchLabels={{ es: labels.switchEs, en: labels.switchEn }}
+      />
       <label className="flex flex-col gap-1">
         <span>{labels.supplierRef}</span>
         <input

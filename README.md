@@ -2,7 +2,9 @@
 
 Herramienta web donde el cliente arma su gorra, la ve y envía una solicitud de cotización. Panel
 protegido por contraseña para el equipo. Ver [specs/001-configurador-gorras/](./specs/001-configurador-gorras/)
-para la especificación completa.
+para la especificación completa. El cliente además puede crear una cuenta e iniciar sesión desde
+la página de inicio, y las traducciones del catálogo viven en tablas independientes por idioma —
+ver [specs/002-login-cliente-traducciones/](./specs/002-login-cliente-traducciones/).
 
 ## Requisitos previos
 
@@ -32,10 +34,13 @@ Copiar `.env.example` a `.env.local` y rellenar. Ningún valor de estos entra al
 
 ```bash
 npm install
-npm run db:migrate          # crea las tablas
+npm run db:migrate          # crea las tablas, incluida la cuenta de cliente y las traducciones
 npm run crear-admin         # pregunta nombre, correo y contraseña del primer usuario del panel
 npm run dev                 # queda en http://localhost:3000
 ```
+
+No hace falta ninguna variable de entorno nueva para el login de cliente ni para las
+traducciones: reutilizan `DATABASE_URL` y `SESSION_SECRET` ya listados arriba.
 
 ## Comprobaciones automáticas
 

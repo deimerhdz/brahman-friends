@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { desc } from "drizzle-orm";
-import { db } from "@/lib/db";
 import { capModel } from "@/lib/db/schema";
+import { capModelConNombre } from "@/lib/catalogo/consultas-traducidas";
 import { getT, type Locale } from "@/lib/i18n/t";
 
 export default async function ModelosPage({
@@ -11,10 +11,7 @@ export default async function ModelosPage({
 }) {
   const { locale } = await params;
   const t = getT(locale);
-  const models = await db
-    .select()
-    .from(capModel)
-    .orderBy(desc(capModel.createdAt));
+  const models = await capModelConNombre().orderBy(desc(capModel.createdAt));
 
   return (
     <div>

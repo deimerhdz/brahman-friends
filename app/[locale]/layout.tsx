@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getT, isLocale, type Locale } from "@/lib/i18n/t";
 import { SelectorIdioma } from "@/app/_components/SelectorIdioma";
 import { SetHtmlLang } from "@/app/_components/SetHtmlLang";
+import { ControlCuenta } from "@/app/_components/ControlCuenta";
 
 export function generateStaticParams() {
   return [{ locale: "es" }, { locale: "en" }];
@@ -27,7 +28,10 @@ export default async function LocaleLayout({
         <Link href={`/${locale}`} className="font-semibold text-brand">
           {t("common.siteName")}
         </Link>
-        <SelectorIdioma locale={locale} label={t("nav.languageSelector")} />
+        <div className="flex items-center gap-4">
+          <ControlCuenta locale={locale} />
+          <SelectorIdioma locale={locale} label={t("nav.languageSelector")} />
+        </div>
       </header>
       <main>{children}</main>
     </>

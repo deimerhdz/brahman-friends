@@ -5,13 +5,17 @@ import {
   modelView,
   component,
   componentColor,
-  color,
   componentImage,
   decorationZone,
   modelSize,
-  technique,
   modelTechnique,
 } from "@/lib/db/schema";
+import {
+  capModelConNombre,
+  colorConNombre,
+  componentConNombre,
+  techniqueConNombre,
+} from "@/lib/catalogo/consultas-traducidas";
 
 const VIEW_ORDER = ["front", "side", "back"] as const;
 
@@ -22,9 +26,7 @@ const VIEW_ORDER = ["front", "side", "back"] as const;
  * para no tener dos versiones de la misma consulta.
  */
 export async function loadModelManifest(modelId: string) {
-  const [model] = await db
-    .select()
-    .from(capModel)
+  const [model] = await capModelConNombre()
     .where(and(eq(capModel.id, modelId), eq(capModel.status, "published")))
     .limit(1);
 
@@ -33,13 +35,13 @@ export async function loadModelManifest(modelId: string) {
   const [views, components, links, colors, images, zones, sizes, techniques, modelTechniques] =
     await Promise.all([
       db.select().from(modelView).where(eq(modelView.modelId, modelId)),
-      db.select().from(component).where(eq(component.modelId, modelId)),
+      componentConNombre().where(eq(component.modelId, modelId)),
       db.select().from(componentColor),
-      db.select().from(color),
+      colorConNombre(),
       db.select().from(componentImage).where(eq(componentImage.modelId, modelId)),
       db.select().from(decorationZone).where(eq(decorationZone.modelId, modelId)),
       db.select().from(modelSize).where(eq(modelSize.modelId, modelId)),
-      db.select().from(technique),
+      techniqueConNombre(),
       db.select().from(modelTechnique).where(eq(modelTechnique.modelId, modelId)),
     ]);
 

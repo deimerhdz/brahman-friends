@@ -6,9 +6,12 @@ import {
   modelView,
   component,
   componentColor,
-  color,
   componentImage,
 } from "@/lib/db/schema";
+import {
+  componentConNombre,
+  colorConNombre,
+} from "@/lib/catalogo/consultas-traducidas";
 import { getT, type Locale } from "@/lib/i18n/t";
 import { CargaMasiva } from "./_CargaMasiva";
 
@@ -25,9 +28,9 @@ export default async function ImagenesPage({
 
   const [views, components, links, colors, images] = await Promise.all([
     db.select().from(modelView).where(eq(modelView.modelId, id)),
-    db.select().from(component).where(eq(component.modelId, id)),
+    componentConNombre().where(eq(component.modelId, id)),
     db.select().from(componentColor),
-    db.select().from(color),
+    colorConNombre(),
     db.select().from(componentImage).where(eq(componentImage.modelId, id)),
   ]);
 

@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { technique } from "@/lib/db/schema";
+import { technique, techniqueTranslation } from "@/lib/db/schema";
 import { getSession } from "@/lib/auth/session";
 import { errors, handleApiError } from "@/lib/http/errors";
+import { validarNombreTraducido } from "@/lib/catalogo/traduccion";
 
 // Alta de técnicas de decoración (FR-036). Lista global; su asociación a un
 // modelo concreto vive en `model_technique`.
@@ -12,21 +13,22 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    if (
-      typeof body.nameEs !== "string" ||
-      !body.nameEs ||
-      typeof body.nameEn !== "string" ||
-      !body.nameEn
-    ) {
+    const name = validarNombreTraducido(body.name);
+    if (!name) {
       return NextResponse.json({ error: "datos_invalidos" }, { status: 400 });
     }
 
-    const [created] = await db
-      .insert(technique)
-      .values({ nameEs: body.nameEs, nameEn: body.nameEn })
-      .returning();
+    const [created] = await db.insert(technique).values({}).returning();
 
-    return NextResponse.json(created, { status: 201 });
+    await db.insert(techniqueTranslation).values([
+      { techniqueId: created.id, locale: "es", name: name.es },
+      { techniqueId: created.id, locale: "en", name: name.en },
+    ]);
+
+    return NextResponse.json(
+      { ...created, nameEs: name.es, nameEn: name.en },
+      { status: 201 },
+    );
   } catch (error) {
     return handleApiError(error);
   }

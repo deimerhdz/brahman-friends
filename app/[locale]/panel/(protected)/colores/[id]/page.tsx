@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
-import { db } from "@/lib/db";
 import { color } from "@/lib/db/schema";
+import { colorConNombre } from "@/lib/catalogo/consultas-traducidas";
 import { getT, type Locale } from "@/lib/i18n/t";
 import { ColorForm, type ColorFormValue } from "./_ColorForm";
 
@@ -23,11 +23,7 @@ export default async function ColorFormPage({
   };
 
   if (id !== "nuevo") {
-    const [existing] = await db
-      .select()
-      .from(color)
-      .where(eq(color.id, id))
-      .limit(1);
+    const [existing] = await colorConNombre().where(eq(color.id, id)).limit(1);
     if (!existing) notFound();
     initial = existing;
   }
@@ -41,8 +37,9 @@ export default async function ColorFormPage({
         locale={locale}
         initial={initial}
         labels={{
-          nameEs: t("panel.colores.nameEs"),
-          nameEn: t("panel.colores.nameEn"),
+          name: t("common.name"),
+          switchEs: t("panel.switchIdioma.es"),
+          switchEn: t("panel.switchIdioma.en"),
           supplierRef: t("panel.colores.supplierRef"),
           material: t("panel.colores.material"),
           selectMaterial: t("panel.colores.selectMaterial"),

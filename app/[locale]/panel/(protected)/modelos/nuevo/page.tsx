@@ -16,10 +16,10 @@ export default async function NuevoModeloPage({
         locale={locale}
         labels={{
           code: t("panel.modelos.code"),
-          nameEs: t("panel.colores.nameEs"),
-          nameEn: t("panel.colores.nameEn"),
-          descriptionEs: t("panel.modelos.descriptionEs"),
-          descriptionEn: t("panel.modelos.descriptionEn"),
+          name: t("common.name"),
+          description: t("common.description"),
+          switchEs: t("panel.switchIdioma.es"),
+          switchEn: t("panel.switchIdioma.en"),
           error: t("errors.generic"),
           save: t("common.save"),
         }}

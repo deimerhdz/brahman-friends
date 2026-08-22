@@ -3,6 +3,10 @@
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import type { Locale } from "@/lib/i18n/t";
+import {
+  CampoTraducible,
+  type ValorTraducido,
+} from "@/app/[locale]/panel/_components/CampoTraducible";
 
 export function NuevoModeloForm({
   locale,
@@ -14,6 +18,11 @@ export function NuevoModeloForm({
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(false);
+  const [name, setName] = useState<ValorTraducido>({ es: "", en: "" });
+  const [description, setDescription] = useState<ValorTraducido>({
+    es: "",
+    en: "",
+  });
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -25,10 +34,8 @@ export function NuevoModeloForm({
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         code: form.get("code"),
-        nameEs: form.get("nameEs"),
-        nameEn: form.get("nameEn"),
-        descriptionEs: form.get("descriptionEs"),
-        descriptionEn: form.get("descriptionEn"),
+        name,
+        description,
       }),
     });
     setSaving(false);
@@ -46,22 +53,22 @@ export function NuevoModeloForm({
         <span>{labels.code}</span>
         <input name="code" required className="rounded border border-gray-300 px-3 py-2" />
       </label>
-      <label className="flex flex-col gap-1">
-        <span>{labels.nameEs}</span>
-        <input name="nameEs" required className="rounded border border-gray-300 px-3 py-2" />
-      </label>
-      <label className="flex flex-col gap-1">
-        <span>{labels.nameEn}</span>
-        <input name="nameEn" required className="rounded border border-gray-300 px-3 py-2" />
-      </label>
-      <label className="flex flex-col gap-1">
-        <span>{labels.descriptionEs}</span>
-        <textarea name="descriptionEs" className="rounded border border-gray-300 px-3 py-2" />
-      </label>
-      <label className="flex flex-col gap-1">
-        <span>{labels.descriptionEn}</span>
-        <textarea name="descriptionEn" className="rounded border border-gray-300 px-3 py-2" />
-      </label>
+      <CampoTraducible
+        label={labels.name}
+        value={name}
+        onChange={setName}
+        required
+        defaultLocale={locale}
+        switchLabels={{ es: labels.switchEs, en: labels.switchEn }}
+      />
+      <CampoTraducible
+        label={labels.description}
+        value={description}
+        onChange={setDescription}
+        multiline
+        defaultLocale={locale}
+        switchLabels={{ es: labels.switchEs, en: labels.switchEn }}
+      />
       {error && <p className="text-sm text-red-600">{labels.error}</p>}
       <button
         type="submit"

@@ -1,7 +1,11 @@
 import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
-import { capModel, component, color, componentColor } from "@/lib/db/schema";
+import { capModel, component, componentColor } from "@/lib/db/schema";
+import {
+  componentConNombre,
+  colorConNombre,
+} from "@/lib/catalogo/consultas-traducidas";
 import { getT, type Locale } from "@/lib/i18n/t";
 import { ComponentesManager } from "./_ComponentesManager";
 
@@ -17,8 +21,8 @@ export default async function ComponentesPage({
   if (!model) notFound();
 
   const [components, colors, links] = await Promise.all([
-    db.select().from(component).where(eq(component.modelId, id)),
-    db.select().from(color),
+    componentConNombre().where(eq(component.modelId, id)),
+    colorConNombre(),
     db.select().from(componentColor),
   ]);
 
@@ -37,8 +41,9 @@ export default async function ComponentesPage({
         colors={colors}
         enabledByComponent={enabledByComponent}
         labels={{
-          nameEs: t("panel.colores.nameEs"),
-          nameEn: t("panel.colores.nameEn"),
+          name: t("common.name"),
+          switchEs: t("panel.switchIdioma.es"),
+          switchEn: t("panel.switchIdioma.en"),
           material: t("panel.colores.material"),
           layerOrder: t("panel.modelos.layerOrder"),
           customizable: t("panel.modelos.customizable"),

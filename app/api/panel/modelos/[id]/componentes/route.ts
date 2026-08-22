@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { component } from "@/lib/db/schema";
+import { component, componentTranslation } from "@/lib/db/schema";
 import { getSession } from "@/lib/auth/session";
 import { errors, handleApiError } from "@/lib/http/errors";
 import { isMaterial } from "@/lib/catalogo/materiales";
+import { validarNombreTraducido } from "@/lib/catalogo/traduccion";
 
 // Alta de componentes (FR-007): nombre bilingüe, material, personalizable,
 // orden de capa. El color por defecto se fija después, entre los colores
@@ -18,12 +19,10 @@ export async function POST(
   try {
     const { id: modelId } = await params;
     const body = await request.json();
+    const name = validarNombreTraducido(body.name);
 
     if (
-      typeof body.nameEs !== "string" ||
-      !body.nameEs ||
-      typeof body.nameEn !== "string" ||
-      !body.nameEn ||
+      !name ||
       typeof body.material !== "string" ||
       !isMaterial(body.material)
     ) {
@@ -34,15 +33,21 @@ export async function POST(
       .insert(component)
       .values({
         modelId,
-        nameEs: body.nameEs,
-        nameEn: body.nameEn,
         material: body.material,
         customizable: body.customizable !== false,
         layerOrder: Number.isFinite(body.layerOrder) ? body.layerOrder : 0,
       })
       .returning();
 
-    return NextResponse.json(created, { status: 201 });
+    await db.insert(componentTranslation).values([
+      { componentId: created.id, locale: "es", name: name.es },
+      { componentId: created.id, locale: "en", name: name.en },
+    ]);
+
+    return NextResponse.json(
+      { ...created, nameEs: name.es, nameEn: name.en },
+      { status: 201 },
+    );
   } catch (error) {
     return handleApiError(error);
   }

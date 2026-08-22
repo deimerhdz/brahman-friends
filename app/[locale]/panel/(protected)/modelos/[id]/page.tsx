@@ -2,7 +2,11 @@ import Link from "next/link";
 import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
-import { capModel, technique, modelTechnique } from "@/lib/db/schema";
+import { capModel, modelTechnique } from "@/lib/db/schema";
+import {
+  capModelConNombre,
+  techniqueConNombre,
+} from "@/lib/catalogo/consultas-traducidas";
 import { getT, type Locale } from "@/lib/i18n/t";
 import { EstadoPublicacion } from "./_components/EstadoPublicacion";
 import { TecnicasModelo } from "./_components/TecnicasModelo";
@@ -15,11 +19,11 @@ export default async function ModeloHubPage({
   const { locale, id } = await params;
   const t = getT(locale);
 
-  const [model] = await db.select().from(capModel).where(eq(capModel.id, id)).limit(1);
+  const [model] = await capModelConNombre().where(eq(capModel.id, id)).limit(1);
   if (!model) notFound();
 
   const [techniques, links] = await Promise.all([
-    db.select().from(technique),
+    techniqueConNombre(),
     db.select().from(modelTechnique).where(eq(modelTechnique.modelId, id)),
   ]);
 
