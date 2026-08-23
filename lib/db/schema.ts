@@ -173,7 +173,8 @@ export const componentTranslation = pgTable(
   (t) => [primaryKey({ columns: [t.componentId, t.locale] })],
 );
 
-// component_color — FR-019, FR-020
+// component_color — FR-019, FR-020. La vista es parte de la clave: un color
+// se habilita vista por vista para un componente, no las tres a la vez.
 export const componentColor = pgTable(
   "component_color",
   {
@@ -183,8 +184,9 @@ export const componentColor = pgTable(
     colorId: uuid("color_id")
       .notNull()
       .references(() => color.id, { onDelete: "restrict" }),
+    view: viewEnum("view").notNull(),
   },
-  (t) => [primaryKey({ columns: [t.componentId, t.colorId] })],
+  (t) => [primaryKey({ columns: [t.componentId, t.colorId, t.view] })],
 );
 
 // component_image — FR-009, FR-011

@@ -1,13 +1,20 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useMemo, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { MATERIALS, MATERIAL_LABELS, type Material } from "@/lib/catalogo/materiales";
+import {
+  MATERIALS,
+  MATERIAL_LABELS,
+  type Material,
+} from "@/lib/catalogo/materiales";
 import type { Locale } from "@/lib/i18n/t";
 import {
   CampoTraducible,
   type ValorTraducido,
 } from "@/app/[locale]/panel/_components/CampoTraducible";
+import { ColorVariante } from "./_ColorVariante";
+
+type View = "front" | "side" | "back";
 
 interface ComponentRow {
   id: string;
@@ -27,19 +34,30 @@ interface ColorRow {
   status: string;
 }
 
+interface Cargada {
+  componentId: string;
+  colorId: string;
+  view: View;
+  imageUrl: string;
+}
+
 export function ComponentesManager({
   locale,
   modelId,
   components,
   colors,
+  activeViews,
   enabledByComponent,
+  cargadas,
   labels,
 }: {
   locale: Locale;
   modelId: string;
   components: ComponentRow[];
   colors: ColorRow[];
-  enabledByComponent: Record<string, string[]>;
+  activeViews: View[];
+  enabledByComponent: Record<string, { colorId: string; views: View[] }[]>;
+  cargadas: Cargada[];
   labels: Record<string, string>;
 }) {
   const router = useRouter();
@@ -51,6 +69,17 @@ export function ComponentesManager({
   const [editLayerOrder, setEditLayerOrder] = useState(0);
   const [editCustomizable, setEditCustomizable] = useState(true);
   const [saving, setSaving] = useState(false);
+
+  const imagesByComponentColor = useMemo(() => {
+    const map = new Map<string, Partial<Record<View, string>>>();
+    for (const c of cargadas) {
+      const key = `${c.componentId}:${c.colorId}`;
+      const entry = map.get(key) ?? {};
+      entry[c.view] = c.imageUrl;
+      map.set(key, entry);
+    }
+    return map;
+  }, [cargadas]);
 
   async function createComponent(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -73,28 +102,6 @@ export function ComponentesManager({
     }
     formEl.reset();
     setName({ es: "", en: "" });
-    router.refresh();
-  }
-
-  async function toggleColor(componentId: string, colorId: string, enable: boolean) {
-    setError(null);
-    const url = `/api/panel/componentes/${componentId}/colores${
-      enable ? "" : `?colorId=${colorId}`
-    }`;
-    const response = await fetch(url, {
-      method: enable ? "POST" : "DELETE",
-      headers: enable ? { "Content-Type": "application/json" } : undefined,
-      body: enable ? JSON.stringify({ colorId }) : undefined,
-    });
-    if (!response.ok) {
-      const body = await response.json().catch(() => ({}));
-      setError(
-        body.error === "material_no_coincide"
-          ? labels.materialMismatch
-          : labels.error,
-      );
-      return;
-    }
     router.refresh();
   }
 
@@ -197,7 +204,12 @@ export function ComponentesManager({
           />
         </label>
         <label className="flex items-center gap-2 font-body-md text-body-md text-on-surface">
-          <input name="customizable" type="checkbox" defaultChecked className="accent-primary" />
+          <input
+            name="customizable"
+            type="checkbox"
+            defaultChecked
+            className="accent-primary"
+          />
           <span>{labels.customizable}</span>
         </label>
         <button
@@ -286,7 +298,10 @@ export function ComponentesManager({
                 <h2 className="font-body-md text-body-md font-semibold text-on-surface">
                   {locale === "es" ? comp.nameEs : comp.nameEn}{" "}
                   <span className="font-label-caps text-label-caps text-on-surface-variant">
-                    ({MATERIAL_LABELS[comp.material as Material]?.[locale] ?? comp.material})
+                    (
+                    {MATERIAL_LABELS[comp.material as Material]?.[locale] ??
+                      comp.material}
+                    )
                   </span>
                 </h2>
                 <div className="flex items-center gap-2">
@@ -295,7 +310,9 @@ export function ComponentesManager({
                     onClick={() => startEdit(comp)}
                     className="flex items-center gap-1 rounded border border-outline-variant px-3 py-1.5 font-label-caps text-label-caps text-on-surface transition-colors hover:border-primary hover:text-primary"
                   >
-                    <span className="material-symbols-outlined text-[18px]">edit</span>
+                    <span className="material-symbols-outlined text-[18px]">
+                      edit
+                    </span>
                     {labels.edit}
                   </button>
                   <button
@@ -303,7 +320,9 @@ export function ComponentesManager({
                     onClick={() => deleteComponent(comp.id)}
                     className="flex items-center gap-1 rounded border border-outline-variant px-3 py-1.5 font-label-caps text-label-caps text-error transition-colors hover:border-error"
                   >
-                    <span className="material-symbols-outlined text-[18px]">delete</span>
+                    <span className="material-symbols-outlined text-[18px]">
+                      delete
+                    </span>
                     {labels.delete}
                   </button>
                 </div>
@@ -315,35 +334,32 @@ export function ComponentesManager({
               </p>
             )}
             {comp.customizable && (
-              <div className="mt-3 flex flex-col gap-2">
-                {colors.map((c) => {
-                  const isEnabled = enabled.includes(c.id);
-                  return (
-                    <div key={c.id} className="flex items-center gap-3">
-                      <label className="flex items-center gap-2 font-body-md text-body-md text-on-surface">
-                        <input
-                          type="checkbox"
-                          checked={isEnabled}
-                          onChange={(e) => toggleColor(comp.id, c.id, e.target.checked)}
-                          className="accent-primary"
-                        />
-                        <span>{locale === "es" ? c.nameEs : c.nameEn}</span>
-                      </label>
-                      {isEnabled && (
-                        <label className="flex items-center gap-1 font-label-caps text-label-caps text-on-surface-variant">
-                          <input
-                            type="radio"
-                            name={`default-${comp.id}`}
-                            checked={comp.defaultColorId === c.id}
-                            onChange={() => setDefaultColor(comp.id, c.id)}
-                            className="accent-primary"
-                          />
-                          {labels.default}
-                        </label>
-                      )}
-                    </div>
-                  );
-                })}
+              <div className="mt-3 flex flex-col gap-3">
+                {colors
+                  .filter((c) => c.material === comp.material)
+                  .map((c) => {
+                    const requiredViews =
+                      enabled.find((e) => e.colorId === c.id)?.views ?? [];
+                    return (
+                      <ColorVariante
+                        key={c.id}
+                        modelId={modelId}
+                        componentId={comp.id}
+                        color={{
+                          id: c.id,
+                          nameEs: locale === "es" ? c.nameEs : c.nameEn,
+                        }}
+                        activeViews={activeViews}
+                        requiredViews={requiredViews}
+                        images={
+                          imagesByComponentColor.get(`${comp.id}:${c.id}`) ?? {}
+                        }
+                        isDefault={comp.defaultColorId === c.id}
+                        onSetDefault={() => setDefaultColor(comp.id, c.id)}
+                        labels={labels}
+                      />
+                    );
+                  })}
               </div>
             )}
           </div>

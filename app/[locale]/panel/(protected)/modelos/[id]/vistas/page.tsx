@@ -56,7 +56,6 @@ export default async function VistasPage({
           uploadSuccess: t("common.uploadSuccess"),
           retry: t("common.retry"),
           error: t("errors.generic"),
-          dimensionMismatch: t("panel.modelos.dimensionMismatch"),
         }}
       />
     </div>

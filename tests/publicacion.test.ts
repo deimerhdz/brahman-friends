@@ -28,11 +28,18 @@ function baseInput(): PublicacionInput {
       },
     ],
     componentColors: [
-      { componentId: "corona", colorId: "azul" },
-      { componentId: "corona", colorId: "rojo" },
+      { componentId: "corona", colorId: "azul", view: "front" },
+      { componentId: "corona", colorId: "azul", view: "side" },
+      { componentId: "corona", colorId: "rojo", view: "front" },
+      { componentId: "corona", colorId: "rojo", view: "side" },
     ],
     colors: [
-      { id: "azul", nameEs: "Azul Rey", nameEn: "Royal Blue", status: "available" },
+      {
+        id: "azul",
+        nameEs: "Azul Rey",
+        nameEn: "Royal Blue",
+        status: "available",
+      },
       { id: "rojo", nameEs: "Rojo", nameEn: "Red", status: "available" },
     ],
     images: [
@@ -84,9 +91,7 @@ describe("lib/catalogo/publicacion — qué falta para publicar (FR-012, RN2, RN
   it("un componente no personalizable nunca exige imágenes por color", () => {
     const input = baseInput();
     const result = checkPublicacion(input);
-    expect(
-      result.missing.some((m) => m.component === "Botón"),
-    ).toBe(false);
+    expect(result.missing.some((m) => m.component === "Botón")).toBe(false);
   });
 
   it("el color por defecto debe estar entre los habilitados y disponibles (RN9)", () => {
@@ -96,5 +101,18 @@ describe("lib/catalogo/publicacion — qué falta para publicar (FR-012, RN2, RN
     );
     const result = checkPublicacion(input);
     expect(result.componentsWithoutColors).toEqual(["Corona"]);
+  });
+
+  it("un color puede requerir menos vistas que las activas del modelo, sin generar faltantes para las que no eligió", () => {
+    const input = baseInput();
+    input.componentColors = input.componentColors.filter(
+      (cc) => !(cc.colorId === "rojo" && cc.view === "side"),
+    );
+    input.images = input.images.filter(
+      (img) => !(img.colorId === "rojo" && img.view === "side"),
+    );
+    const result = checkPublicacion(input);
+    expect(result.missing).toEqual([]);
+    expect(canPublish(result)).toBe(true);
   });
 });

@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { capModel, modelView } from "@/lib/db/schema";
 import { getSession } from "@/lib/auth/session";
 import { errors, handleApiError, apiError } from "@/lib/http/errors";
-import { dimensionsMatch } from "@/lib/media/dimensiones";
+import { deletePublicFile } from "@/lib/media/storage";
 
 const VIEWS = ["front", "side", "back"] as const;
 
@@ -31,9 +31,13 @@ export async function POST(
     }
 
     if (!active) {
-      await db
+      const [removed] = await db
         .delete(modelView)
-        .where(and(eq(modelView.modelId, modelId), eq(modelView.view, view)));
+        .where(and(eq(modelView.modelId, modelId), eq(modelView.view, view)))
+        .returning({ baseImageUrl: modelView.baseImageUrl });
+      if (removed?.baseImageUrl) {
+        await deletePublicFile(removed.baseImageUrl).catch(() => {});
+      }
       return new NextResponse(null, { status: 204 });
     }
 
@@ -48,14 +52,7 @@ export async function POST(
       if (!model) {
         return NextResponse.json({ error: "no_encontrado" }, { status: 404 });
       }
-      const expected =
-        model.imageWidth && model.imageHeight
-          ? { width: model.imageWidth, height: model.imageHeight }
-          : null;
-      if (expected && !dimensionsMatch(expected, { width: body.width, height: body.height })) {
-        return apiError(422, "dimensiones_no_coinciden", { expected });
-      }
-      if (!expected) {
+      if (!model.imageWidth || !model.imageHeight) {
         await db
           .update(capModel)
           .set({ imageWidth: body.width, imageHeight: body.height })
@@ -70,6 +67,13 @@ export async function POST(
       .limit(1);
 
     if (existing) {
+      if (
+        baseImageUrl &&
+        existing.baseImageUrl &&
+        existing.baseImageUrl !== baseImageUrl
+      ) {
+        await deletePublicFile(existing.baseImageUrl).catch(() => {});
+      }
       const [updated] = await db
         .update(modelView)
         .set({ baseImageUrl: baseImageUrl ?? existing.baseImageUrl })

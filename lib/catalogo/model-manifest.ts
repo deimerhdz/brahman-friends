@@ -32,18 +32,27 @@ export async function loadModelManifest(modelId: string) {
 
   if (!model) return null;
 
-  const [views, components, links, colors, images, zones, sizes, techniques, modelTechniques] =
-    await Promise.all([
-      db.select().from(modelView).where(eq(modelView.modelId, modelId)),
-      componentConNombre().where(eq(component.modelId, modelId)),
-      db.select().from(componentColor),
-      colorConNombre(),
-      db.select().from(componentImage).where(eq(componentImage.modelId, modelId)),
-      db.select().from(decorationZone).where(eq(decorationZone.modelId, modelId)),
-      db.select().from(modelSize).where(eq(modelSize.modelId, modelId)),
-      techniqueConNombre(),
-      db.select().from(modelTechnique).where(eq(modelTechnique.modelId, modelId)),
-    ]);
+  const [
+    views,
+    components,
+    links,
+    colors,
+    images,
+    zones,
+    sizes,
+    techniques,
+    modelTechniques,
+  ] = await Promise.all([
+    db.select().from(modelView).where(eq(modelView.modelId, modelId)),
+    componentConNombre().where(eq(component.modelId, modelId)),
+    db.select().from(componentColor),
+    colorConNombre(),
+    db.select().from(componentImage).where(eq(componentImage.modelId, modelId)),
+    db.select().from(decorationZone).where(eq(decorationZone.modelId, modelId)),
+    db.select().from(modelSize).where(eq(modelSize.modelId, modelId)),
+    techniqueConNombre(),
+    db.select().from(modelTechnique).where(eq(modelTechnique.modelId, modelId)),
+  ]);
 
   const colorsById = new Map(colors.map((c) => [c.id, c]));
   const sortedViews = [...views].sort(
@@ -54,15 +63,21 @@ export async function loadModelManifest(modelId: string) {
     .slice()
     .sort((a, b) => a.layerOrder - b.layerOrder)
     .map((comp) => {
-      const enabledColorIds = links
-        .filter((l) => l.componentId === comp.id)
-        .map((l) => l.colorId);
+      const enabledColorIds = [
+        ...new Set(
+          links.filter((l) => l.componentId === comp.id).map((l) => l.colorId),
+        ),
+      ];
 
       const compColors = enabledColorIds
         .map((id) => colorsById.get(id))
         .filter((c): c is NonNullable<typeof c> => !!c)
         .sort((a, b) =>
-          a.id === comp.defaultColorId ? -1 : b.id === comp.defaultColorId ? 1 : 0,
+          a.id === comp.defaultColorId
+            ? -1
+            : b.id === comp.defaultColorId
+              ? 1
+              : 0,
         )
         .map((c) => ({
           id: c.id,
@@ -73,7 +88,9 @@ export async function loadModelManifest(modelId: string) {
           status: c.status,
           images: Object.fromEntries(
             images
-              .filter((img) => img.componentId === comp.id && img.colorId === c.id)
+              .filter(
+                (img) => img.componentId === comp.id && img.colorId === c.id,
+              )
               .map((img) => [img.view, img.imageUrl]),
           ) as Partial<Record<"front" | "side" | "back", string>>,
         }));
@@ -126,4 +143,6 @@ export async function loadModelManifest(modelId: string) {
   };
 }
 
-export type ModelManifest = NonNullable<Awaited<ReturnType<typeof loadModelManifest>>>;
+export type ModelManifest = NonNullable<
+  Awaited<ReturnType<typeof loadModelManifest>>
+>;

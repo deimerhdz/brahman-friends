@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { eq, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { capModel, componentImage } from "@/lib/db/schema";
 import { getSession } from "@/lib/auth/session";
-import { errors, apiError, handleApiError } from "@/lib/http/errors";
-import { findMismatched } from "@/lib/media/dimensiones";
+import { errors, handleApiError } from "@/lib/http/errors";
+import { deletePublicFile } from "@/lib/media/storage";
 
 interface IncomingImage {
   componentId: string;
@@ -15,9 +15,7 @@ interface IncomingImage {
   height: number;
 }
 
-// Registro por lotes de la carga masiva (FR-009, FR-010). Se rechaza el lote
-// entero si alguna dimensión no coincide, indicando cuáles (FR-011, SC-024) —
-// así el administrador nunca queda con un modelo a medio cargar sin saberlo.
+// Registro por lotes de la carga masiva (FR-009, FR-010).
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -42,31 +40,28 @@ export async function POST(
       return NextResponse.json({ error: "no_encontrado" }, { status: 404 });
     }
 
-    const expected =
-      model.imageWidth && model.imageHeight
-        ? { width: model.imageWidth, height: model.imageHeight }
-        : null;
-    const { expected: base, mismatched } = findMismatched(images, expected);
-
-    if (mismatched.length > 0) {
-      return apiError(422, "dimensiones_no_coinciden", {
-        expected: base,
-        mismatched: mismatched.map((m) => ({
-          componentId: m.componentId,
-          colorId: m.colorId,
-          view: m.view,
-          width: m.width,
-          height: m.height,
-        })),
-      });
-    }
-
-    if (!expected && base) {
+    if (!model.imageWidth || !model.imageHeight) {
       await db
         .update(capModel)
-        .set({ imageWidth: base.width, imageHeight: base.height })
+        .set({ imageWidth: images[0].width, imageHeight: images[0].height })
         .where(eq(capModel.id, modelId));
     }
+
+    const existing = await db
+      .select({
+        componentId: componentImage.componentId,
+        colorId: componentImage.colorId,
+        view: componentImage.view,
+        imageUrl: componentImage.imageUrl,
+      })
+      .from(componentImage)
+      .where(eq(componentImage.modelId, modelId));
+    const existingByKey = new Map(
+      existing.map((e) => [
+        `${e.componentId}:${e.colorId}:${e.view}`,
+        e.imageUrl,
+      ]),
+    );
 
     const inserted = await db
       .insert(componentImage)
@@ -96,7 +91,60 @@ export async function POST(
       })
       .returning();
 
+    const oldUrlsToDelete = images.flatMap((img) => {
+      const oldUrl = existingByKey.get(
+        `${img.componentId}:${img.colorId}:${img.view}`,
+      );
+      return oldUrl && oldUrl !== img.url ? [oldUrl] : [];
+    });
+    await Promise.all(
+      oldUrlsToDelete.map((url) => deletePublicFile(url).catch(() => {})),
+    );
+
     return NextResponse.json({ inserted: inserted.length }, { status: 201 });
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
+// Borra una imagen de componente puntual (componente + color + vista),
+// dejándola de nuevo como "falta". Borra también el archivo en R2 para no
+// dejarlo huérfano.
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const session = await getSession();
+  if (!session) return errors.noAutorizado();
+
+  try {
+    const { id: modelId } = await params;
+    const componentId = request.nextUrl.searchParams.get("componentId");
+    const colorId = request.nextUrl.searchParams.get("colorId");
+    const view = request.nextUrl.searchParams.get("view");
+    if (!componentId || !colorId || !view) {
+      return NextResponse.json({ error: "datos_invalidos" }, { status: 400 });
+    }
+
+    const [deleted] = await db
+      .delete(componentImage)
+      .where(
+        and(
+          eq(componentImage.modelId, modelId),
+          eq(componentImage.componentId, componentId),
+          eq(componentImage.colorId, colorId),
+          eq(componentImage.view, view as "front" | "side" | "back"),
+        ),
+      )
+      .returning({ imageUrl: componentImage.imageUrl });
+
+    if (!deleted) {
+      return NextResponse.json({ error: "no_encontrado" }, { status: 404 });
+    }
+
+    await deletePublicFile(deleted.imageUrl).catch(() => {});
+
+    return new NextResponse(null, { status: 204 });
   } catch (error) {
     return handleApiError(error);
   }

@@ -28,8 +28,8 @@ export interface PublicacionInput {
   activeViews: View[];
   viewsWithBaseImage: View[];
   components: PublicacionComponente[];
-  /** Colores habilitados por componente (FR-019). */
-  componentColors: { componentId: string; colorId: string }[];
+  /** Colores habilitados por componente, vista por vista (FR-019). */
+  componentColors: { componentId: string; colorId: string; view: View }[];
   colors: PublicacionColor[];
   /** Imágenes ya cargadas por componente/color/vista. */
   images: { componentId: string; colorId: string; view: View }[];
@@ -55,7 +55,9 @@ export function canPublish(result: PublicacionResultado): boolean {
   );
 }
 
-export function checkPublicacion(input: PublicacionInput): PublicacionResultado {
+export function checkPublicacion(
+  input: PublicacionInput,
+): PublicacionResultado {
   const colorsById = new Map(input.colors.map((c) => [c.id, c]));
   const imageKeys = new Set(
     input.images.map((img) => `${img.componentId}:${img.colorId}:${img.view}`),
@@ -71,9 +73,13 @@ export function checkPublicacion(input: PublicacionInput): PublicacionResultado 
   for (const component of input.components) {
     if (!component.customizable) continue;
 
-    const enabledColorIds = input.componentColors
-      .filter((cc) => cc.componentId === component.id)
-      .map((cc) => cc.colorId);
+    const enabledColorIds = [
+      ...new Set(
+        input.componentColors
+          .filter((cc) => cc.componentId === component.id)
+          .map((cc) => cc.colorId),
+      ),
+    ];
 
     const availableEnabledColors = enabledColorIds
       .map((id) => colorsById.get(id))
@@ -92,7 +98,14 @@ export function checkPublicacion(input: PublicacionInput): PublicacionResultado 
     for (const colorId of enabledColorIds) {
       const c = colorsById.get(colorId);
       if (!c) continue;
-      for (const view of input.activeViews) {
+      const requiredViews = input.componentColors
+        .filter(
+          (cc) => cc.componentId === component.id && cc.colorId === colorId,
+        )
+        .map((cc) => cc.view)
+        // defensivo: ignora vistas que ya no están activas en el modelo
+        .filter((view) => input.activeViews.includes(view));
+      for (const view of requiredViews) {
         if (!imageKeys.has(`${component.id}:${colorId}:${view}`)) {
           missing.push({ component: component.nameEs, color: c.nameEs, view });
         }

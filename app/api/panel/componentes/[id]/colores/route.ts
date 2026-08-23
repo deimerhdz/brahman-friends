@@ -1,12 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { and, eq } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { component, componentColor, color } from "@/lib/db/schema";
+import {
+  component,
+  componentColor,
+  color,
+  componentImage,
+  modelView,
+} from "@/lib/db/schema";
 import { getSession } from "@/lib/auth/session";
 import { errors, apiError, handleApiError } from "@/lib/http/errors";
+import { deletePublicFile } from "@/lib/media/storage";
 
-// Habilita un color en un componente. El material del color debe coincidir
-// con el del componente, o se rechaza (FR-019, RN6, SC-004).
+const VIEWS = ["front", "side", "back"] as const;
+
+// Habilita un color en un componente para una vista puntual (FR-019, RN6,
+// SC-004): el material del color debe coincidir con el del componente, y la
+// vista debe estar activa en el modelo, o se rechaza.
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -16,17 +26,28 @@ export async function POST(
 
   try {
     const { id: componentId } = await params;
-    const { colorId } = await request.json();
-    if (typeof colorId !== "string" || !colorId) {
+    const body = await request.json();
+    const colorId = body.colorId;
+    if (
+      typeof colorId !== "string" ||
+      !colorId ||
+      typeof body.view !== "string" ||
+      !VIEWS.includes(body.view as (typeof VIEWS)[number])
+    ) {
       return NextResponse.json({ error: "datos_invalidos" }, { status: 400 });
     }
+    const view = body.view as (typeof VIEWS)[number];
 
     const [comp] = await db
       .select()
       .from(component)
       .where(eq(component.id, componentId))
       .limit(1);
-    const [col] = await db.select().from(color).where(eq(color.id, colorId)).limit(1);
+    const [col] = await db
+      .select()
+      .from(color)
+      .where(eq(color.id, colorId))
+      .limit(1);
 
     if (!comp || !col) {
       return NextResponse.json({ error: "no_encontrado" }, { status: 404 });
@@ -38,9 +59,18 @@ export async function POST(
       });
     }
 
+    const [activeView] = await db
+      .select()
+      .from(modelView)
+      .where(and(eq(modelView.modelId, comp.modelId), eq(modelView.view, view)))
+      .limit(1);
+    if (!activeView) {
+      return apiError(422, "vista_no_activa");
+    }
+
     await db
       .insert(componentColor)
-      .values({ componentId, colorId })
+      .values({ componentId, colorId, view })
       .onConflictDoNothing();
 
     return new NextResponse(null, { status: 204 });
@@ -49,6 +79,11 @@ export async function POST(
   }
 }
 
+// Deshabilita un color en un componente: con `view`, solo esa vista puntual
+// (y su imagen, si existe); sin `view`, la variante completa (todas sus
+// vistas). Borra también las imágenes ya cargadas y sus archivos en R2 — si
+// no, quedan huérfanas: ya no se ven en ningún lado pero siguen ocupando
+// lugar.
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -59,18 +94,46 @@ export async function DELETE(
   try {
     const { id: componentId } = await params;
     const colorId = request.nextUrl.searchParams.get("colorId");
+    const rawView = request.nextUrl.searchParams.get("view");
     if (!colorId) {
       return NextResponse.json({ error: "datos_invalidos" }, { status: 400 });
     }
+    if (
+      rawView !== null &&
+      !VIEWS.includes(rawView as (typeof VIEWS)[number])
+    ) {
+      return NextResponse.json({ error: "datos_invalidos" }, { status: 400 });
+    }
+    const view = rawView as (typeof VIEWS)[number] | null;
 
+    const pairCondition = and(
+      eq(componentImage.componentId, componentId),
+      eq(componentImage.colorId, colorId),
+    );
+    const images = await db
+      .delete(componentImage)
+      .where(
+        view
+          ? and(pairCondition, eq(componentImage.view, view))
+          : pairCondition,
+      )
+      .returning({ imageUrl: componentImage.imageUrl });
+
+    const colorViewCondition = and(
+      eq(componentColor.componentId, componentId),
+      eq(componentColor.colorId, colorId),
+    );
     await db
       .delete(componentColor)
       .where(
-        and(
-          eq(componentColor.componentId, componentId),
-          eq(componentColor.colorId, colorId),
-        ),
+        view
+          ? and(colorViewCondition, eq(componentColor.view, view))
+          : colorViewCondition,
       );
+
+    await Promise.all(
+      images.map((img) => deletePublicFile(img.imageUrl).catch(() => {})),
+    );
 
     return new NextResponse(null, { status: 204 });
   } catch (error) {

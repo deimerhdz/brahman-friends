@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { SubidaArchivo } from "@/app/[locale]/panel/_components/SubidaArchivo";
+import { leerDimensiones } from "@/lib/media/leer-dimensiones";
 
 const VIEWS = ["front", "side", "back"] as const;
 type View = (typeof VIEWS)[number];
@@ -49,7 +50,7 @@ export function VistasForm({
     setBusy(view);
     setError(null);
     try {
-      const dims = await readDimensions(file);
+      const dims = await leerDimensiones(file);
       const response = await fetch(`/api/panel/modelos/${modelId}/vistas`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -62,12 +63,7 @@ export function VistasForm({
         }),
       });
       if (!response.ok) {
-        const body = await response.json().catch(() => ({}));
-        setError(
-          body.error === "dimensiones_no_coinciden"
-            ? labels.dimensionMismatch
-            : labels.error,
-        );
+        setError(labels.error);
         return;
       }
       setImages((v) => ({ ...v, [view]: url }));
@@ -131,20 +127,4 @@ export function VistasForm({
       {error && <p className="font-body-md text-body-md text-error">{error}</p>}
     </div>
   );
-}
-
-function readDimensions(file: File): Promise<{ width: number; height: number }> {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    const url = URL.createObjectURL(file);
-    img.onload = () => {
-      URL.revokeObjectURL(url);
-      resolve({ width: img.naturalWidth, height: img.naturalHeight });
-    };
-    img.onerror = () => {
-      URL.revokeObjectURL(url);
-      reject(new Error("no se pudo leer la imagen"));
-    };
-    img.src = url;
-  });
 }
