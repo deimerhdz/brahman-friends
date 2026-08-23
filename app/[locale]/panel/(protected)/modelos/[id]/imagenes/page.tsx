@@ -13,7 +13,7 @@ import {
   colorConNombre,
 } from "@/lib/catalogo/consultas-traducidas";
 import { getT, type Locale } from "@/lib/i18n/t";
-import { CargaMasiva } from "./_CargaMasiva";
+import { SubidaManual } from "./_SubidaManual";
 import { PanelHeader } from "../../../_PanelHeader";
 
 export default async function ImagenesPage({
@@ -56,7 +56,7 @@ export default async function ImagenesPage({
         backHref={`/${locale}/panel/modelos/${id}`}
         backLabel={t("common.back")}
       />
-      <CargaMasiva
+      <SubidaManual
         modelId={id}
         activeViews={views.map((v) => v.view)}
         componentes={componentes}
@@ -65,27 +65,26 @@ export default async function ImagenesPage({
           colorId: i.colorId,
           view: i.view,
         }))}
-        expected={
-          model.imageWidth && model.imageHeight
-            ? { width: model.imageWidth, height: model.imageHeight }
-            : null
-        }
         labels={{
-          dropHere: t("panel.modelos.dropHere"),
-          reading: t("panel.modelos.reading"),
-          matchedCount: t("panel.modelos.matchedCount"),
-          dimensionMismatch: t("panel.modelos.dimensionMismatchBatch"),
-          unmatched: t("panel.modelos.unmatched"),
-          upload: t("panel.modelos.uploadBatch"),
-          uploading: t("common.loading"),
-          done: t("panel.modelos.uploadDone"),
-          matrixTitle: t("panel.modelos.matrixTitle"),
+          title: t("panel.modelos.manualUpload"),
           component: t("panel.modelos.components"),
+          selectComponent: t("panel.modelos.selectComponent"),
           color: t("nav.colors"),
+          selectColor: t("panel.modelos.selectColor"),
           view: t("panel.modelos.viewColumn"),
+          selectView: t("panel.modelos.selectView"),
+          view_front: t("panel.modelos.view.front"),
+          view_side: t("panel.modelos.view.side"),
+          view_back: t("panel.modelos.view.back"),
+          upload: t("common.upload"),
+          uploading: t("common.uploading"),
+          success: t("common.uploadSuccess"),
+          retry: t("common.retry"),
+          error: t("errors.generic"),
+          dimensionMismatch: t("panel.modelos.dimensionMismatch"),
+          matrixTitle: t("panel.modelos.matrixTitle"),
           status: t("panel.modelos.status.label"),
           loaded: t("panel.modelos.loaded"),
-          pending: t("panel.modelos.pending"),
           missing: t("panel.modelos.missing"),
           allLoaded: t("panel.modelos.allLoaded"),
         }}
