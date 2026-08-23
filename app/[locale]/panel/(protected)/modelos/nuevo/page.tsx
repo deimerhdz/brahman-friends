@@ -1,5 +1,5 @@
 import { getT, type Locale } from "@/lib/i18n/t";
-import { NuevoModeloForm } from "./_NuevoModeloForm";
+import { ModeloForm } from "../_ModeloForm";
 import { PanelHeader } from "../../_PanelHeader";
 
 export default async function NuevoModeloPage({
@@ -13,8 +13,15 @@ export default async function NuevoModeloPage({
   return (
     <div>
       <PanelHeader eyebrow={t("nav.models")} title={t("panel.modelos.new")} />
-      <NuevoModeloForm
+      <ModeloForm
         locale={locale}
+        initial={{
+          code: "",
+          nameEs: "",
+          nameEn: "",
+          descriptionEs: "",
+          descriptionEn: "",
+        }}
         labels={{
           code: t("panel.modelos.code"),
           name: t("common.name"),

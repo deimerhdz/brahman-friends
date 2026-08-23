@@ -17,8 +17,20 @@ export const env = {
   get databaseUrl() {
     return required("DATABASE_URL");
   },
-  get blobReadWriteToken() {
-    return required("BLOB_READ_WRITE_TOKEN");
+  get r2AccountId() {
+    return required("R2_ACCOUNT_ID");
+  },
+  get r2AccessKeyId() {
+    return required("R2_ACCESS_KEY_ID");
+  },
+  get r2SecretAccessKey() {
+    return required("R2_SECRET_ACCESS_KEY");
+  },
+  get r2Bucket() {
+    return required("R2_BUCKET_NAME");
+  },
+  get r2PublicBaseUrl() {
+    return required("R2_PUBLIC_BASE_URL");
   },
   get resendApiKey() {
     return required("RESEND_API_KEY");

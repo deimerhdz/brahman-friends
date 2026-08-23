@@ -34,7 +34,12 @@ export default async function ComponentesPage({
 
   return (
     <div>
-      <PanelHeader eyebrow={t("nav.models")} title={t("panel.modelos.components")} />
+      <PanelHeader
+        eyebrow={t("nav.models")}
+        title={t("panel.modelos.components")}
+        backHref={`/${locale}/panel/modelos/${id}`}
+        backLabel={t("common.back")}
+      />
       <ComponentesManager
         locale={locale}
         modelId={id}
@@ -53,6 +58,11 @@ export default async function ComponentesPage({
           materialMismatch: t("panel.modelos.materialMismatch"),
           notCustomizable: t("panel.modelos.notCustomizable"),
           default: t("panel.modelos.defaultColor"),
+          edit: t("common.edit"),
+          delete: t("common.delete"),
+          save: t("common.save"),
+          cancel: t("common.cancel"),
+          confirmDelete: t("panel.modelos.confirmDeleteComponent"),
         }}
       />
     </div>

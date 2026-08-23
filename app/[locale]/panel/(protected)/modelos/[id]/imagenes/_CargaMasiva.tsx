@@ -2,7 +2,7 @@
 
 import { useMemo, useState, type DragEvent } from "react";
 import { useRouter } from "next/navigation";
-import { upload } from "@vercel/blob/client";
+import { subirDirecto } from "@/lib/media/subir-directo";
 import {
   parseImageFilename,
   matchBySlug,
@@ -186,16 +186,17 @@ export function CargaMasiva({
 
     let progreso = 0;
     for (const item of resueltos) {
-      const blob = await upload(
+      const url = await subirDirecto(
+        "/api/panel/subidas/presignar",
         `modelos/${modelId}/${item.view}_${item.componentId}_${item.colorId}-${Date.now()}`,
         item.file,
-        { access: "public", handleUploadUrl: "/api/panel/subidas/autorizar" },
+        item.file.type,
       );
       subidos.push({
         componentId: item.componentId,
         colorId: item.colorId,
         view: item.view,
-        url: blob.url,
+        url,
         width: item.dims.width,
         height: item.dims.height,
       });

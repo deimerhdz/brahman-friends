@@ -4,16 +4,29 @@ export function PanelHeader({
   eyebrow,
   title,
   primaryAction,
+  backHref,
+  backLabel,
   children,
 }: {
   eyebrow?: string;
   title: string;
   primaryAction?: { label: string; href: string; icon?: string };
+  backHref?: string;
+  backLabel?: string;
   children?: React.ReactNode;
 }) {
   return (
     <header className="mb-8 flex flex-wrap items-end justify-between gap-4 border-b border-outline-variant/30 pb-8">
       <div>
+        {backHref && (
+          <Link
+            href={backHref}
+            className="mb-2 flex w-fit items-center gap-1 font-label-caps text-label-caps text-on-surface-variant transition-colors hover:text-primary"
+          >
+            <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+            {backLabel}
+          </Link>
+        )}
         {eyebrow && (
           <p className="mb-2 text-label-caps font-label-caps uppercase text-on-surface-variant">
             {eyebrow}

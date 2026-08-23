@@ -2,10 +2,13 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { upload } from "@vercel/blob/client";
 import type { Locale } from "@/lib/i18n/t";
 import { MATERIALS, MATERIAL_LABELS } from "@/lib/catalogo/materiales";
 import { CampoTraducible } from "@/app/[locale]/panel/_components/CampoTraducible";
+import {
+  SubidaArchivo,
+  type EstadoSubida,
+} from "@/app/[locale]/panel/_components/SubidaArchivo";
 
 export interface ColorFormValue {
   id?: string;
@@ -28,26 +31,9 @@ export function ColorForm({
 }) {
   const router = useRouter();
   const [value, setValue] = useState(initial);
-  const [uploading, setUploading] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState<EstadoSubida>("idle");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  async function onFileChange(file: File | undefined) {
-    if (!file) return;
-    setUploading(true);
-    setError(null);
-    try {
-      const blob = await upload(`colores/${Date.now()}-${file.name}`, file, {
-        access: "public",
-        handleUploadUrl: "/api/panel/subidas/autorizar",
-      });
-      setValue((v) => ({ ...v, sampleImageUrl: blob.url }));
-    } catch {
-      setError(labels.uploadError);
-    } finally {
-      setUploading(false);
-    }
-  }
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
@@ -132,30 +118,34 @@ export function ColorForm({
       </label>
       <label className="flex flex-col gap-1">
         <span className="font-label-caps text-label-caps text-on-surface-variant">{labels.sampleImage}</span>
-        <input
-          type="file"
-          accept="image/png,image/jpeg,image/webp"
-          onChange={(e) => onFileChange(e.target.files?.[0])}
-          className="font-body-md text-body-md text-on-surface"
+        <SubidaArchivo
+          presignEndpoint="/api/panel/subidas/presignar"
+          pathPrefix="colores"
+          accept={["image/png", "image/jpeg", "image/webp"]}
+          currentUrl={value.sampleImageUrl || undefined}
+          onStatusChange={setUploadStatus}
+          onUploaded={(url) => setValue((v) => ({ ...v, sampleImageUrl: url }))}
+          labels={{
+            select: labels.sampleImage,
+            upload: labels.upload,
+            uploading: labels.uploading,
+            success: labels.uploadSuccess,
+            error: labels.uploadError,
+            retry: labels.retry,
+          }}
         />
-        {uploading && (
-          <p className="font-body-md text-body-md text-on-surface-variant">{labels.uploading}</p>
-        )}
-        {value.sampleImageUrl && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={value.sampleImageUrl}
-            alt=""
-            className="h-16 w-16 rounded border border-outline-variant/60 object-cover"
-          />
-        )}
       </label>
 
       {error && <p className="font-body-md text-body-md text-error">{error}</p>}
 
       <button
         type="submit"
-        disabled={saving || uploading || !value.sampleImageUrl}
+        disabled={
+          saving ||
+          uploadStatus === "subiendo" ||
+          uploadStatus === "error" ||
+          !value.sampleImageUrl
+        }
         className="w-fit rounded bg-on-surface px-6 py-2 font-button text-button text-on-primary transition-colors duration-200 hover:bg-primary disabled:opacity-50"
       >
         {labels.save}

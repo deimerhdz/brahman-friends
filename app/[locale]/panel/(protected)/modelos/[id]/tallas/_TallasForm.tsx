@@ -16,7 +16,8 @@ export function TallasForm({
 
   async function add(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const form = new FormData(event.currentTarget);
+    const formEl = event.currentTarget;
+    const form = new FormData(formEl);
     await fetch(`/api/panel/modelos/${modelId}/tallas`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -25,7 +26,7 @@ export function TallasForm({
         sortOrder: sizes.length,
       }),
     });
-    event.currentTarget.reset();
+    formEl.reset();
     router.refresh();
   }
 

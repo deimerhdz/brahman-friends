@@ -13,6 +13,9 @@
     "no": "No",
     "close": "Close",
     "retry": "Retry",
+    "upload": "Upload",
+    "uploading": "Uploading…",
+    "uploadSuccess": "Uploaded successfully.",
     "optional": "optional",
     "required": "required",
     "name": "Name",
@@ -221,6 +224,7 @@
     },
     "modelos": {
       "new": "New model",
+      "editTitle": "Edit model",
       "empty": "No models yet. Create the first one.",
       "code": "Internal code",
       "status": {
@@ -248,6 +252,7 @@
       "layerOrder": "Layer order",
       "customizable": "Customizable",
       "addComponent": "Add component",
+      "confirmDeleteComponent": "Delete this component? Its images and enabled colors will also be removed.",
       "materialMismatch": "The color's material doesn't match the component's",
       "notCustomizable": "This component isn't customizable: it belongs in the base image",
       "defaultColor": "Default",

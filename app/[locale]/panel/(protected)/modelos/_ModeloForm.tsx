@@ -8,43 +8,62 @@ import {
   type ValorTraducido,
 } from "@/app/[locale]/panel/_components/CampoTraducible";
 
-export function NuevoModeloForm({
+export interface ModeloFormValue {
+  id?: string;
+  code: string;
+  nameEs: string;
+  nameEn: string;
+  descriptionEs: string;
+  descriptionEn: string;
+}
+
+export function ModeloForm({
   locale,
+  initial,
   labels,
 }: {
   locale: Locale;
+  initial: ModeloFormValue;
   labels: Record<string, string>;
 }) {
   const router = useRouter();
+  const isNew = !initial.id;
+  const [code, setCode] = useState(initial.code);
+  const [name, setName] = useState<ValorTraducido>({
+    es: initial.nameEs,
+    en: initial.nameEn,
+  });
+  const [description, setDescription] = useState<ValorTraducido>({
+    es: initial.descriptionEs,
+    en: initial.descriptionEn,
+  });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(false);
-  const [name, setName] = useState<ValorTraducido>({ es: "", en: "" });
-  const [description, setDescription] = useState<ValorTraducido>({
-    es: "",
-    en: "",
-  });
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setSaving(true);
     setError(false);
-    const form = new FormData(event.currentTarget);
-    const response = await fetch("/api/panel/modelos", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        code: form.get("code"),
-        name,
-        description,
-      }),
-    });
+    const response = await fetch(
+      isNew ? "/api/panel/modelos" : `/api/panel/modelos/${initial.id}`,
+      {
+        method: isNew ? "POST" : "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code, name, description }),
+      },
+    );
     setSaving(false);
     if (!response.ok) {
       setError(true);
       return;
     }
-    const created = await response.json();
-    router.push(`/${locale}/panel/modelos/${created.id}`);
+    if (isNew) {
+      const created = await response.json();
+      router.push(`/${locale}/panel/modelos/${created.id}`);
+    } else {
+      router.push(`/${locale}/panel/modelos/${initial.id}`);
+      router.refresh();
+    }
   }
 
   return (
@@ -54,7 +73,8 @@ export function NuevoModeloForm({
           {labels.code}
         </span>
         <input
-          name="code"
+          value={code}
+          onChange={(e) => setCode(e.target.value)}
           required
           className="rounded border border-outline-variant bg-surface px-3 py-2 font-body-md text-body-md text-on-surface focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
         />

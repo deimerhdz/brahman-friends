@@ -49,6 +49,11 @@ export default async function ModeloHubPage({
       <PanelHeader
         eyebrow={`${t("panel.modelos.code")}: ${model.code}`}
         title={locale === "es" ? model.nameEs : model.nameEn}
+        primaryAction={{
+          label: t("common.edit"),
+          href: `/${locale}/panel/modelos/${id}/editar`,
+          icon: "edit",
+        }}
       />
 
       <EstadoPublicacion

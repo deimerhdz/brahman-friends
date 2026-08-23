@@ -46,7 +46,12 @@ export default async function ZonasPage({
 
   return (
     <div>
-      <PanelHeader eyebrow={t("nav.models")} title={t("panel.modelos.zones")} />
+      <PanelHeader
+        eyebrow={t("nav.models")}
+        title={t("panel.modelos.zones")}
+        backHref={`/${locale}/panel/modelos/${id}`}
+        backLabel={t("common.back")}
+      />
       <ZonasEditor
         modelId={id}
         baseImagesByView={baseImagesByView}

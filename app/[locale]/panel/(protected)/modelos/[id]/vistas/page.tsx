@@ -37,7 +37,12 @@ export default async function VistasPage({
 
   return (
     <div>
-      <PanelHeader eyebrow={t("nav.models")} title={t("panel.modelos.views")} />
+      <PanelHeader
+        eyebrow={t("nav.models")}
+        title={t("panel.modelos.views")}
+        backHref={`/${locale}/panel/modelos/${id}`}
+        backLabel={t("common.back")}
+      />
       <VistasForm
         modelId={id}
         initial={initial}
@@ -46,7 +51,10 @@ export default async function VistasPage({
           view_side: t("panel.modelos.view.side"),
           view_back: t("panel.modelos.view.back"),
           frontRequired: t("panel.modelos.frontRequired"),
-          uploading: t("common.loading"),
+          upload: t("common.upload"),
+          uploading: t("common.uploading"),
+          uploadSuccess: t("common.uploadSuccess"),
+          retry: t("common.retry"),
           error: t("errors.generic"),
           dimensionMismatch: t("panel.modelos.dimensionMismatch"),
         }}

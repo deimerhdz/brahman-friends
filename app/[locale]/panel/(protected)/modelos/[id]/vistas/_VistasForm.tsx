@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { upload } from "@vercel/blob/client";
+import { SubidaArchivo } from "@/app/[locale]/panel/_components/SubidaArchivo";
 
 const VIEWS = ["front", "side", "back"] as const;
 type View = (typeof VIEWS)[number];
@@ -45,24 +45,18 @@ export function VistasForm({
     if (response.ok) router.refresh();
   }
 
-  async function onFile(view: View, file: File | undefined) {
-    if (!file) return;
+  async function onUploaded(view: View, url: string, file: File) {
     setBusy(view);
     setError(null);
     try {
       const dims = await readDimensions(file);
-      const blob = await upload(
-        `modelos/${modelId}/base-${view}-${Date.now()}-${file.name}`,
-        file,
-        { access: "public", handleUploadUrl: "/api/panel/subidas/autorizar" },
-      );
       const response = await fetch(`/api/panel/modelos/${modelId}/vistas`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           view,
           active: true,
-          baseImageUrl: blob.url,
+          baseImageUrl: url,
           width: dims.width,
           height: dims.height,
         }),
@@ -76,7 +70,7 @@ export function VistasForm({
         );
         return;
       }
-      setImages((v) => ({ ...v, [view]: blob.url }));
+      setImages((v) => ({ ...v, [view]: url }));
       router.refresh();
     } finally {
       setBusy(null);
@@ -108,25 +102,26 @@ export function VistasForm({
               )}
             </label>
             {active && (
-              <div className="mt-3 flex items-center gap-3">
-                <input
-                  type="file"
-                  accept="image/png,image/jpeg,image/webp"
-                  onChange={(e) => onFile(view, e.target.files?.[0])}
-                  className="font-body-md text-body-md text-on-surface"
+              <div className="mt-3">
+                <SubidaArchivo
+                  presignEndpoint="/api/panel/subidas/presignar"
+                  pathPrefix={`modelos/${modelId}/base-${view}`}
+                  accept={["image/png", "image/jpeg", "image/webp"]}
+                  currentUrl={images[view] || undefined}
+                  onUploaded={(url, file) => onUploaded(view, url, file)}
+                  labels={{
+                    select: labels[`view_${view}`],
+                    upload: labels.upload,
+                    uploading: labels.uploading,
+                    success: labels.uploadSuccess,
+                    error: labels.error,
+                    retry: labels.retry,
+                  }}
                 />
                 {busy === view && (
                   <span className="font-body-md text-body-md text-on-surface-variant">
                     {labels.uploading}
                   </span>
-                )}
-                {images[view] && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={images[view]}
-                    alt=""
-                    className="h-14 w-14 rounded border border-outline-variant/60 object-cover"
-                  />
                 )}
               </div>
             )}

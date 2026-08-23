@@ -25,7 +25,12 @@ export default async function TallasPage({
 
   return (
     <div>
-      <PanelHeader eyebrow={t("nav.models")} title={t("panel.modelos.sizes")} />
+      <PanelHeader
+        eyebrow={t("nav.models")}
+        title={t("panel.modelos.sizes")}
+        backHref={`/${locale}/panel/modelos/${id}`}
+        backLabel={t("common.back")}
+      />
       <TallasForm
         modelId={id}
         sizes={sizes}

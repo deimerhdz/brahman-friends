@@ -50,7 +50,12 @@ export default async function ImagenesPage({
 
   return (
     <div>
-      <PanelHeader eyebrow={t("nav.models")} title={t("panel.modelos.images")} />
+      <PanelHeader
+        eyebrow={t("nav.models")}
+        title={t("panel.modelos.images")}
+        backHref={`/${locale}/panel/modelos/${id}`}
+        backLabel={t("common.back")}
+      />
       <CargaMasiva
         modelId={id}
         activeViews={views.map((v) => v.view)}
