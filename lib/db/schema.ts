@@ -115,6 +115,9 @@ export const capModel = pgTable("cap_model", {
   status: modelStatusEnum("status").notNull().default("draft"),
   imageWidth: integer("image_width"),
   imageHeight: integer("image_height"),
+  // Cantidad mínima de pedido (006-configurador-stepper FR-010, FR-012).
+  // NULL = no configurado todavía; el código lo trata como 1.
+  moq: integer("moq"),
   publishedAt: timestamp("published_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()

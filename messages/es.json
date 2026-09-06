@@ -129,6 +129,17 @@
     }
   },
   "configurador": {
+    "step": {
+      "colors": "Personalizar colores",
+      "logo": "Colocación de logo",
+      "summary": "Resumen"
+    },
+    "summary": {
+      "decoration": "Decoración",
+      "noDecoration": "Sin decoración",
+      "logo": "Logo"
+    },
+    "position": "Ubicación del logo",
     "unavailableTitle": "Algunos colores de tu diseño anterior ya no están disponibles y se cambiaron por el color por defecto:",
     "previousView": "Vista anterior",
     "nextView": "Vista siguiente",
@@ -160,7 +171,7 @@
     "logoAdded": "Logotipo cargado en esta zona.",
     "widthCm": "Ancho (cm)",
     "heightCm": "Alto (cm)",
-    "continueToQuote": "Continuar a la solicitud"
+    "continueToQuote": "Solicitar cotización"
   },
   "solicitud": {
     "title": "Cantidad y solicitud",
@@ -237,6 +248,7 @@
       "zones": "Zonas de decoración",
       "sizes": "Tallas",
       "techniques": "Técnicas de este modelo",
+      "moq": "Cantidad mínima de pedido (MOQ)",
       "publish": "Publicar",
       "unpublish": "Despublicar",
       "missingBaseViews": "Vistas sin imagen base",

@@ -129,6 +129,17 @@
     }
   },
   "configurador": {
+    "step": {
+      "colors": "Customize Colors",
+      "logo": "Logo Placement",
+      "summary": "Summary"
+    },
+    "summary": {
+      "decoration": "Decoration",
+      "noDecoration": "No decoration",
+      "logo": "Logo"
+    },
+    "position": "Logo Position",
     "unavailableTitle": "Some colors from your previous design are no longer available and were switched to the default color:",
     "previousView": "Previous view",
     "nextView": "Next view",
@@ -160,7 +171,7 @@
     "logoAdded": "Logo uploaded to this zone.",
     "widthCm": "Width (cm)",
     "heightCm": "Height (cm)",
-    "continueToQuote": "Continue to the request"
+    "continueToQuote": "Request quote"
   },
   "solicitud": {
     "title": "Quantity and request",
@@ -237,6 +248,7 @@
       "zones": "Decoration zones",
       "sizes": "Sizes",
       "techniques": "Techniques for this model",
+      "moq": "Minimum order quantity (MOQ)",
       "publish": "Publish",
       "unpublish": "Unpublish",
       "missingBaseViews": "Views without a base image",

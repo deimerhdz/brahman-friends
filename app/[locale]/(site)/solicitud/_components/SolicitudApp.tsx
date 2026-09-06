@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n/t";
 import type { ModelManifest } from "@/lib/catalogo/model-manifest";
@@ -22,9 +22,16 @@ export function SolicitudApp({
   labels: Record<string, string>;
 }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [manifest, setManifest] = useState<ModelManifest | null>(null);
   const [loadError, setLoadError] = useState(false);
-  const [quantity, setQuantity] = useState(0);
+  // Cantidad sugerida desde el paso de resumen del configurador
+  // (006-configurador-stepper FR-021); si falta o no es válida, arranca en 0
+  // como hoy.
+  const [quantity, setQuantity] = useState(() => {
+    const qty = Number.parseInt(searchParams.get("qty") ?? "", 10);
+    return Number.isInteger(qty) && qty >= 1 ? qty : 0;
+  });
   const [sizes, setSizes] = useState<SizeQuantity[]>([]);
   const [contact, setContact] = useState<ContactValue>({
     name: "",

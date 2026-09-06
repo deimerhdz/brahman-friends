@@ -32,6 +32,7 @@ export function capModelConNombre() {
       status: capModel.status,
       imageWidth: capModel.imageWidth,
       imageHeight: capModel.imageHeight,
+      moq: capModel.moq,
       publishedAt: capModel.publishedAt,
       createdAt: capModel.createdAt,
       nameEs: capModelEs.name,

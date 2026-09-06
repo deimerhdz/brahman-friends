@@ -3,6 +3,8 @@ import {
   clampSizeToZone,
   clampOffsetToZone,
   canPlaceDecoration,
+  puedeAvanzarPaso,
+  moqEfectivo,
 } from "@/lib/design/rules";
 
 const ZONE = { maxWidthCm: 11, maxHeightCm: 5.5 };
@@ -73,6 +75,34 @@ describe("lib/design/rules — límites de decoración (RN11, RN12, RN13)", () =
     it("rechaza al llegar al máximo de zonas", () => {
       const result = canPlaceDecoration(["front", "back", "left"], "right", 3);
       expect(result).toEqual({ allowed: false, reason: "max_zones" });
+    });
+  });
+
+  describe("puedeAvanzarPaso — gating del stepper (006-configurador-stepper FR-018)", () => {
+    it("paso 1 exige un color por cada componente personalizable", () => {
+      const draftIncompleto = { colors: { corona: "azul" } };
+      const draftCompleto = { colors: { corona: "azul", visera: "negro" } };
+      expect(puedeAvanzarPaso(1, draftIncompleto, ["corona", "visera"])).toBe(false);
+      expect(puedeAvanzarPaso(1, draftCompleto, ["corona", "visera"])).toBe(true);
+    });
+
+    it("paso 1 no exige nada si no hay componentes personalizables", () => {
+      expect(puedeAvanzarPaso(1, { colors: {} }, [])).toBe(true);
+    });
+
+    it("paso 2 nunca bloquea, la decoración es opcional", () => {
+      expect(puedeAvanzarPaso(2, { colors: {} }, ["corona"])).toBe(true);
+    });
+  });
+
+  describe("moqEfectivo — MOQ sin definir usa 1 (006-configurador-stepper FR-012)", () => {
+    it("usa 1 cuando el modelo no tiene MOQ definido", () => {
+      expect(moqEfectivo(null)).toBe(1);
+      expect(moqEfectivo(undefined)).toBe(1);
+    });
+
+    it("usa el MOQ del modelo cuando está definido", () => {
+      expect(moqEfectivo(144)).toBe(144);
     });
   });
 });

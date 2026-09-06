@@ -15,6 +15,8 @@ export interface ModeloFormValue {
   nameEn: string;
   descriptionEs: string;
   descriptionEn: string;
+  /** Cantidad mínima de pedido (006-configurador-stepper FR-010). `null` = sin definir. */
+  moq?: number | null;
 }
 
 export function ModeloForm({
@@ -37,6 +39,9 @@ export function ModeloForm({
     es: initial.descriptionEs,
     en: initial.descriptionEn,
   });
+  const [moq, setMoq] = useState<string>(
+    initial.moq != null ? String(initial.moq) : "",
+  );
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(false);
 
@@ -44,12 +49,18 @@ export function ModeloForm({
     event.preventDefault();
     setSaving(true);
     setError(false);
+    const body: Record<string, unknown> = { code, name, description };
+    // El MOQ solo se edita sobre un modelo ya existente (FR-010); al crear,
+    // el modelo empieza sin MOQ definido (NULL → 1, FR-012).
+    if (!isNew) {
+      body.moq = moq.trim() === "" ? null : Number(moq);
+    }
     const response = await fetch(
       isNew ? "/api/panel/modelos" : `/api/panel/modelos/${initial.id}`,
       {
         method: isNew ? "POST" : "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code, name, description }),
+        body: JSON.stringify(body),
       },
     );
     setSaving(false);
@@ -95,6 +106,22 @@ export function ModeloForm({
         defaultLocale={locale}
         switchLabels={{ es: labels.switchEs, en: labels.switchEn }}
       />
+      {!isNew && (
+        <label className="flex flex-col gap-1">
+          <span className="font-label-caps text-label-caps text-on-surface-variant">
+            {labels.moq}
+          </span>
+          <input
+            type="number"
+            min={1}
+            step={1}
+            value={moq}
+            onChange={(e) => setMoq(e.target.value)}
+            placeholder="1"
+            className="rounded border border-outline-variant bg-surface px-3 py-2 font-body-md text-body-md text-on-surface focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+          />
+        </label>
+      )}
       {error && <p className="font-body-md text-body-md text-error">{labels.error}</p>}
       <button
         type="submit"

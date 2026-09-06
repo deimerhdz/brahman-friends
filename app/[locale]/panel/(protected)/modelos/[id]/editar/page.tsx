@@ -34,11 +34,13 @@ export default async function EditarModeloPage({
           nameEn: existing.nameEn,
           descriptionEs: existing.descriptionEs,
           descriptionEn: existing.descriptionEn,
+          moq: existing.moq,
         }}
         labels={{
           code: t("panel.modelos.code"),
           name: t("common.name"),
           description: t("common.description"),
+          moq: t("panel.modelos.moq"),
           switchEs: t("panel.switchIdioma.es"),
           switchEn: t("panel.switchIdioma.en"),
           error: t("errors.generic"),

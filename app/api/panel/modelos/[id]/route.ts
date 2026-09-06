@@ -43,6 +43,14 @@ export async function PATCH(
       patch.code = body.code;
     }
 
+    // Cantidad mínima de pedido (006-configurador-stepper FR-010).
+    if (body.moq !== undefined) {
+      if (body.moq !== null && (!Number.isInteger(body.moq) || body.moq < 1)) {
+        return errors.datosInvalidos();
+      }
+      patch.moq = body.moq;
+    }
+
     const [updated] =
       Object.keys(patch).length > 0
         ? await db.update(capModel).set(patch).where(eq(capModel.id, id)).returning()

@@ -140,6 +140,8 @@ export async function loadModelManifest(modelId: string) {
       .map((mt) => techniques.find((t) => t.id === mt.techniqueId))
       .filter((t): t is NonNullable<typeof t> => !!t)
       .map((t) => ({ id: t.id, nameEs: t.nameEs, nameEn: t.nameEn })),
+    // Cantidad mínima de pedido; NULL en la base se trata como 1 (FR-012).
+    moq: model.moq ?? 1,
   };
 }
 

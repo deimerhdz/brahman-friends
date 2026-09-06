@@ -67,3 +67,26 @@ export function canPlaceDecoration(
   }
   return { allowed: true };
 }
+
+/**
+ * Gating del stepper del configurador (006-configurador-stepper FR-018).
+ * Paso 1 exige que cada componente personalizable tenga un color asignado;
+ * el paso 2 (logo) nunca bloquea, la decoración es opcional (spec.md
+ * Clarifications).
+ */
+export function puedeAvanzarPaso(
+  paso: number,
+  draft: { colors: Record<string, string> },
+  customizableComponentIds: readonly string[],
+): boolean {
+  if (paso === 1) return customizableComponentIds.every((id) => Boolean(draft.colors[id]));
+  return true;
+}
+
+/**
+ * Cantidad mínima de pedido efectiva (006-configurador-stepper FR-012): si
+ * el administrador no definió MOQ para el modelo (`null`), el mínimo es 1.
+ */
+export function moqEfectivo(moq: number | null | undefined): number {
+  return moq ?? 1;
+}

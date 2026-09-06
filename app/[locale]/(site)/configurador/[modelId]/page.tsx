@@ -58,7 +58,20 @@ export default async function ConfiguradorPage({
         zone_left: t("panel.modelos.zone.left"),
         zone_right: t("panel.modelos.zone.right"),
         zone_back: t("panel.modelos.zone.back"),
-        continueToQuote: t("configurador.continueToQuote"),
+        // 006-configurador-stepper: pasos y resumen.
+        next: t("common.next"),
+        back: t("common.back"),
+        requestQuote: t("configurador.continueToQuote"),
+        stepColors: t("configurador.step.colors"),
+        stepLogo: t("configurador.step.logo"),
+        stepSummary: t("configurador.step.summary"),
+        position: t("configurador.position"),
+        title: t("configurador.step.summary"),
+        decoration: t("configurador.summary.decoration"),
+        noDecoration: t("configurador.summary.noDecoration"),
+        logo: t("configurador.summary.logo"),
+        quantity: t("solicitud.quantity"),
+        modelUnavailable: t("errors.modelo_no_disponible"),
       }}
     />
   );
