@@ -24,12 +24,6 @@ export const requestViewEnum = pgEnum("request_view", [
   "back",
 ]);
 
-export const colorStatusEnum = pgEnum("color_status", [
-  "available",
-  "out_of_stock",
-  "discontinued",
-]);
-
 export const modelStatusEnum = pgEnum("model_status", ["draft", "published"]);
 
 export const zonePositionEnum = pgEnum("zone_position", [
@@ -83,13 +77,21 @@ export const customer = pgTable("customer", {
     .defaultNow(),
 });
 
-// color — FR-016 a FR-023
+// color — FR-016 a FR-023. Propio de un modelo, no compartido
+// (007-colores-por-modelo FR-002, FR-010): borrar un modelo borra sus
+// colores. `model_id` se volvió NOT NULL después de correr el backfill de
+// datos existentes (scripts/migrar-colores-por-modelo.ts) sobre la columna
+// nullable con la que se agregó primero (drizzle/0004_fresh_violations.sql).
+// Sin `supplier_ref`, `material`, `status` ni `sample_image_url`: un color
+// de un modelo es solo su nombre (007-colores-por-modelo, enmienda
+// 2026-09-06). Sin imagen de muestra, el texto personalizado con color ya no
+// tiene una fuente para su patrón de relleno (lib/design/compose.ts) y cae
+// siempre al color de reserva fijo — decisión tomada con el usuario.
 export const color = pgTable("color", {
   id: uuid("id").primaryKey().defaultRandom(),
-  supplierRef: text("supplier_ref").notNull(),
-  material: text("material").notNull(),
-  sampleImageUrl: text("sample_image_url").notNull(),
-  status: colorStatusEnum("status").notNull().default("available"),
+  modelId: uuid("model_id")
+    .notNull()
+    .references(() => capModel.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),
@@ -218,19 +220,6 @@ export const componentImage = pgTable(
       t.view,
     ),
   ],
-);
-
-// model_size — FR-015
-export const modelSize = pgTable(
-  "model_size",
-  {
-    modelId: uuid("model_id")
-      .notNull()
-      .references(() => capModel.id, { onDelete: "cascade" }),
-    label: text("label").notNull(),
-    sortOrder: integer("sort_order").notNull().default(0),
-  },
-  (t) => [primaryKey({ columns: [t.modelId, t.label] })],
 );
 
 // decoration_zone — FR-034, FR-035
@@ -368,19 +357,6 @@ export const requestImage = pgTable(
     imageUrl: text("image_url").notNull(),
   },
   (t) => [primaryKey({ columns: [t.requestId, t.view] })],
-);
-
-// request_size — FR-048, RN17
-export const requestSize = pgTable(
-  "request_size",
-  {
-    requestId: uuid("request_id")
-      .notNull()
-      .references(() => request.id, { onDelete: "cascade" }),
-    sizeLabel: text("size_label").notNull(),
-    quantity: integer("quantity").notNull(),
-  },
-  (t) => [primaryKey({ columns: [t.requestId, t.sizeLabel] })],
 );
 
 // request_status_history — FR-062, RN21

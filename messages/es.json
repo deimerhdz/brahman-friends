@@ -25,7 +25,6 @@
     "home": "Inicio",
     "panel": "Panel",
     "models": "Modelos",
-    "colors": "Colores",
     "requests": "Solicitudes",
     "techniques": "Técnicas",
     "logout": "Cerrar sesión",
@@ -41,7 +40,7 @@
     "svg_no_valido_tras_saneo": "El archivo SVG no es un dibujo válido después de limpiarlo. Probá con otro archivo.",
     "modelo_no_disponible": "Este modelo ya no está disponible.",
     "color_no_disponible": "Alguno de los colores elegidos ya no está disponible.",
-    "tallas_no_cuadran": "La suma por tallas no coincide con la cantidad total.",
+    "cantidad_invalida": "La cantidad debe ser un número entero mayor o igual a 1.",
     "datos_contacto_invalidos": "Revisá el correo y la aceptación del tratamiento de datos.",
     "decoracion_invalida": "Alguno de los elementos decorativos no es válido.",
     "publicacion_incompleta": "Faltan imágenes para publicar este modelo.",
@@ -176,9 +175,6 @@
   "solicitud": {
     "title": "Cantidad y solicitud",
     "quantity": "Cantidad total",
-    "sizeBreakdown": "Distribución por talla",
-    "matches": "Las tallas cuadran con la cantidad total.",
-    "mismatch": "Repartiste {{total}} de {{quantity}} unidades. Ajustá para poder continuar.",
     "colors": "Colores",
     "decorations": "Elementos decorativos",
     "logo": "Logotipo",
@@ -220,18 +216,7 @@
       "new": "Nuevo color",
       "empty": "Todavía no hay colores. Creá el primero.",
       "editTitle": "Editar color",
-      "supplierRef": "Referencia del proveedor",
-      "material": "Material",
-      "selectMaterial": "Elegí un material",
-      "sampleImage": "Foto de la muestra",
-      "status": {
-        "label": "Disponibilidad",
-        "available": "Disponible",
-        "out_of_stock": "Agotado",
-        "discontinued": "Descontinuado"
-      },
-      "deleteConfirm": "¿Eliminar este color?",
-      "discontinueInstead": "Este color ya se usó. ¿Descontinuarlo en vez de borrarlo?"
+      "material": "Material"
     },
     "modelos": {
       "new": "Nuevo modelo",
@@ -244,9 +229,9 @@
         "label": "Estado"
       },
       "views": "Vistas",
+      "colors": "Colores",
       "components": "Componentes",
       "zones": "Zonas de decoración",
-      "sizes": "Tallas",
       "techniques": "Técnicas de este modelo",
       "moq": "Cantidad mínima de pedido (MOQ)",
       "publish": "Publicar",
@@ -287,8 +272,7 @@
       "arc": "Arco",
       "tilt": "Inclinación",
       "taper": "Estrechamiento",
-      "maxTextChars": "Máximo de caracteres de texto",
-      "sizeLabel": "Talla (S, M, L, Única…)"
+      "maxTextChars": "Máximo de caracteres de texto"
     },
     "solicitudes": {
       "allStatuses": "Todos los estados",

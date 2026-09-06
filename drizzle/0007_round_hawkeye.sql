@@ -1,0 +1,1 @@
+ALTER TABLE "color" DROP COLUMN "sample_image_url";

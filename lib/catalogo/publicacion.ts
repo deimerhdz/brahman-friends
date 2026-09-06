@@ -6,7 +6,6 @@ import type { Material } from "@/lib/catalogo/materiales";
  */
 
 export type View = "front" | "side" | "back";
-export type ColorStatus = "available" | "out_of_stock" | "discontinued";
 
 export interface PublicacionComponente {
   id: string;
@@ -21,7 +20,6 @@ export interface PublicacionColor {
   id: string;
   nameEs: string;
   nameEn: string;
-  status: ColorStatus;
 }
 
 export interface PublicacionInput {
@@ -81,16 +79,16 @@ export function checkPublicacion(
       ),
     ];
 
-    const availableEnabledColors = enabledColorIds
+    const enabledColors = enabledColorIds
       .map((id) => colorsById.get(id))
-      .filter((c): c is PublicacionColor => !!c && c.status === "available");
+      .filter((c): c is PublicacionColor => !!c);
 
     const defaultIsUsable =
       !!component.defaultColorId &&
       enabledColorIds.includes(component.defaultColorId) &&
-      colorsById.get(component.defaultColorId)?.status === "available";
+      colorsById.has(component.defaultColorId);
 
-    if (availableEnabledColors.length === 0 || !defaultIsUsable) {
+    if (enabledColors.length === 0 || !defaultIsUsable) {
       componentsWithoutColors.push(component.nameEs);
       continue;
     }

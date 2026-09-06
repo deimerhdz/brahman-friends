@@ -1,0 +1,2 @@
+ALTER TABLE "color" ADD COLUMN "model_id" uuid;--> statement-breakpoint
+ALTER TABLE "color" ADD CONSTRAINT "color_model_id_cap_model_id_fk" FOREIGN KEY ("model_id") REFERENCES "public"."cap_model"("id") ON DELETE cascade ON UPDATE no action;

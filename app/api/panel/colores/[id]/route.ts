@@ -4,7 +4,6 @@ import { db } from "@/lib/db";
 import { color, colorTranslation } from "@/lib/db/schema";
 import { getSession } from "@/lib/auth/session";
 import { errors, apiError, handleApiError } from "@/lib/http/errors";
-import { isMaterial } from "@/lib/catalogo/materiales";
 import { validarNombreTraducido } from "@/lib/catalogo/traduccion";
 
 export async function PATCH(
@@ -17,11 +16,10 @@ export async function PATCH(
   try {
     const { id } = await params;
     const body = await request.json();
-    const patch: Partial<typeof color.$inferInsert> = {};
 
-    // `name` es opcional en el PATCH, igual que el resto de los campos: se
-    // puede seguir editando solo la disponibilidad sin tocar el nombre. Si
-    // se envía, debe traer ambos idiomas (FR-011).
+    // El único campo editable de un color es su nombre, y ese vive en
+    // `color_translation`, no en `color` (FR-011): esta ruta solo confirma
+    // que el color existe antes de tocar la traducción.
     let name: { es: string; en: string } | null = null;
     if (body.name !== undefined) {
       name = validarNombreTraducido(body.name);
@@ -30,24 +28,11 @@ export async function PATCH(
       }
     }
 
-    if (body.supplierRef !== undefined) patch.supplierRef = body.supplierRef;
-    if (body.sampleImageUrl !== undefined)
-      patch.sampleImageUrl = body.sampleImageUrl;
-    if (body.material !== undefined) {
-      if (!isMaterial(body.material)) {
-        return NextResponse.json({ error: "datos_invalidos" }, { status: 400 });
-      }
-      patch.material = body.material;
-    }
-    if (body.status !== undefined) patch.status = body.status;
-
-    // `name` vive en `color_translation`, no en `color`: si es el único
-    // campo enviado, `patch` queda vacío y no hay nada que actualizar en
-    // esta tabla (Drizzle rechaza un `.set({})` vacío).
-    const [updated] =
-      Object.keys(patch).length > 0
-        ? await db.update(color).set(patch).where(eq(color.id, id)).returning()
-        : await db.select().from(color).where(eq(color.id, id)).limit(1);
+    const [updated] = await db
+      .select()
+      .from(color)
+      .where(eq(color.id, id))
+      .limit(1);
 
     if (!updated) {
       return NextResponse.json({ error: "no_encontrado" }, { status: 404 });
@@ -75,8 +60,9 @@ export async function PATCH(
   }
 }
 
-// Un color usado no se borra, se descontinúa (FR-023, RN8). La base de datos
-// lo impide con claves foráneas; aquí se traduce ese fallo a un error claro.
+// Un color habilitado en algún componente no se puede borrar (RN8): la base
+// de datos lo impide con claves foráneas; aquí se traduce ese fallo a un
+// error claro. Hay que quitarlo de todas las vistas/componentes primero.
 export async function DELETE(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> },

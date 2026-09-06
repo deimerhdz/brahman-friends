@@ -3,6 +3,7 @@ import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import {
   capModel,
+  color,
   modelView,
   component,
   componentColor,
@@ -21,7 +22,7 @@ async function loadPublicacionInput(modelId: string) {
     db.select().from(modelView).where(eq(modelView.modelId, modelId)),
     componentConNombre().where(eq(component.modelId, modelId)),
     db.select().from(componentColor),
-    colorConNombre(),
+    colorConNombre().where(eq(color.modelId, modelId)),
     db.select().from(componentImage).where(eq(componentImage.modelId, modelId)),
   ]);
 
@@ -43,7 +44,6 @@ async function loadPublicacionInput(modelId: string) {
       id: c.id,
       nameEs: c.nameEs,
       nameEn: c.nameEn,
-      status: c.status,
     })),
     images: images.map((i) => ({
       componentId: i.componentId,

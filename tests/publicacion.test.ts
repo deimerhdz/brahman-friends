@@ -34,13 +34,8 @@ function baseInput(): PublicacionInput {
       { componentId: "corona", colorId: "rojo", view: "side" },
     ],
     colors: [
-      {
-        id: "azul",
-        nameEs: "Azul Rey",
-        nameEn: "Royal Blue",
-        status: "available",
-      },
-      { id: "rojo", nameEs: "Rojo", nameEn: "Red", status: "available" },
+      { id: "azul", nameEs: "Azul Rey", nameEn: "Royal Blue" },
+      { id: "rojo", nameEs: "Rojo", nameEn: "Red" },
     ],
     images: [
       { componentId: "corona", colorId: "azul", view: "front" },
@@ -94,11 +89,12 @@ describe("lib/catalogo/publicacion — qué falta para publicar (FR-012, RN2, RN
     expect(result.missing.some((m) => m.component === "Botón")).toBe(false);
   });
 
-  it("el color por defecto debe estar entre los habilitados y disponibles (RN9)", () => {
+  it("el color por defecto debe estar entre los habilitados del componente (RN9)", () => {
     const input = baseInput();
-    input.colors = input.colors.map((c) =>
-      c.id === "azul" ? { ...c, status: "out_of_stock" as const } : c,
+    input.componentColors = input.componentColors.filter(
+      (cc) => cc.colorId !== "azul",
     );
+    input.images = input.images.filter((img) => img.colorId !== "azul");
     const result = checkPublicacion(input);
     expect(result.componentsWithoutColors).toEqual(["Corona"]);
   });

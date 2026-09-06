@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import {
   capModel,
+  color,
   component,
   componentColor,
   componentImage,
@@ -35,7 +36,7 @@ export default async function ComponentesPage({
 
   const [components, colors, links, views, images] = await Promise.all([
     componentConNombre().where(eq(component.modelId, id)),
-    colorConNombre(),
+    colorConNombre().where(eq(color.modelId, id)),
     db.select().from(componentColor),
     db.select().from(modelView).where(eq(modelView.modelId, id)),
     db.select().from(componentImage).where(eq(componentImage.modelId, id)),

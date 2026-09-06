@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import {
   request as requestTable,
-  requestSize,
   requestImage,
   requestStatusHistory,
   adminUser,
@@ -27,8 +26,7 @@ export default async function SolicitudDetallePage({
   const [req] = await db.select().from(requestTable).where(eq(requestTable.id, id)).limit(1);
   if (!req) notFound();
 
-  const [sizes, images, history, logos] = await Promise.all([
-    db.select().from(requestSize).where(eq(requestSize.requestId, id)),
+  const [images, history, logos] = await Promise.all([
     db.select().from(requestImage).where(eq(requestImage.requestId, id)),
     db
       .select({
@@ -80,13 +78,6 @@ export default async function SolicitudDetallePage({
         <p>
           {t("solicitud.quantity")}: {req.quantity}
         </p>
-        <ul className="list-inside list-disc">
-          {sizes.map((s) => (
-            <li key={s.sizeLabel}>
-              {s.sizeLabel}: {s.quantity}
-            </li>
-          ))}
-        </ul>
         {snapshot.technique && (
           <p>
             {t("solicitud.technique")}:{" "}
@@ -98,7 +89,9 @@ export default async function SolicitudDetallePage({
             <li key={c.id}>
               {locale === "es" ? c.nameEs : c.nameEn}:{" "}
               {c.color
-                ? `${locale === "es" ? c.color.nameEs : c.color.nameEn} — ${c.color.supplierRef}`
+                ? locale === "es"
+                  ? c.color.nameEs
+                  : c.color.nameEn
                 : "—"}
             </li>
           ))}

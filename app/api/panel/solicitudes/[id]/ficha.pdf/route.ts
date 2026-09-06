@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { db } from "@/lib/db";
-import { request as requestTable, requestSize } from "@/lib/db/schema";
+import { request as requestTable } from "@/lib/db/schema";
 import { getSession } from "@/lib/auth/session";
 import { errors, handleApiError } from "@/lib/http/errors";
 import type { DesignSnapshot } from "@/lib/solicitud/snapshot";
@@ -26,8 +26,6 @@ export async function GET(
     if (!req) {
       return NextResponse.json({ error: "no_encontrado" }, { status: 404 });
     }
-    const sizes = await db.select().from(requestSize).where(eq(requestSize.requestId, id));
-
     const snapshot = req.designSnapshot as DesignSnapshot;
     const pdf = await PDFDocument.create();
     const page = pdf.addPage([595, 842]); // A4
@@ -49,7 +47,6 @@ export async function GET(
     draw(`Brahman Friends — ${req.code}`, { size: 18, useBold: true });
     draw(`${snapshot.model.nameEs} / ${snapshot.model.nameEn} (${snapshot.model.code})`);
     draw(`Cantidad: ${req.quantity}`);
-    draw(`Tallas: ${sizes.map((s) => `${s.sizeLabel}×${s.quantity}`).join(", ")}`);
     if (snapshot.technique) {
       draw(`Técnica: ${snapshot.technique.nameEs} / ${snapshot.technique.nameEn}`);
     }
@@ -57,9 +54,7 @@ export async function GET(
     y -= 10;
     draw("Componentes", { useBold: true, size: 13 });
     for (const comp of snapshot.components) {
-      draw(
-        `${comp.nameEs}: ${comp.color ? `${comp.color.nameEs} (ref. ${comp.color.supplierRef})` : "—"}`,
-      );
+      draw(`${comp.nameEs}: ${comp.color ? comp.color.nameEs : "—"}`);
     }
 
     if (snapshot.decorations.length > 0) {

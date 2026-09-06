@@ -1,35 +1,41 @@
 import Link from "next/link";
-import { desc } from "drizzle-orm";
-import { color } from "@/lib/db/schema";
+import { eq, desc, and } from "drizzle-orm";
+import { notFound } from "next/navigation";
+import { db } from "@/lib/db";
+import { capModel, color } from "@/lib/db/schema";
 import { colorConNombre } from "@/lib/catalogo/consultas-traducidas";
 import { getT, type Locale } from "@/lib/i18n/t";
-import { MATERIAL_LABELS, isMaterial } from "@/lib/catalogo/materiales";
-import { PanelHeader } from "../_PanelHeader";
-import { EstadoBadge } from "../_EstadoBadge";
+import { PanelHeader } from "../../../_PanelHeader";
 
-const TONE_BY_STATUS = {
-  available: "success",
-  out_of_stock: "warning",
-  discontinued: "neutral",
-} as const;
-
-export default async function ColoresPage({
+export default async function ColoresModeloPage({
   params,
 }: {
-  params: Promise<{ locale: Locale }>;
+  params: Promise<{ locale: Locale; id: string }>;
 }) {
-  const { locale } = await params;
+  const { locale, id: modelId } = await params;
   const t = getT(locale);
-  const colors = await colorConNombre().orderBy(desc(color.createdAt));
+
+  const [model] = await db
+    .select()
+    .from(capModel)
+    .where(eq(capModel.id, modelId))
+    .limit(1);
+  if (!model) notFound();
+
+  const colors = await colorConNombre()
+    .where(and(eq(color.modelId, modelId)))
+    .orderBy(desc(color.createdAt));
 
   return (
     <div>
       <PanelHeader
-        eyebrow={t("nav.panel")}
-        title={t("nav.colors")}
+        eyebrow={t("nav.models")}
+        title={t("panel.modelos.colors")}
+        backHref={`/${locale}/panel/modelos/${modelId}`}
+        backLabel={t("common.back")}
         primaryAction={{
           label: t("panel.colores.new"),
-          href: `/${locale}/panel/colores/nuevo`,
+          href: `/${locale}/panel/modelos/${modelId}/colores/nuevo`,
           icon: "add",
         }}
       />
@@ -46,34 +52,16 @@ export default async function ColoresPage({
                 key={c.id}
                 className="flex flex-wrap items-center gap-x-4 gap-y-2 px-6 py-4 transition-colors hover:bg-surface-container-low/50"
               >
-                <div className="h-12 w-12 shrink-0 overflow-hidden rounded border border-outline-variant/60 bg-surface-container">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={c.sampleImageUrl}
-                    alt=""
-                    className="h-full w-full object-cover"
-                  />
-                </div>
                 <div className="min-w-0 flex-1">
                   <Link
-                    href={`/${locale}/panel/colores/${c.id}`}
+                    href={`/${locale}/panel/modelos/${modelId}/colores/${c.id}`}
                     className="font-body-md text-body-md font-semibold text-on-surface hover:text-primary"
                   >
                     {locale === "es" ? c.nameEs : c.nameEn}
                   </Link>
-                  <p className="mt-1 text-label-caps font-label-caps text-on-surface-variant">
-                    {isMaterial(c.material)
-                      ? MATERIAL_LABELS[c.material][locale]
-                      : c.material}{" "}
-                    · {c.supplierRef}
-                  </p>
                 </div>
-                <EstadoBadge
-                  label={t(`panel.colores.status.${c.status}`)}
-                  tone={TONE_BY_STATUS[c.status]}
-                />
                 <Link
-                  href={`/${locale}/panel/colores/${c.id}`}
+                  href={`/${locale}/panel/modelos/${modelId}/colores/${c.id}`}
                   className="inline-flex p-2 text-on-surface-variant transition-colors hover:text-primary"
                   title={t("common.edit")}
                   aria-label={t("common.edit")}

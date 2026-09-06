@@ -90,10 +90,7 @@ export function colorConNombre() {
   return db
     .select({
       id: color.id,
-      supplierRef: color.supplierRef,
-      material: color.material,
-      sampleImageUrl: color.sampleImageUrl,
-      status: color.status,
+      modelId: color.modelId,
       createdAt: color.createdAt,
       nameEs: colorEs.name,
       nameEn: colorEn.name,

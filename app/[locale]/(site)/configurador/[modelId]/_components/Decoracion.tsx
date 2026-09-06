@@ -9,14 +9,6 @@ import type { DisplayView } from "./CapasGorra";
 import { useArrastrarElemento } from "./ArrastrarElemento";
 import { useRedimensionarPellizco, DeslizadorTamano } from "./RedimensionarElemento";
 
-function findSwatchUrl(manifest: ModelManifest, colorId: string): string | undefined {
-  for (const comp of manifest.components) {
-    const match = comp.colors.find((c) => c.id === colorId);
-    if (match) return match.sampleImageUrl;
-  }
-  return undefined;
-}
-
 /**
  * Dibuja cada elemento decorativo deformado sobre su zona (FR-041, SC-013),
  * solo en las vistas donde su zona es visible (FR-026, FR-042, SC-006,
@@ -57,11 +49,6 @@ export function Decoracion({
             imageWidth={imageWidth}
             imageHeight={imageHeight}
             logoUrl={decoration.kind === "logo" ? decoration.url : undefined}
-            textSwatchUrl={
-              decoration.kind === "text"
-                ? findSwatchUrl(manifest, decoration.colorId)
-                : undefined
-            }
             onChange={(patch) => onChange(index, patch)}
             onRemove={() => onRemove(index)}
             labels={labels}
@@ -78,7 +65,6 @@ function ElementoDecorativo({
   imageWidth,
   imageHeight,
   logoUrl,
-  textSwatchUrl,
   onChange,
   onRemove,
   labels,
@@ -88,7 +74,6 @@ function ElementoDecorativo({
   imageWidth: number;
   imageHeight: number;
   logoUrl: string | undefined;
-  textSwatchUrl: string | undefined;
   onChange: (patch: Partial<Decoration>) => void;
   onRemove: () => void;
   labels: Record<string, string>;
@@ -127,9 +112,7 @@ function ElementoDecorativo({
         if (cancelled) return;
         drawWarped(ctx, img, box, warpParams);
       } else {
-        const swatch = textSwatchUrl ? await loadImage(textSwatchUrl).catch(() => null) : null;
-        if (cancelled) return;
-        const source = renderTextSource(decoration.content, decoration.font, swatch);
+        const source = renderTextSource(decoration.content, decoration.font);
         drawWarped(ctx, source, box, warpParams);
       }
     }
@@ -138,7 +121,7 @@ function ElementoDecorativo({
     return () => {
       cancelled = true;
     };
-  }, [decoration, zone, logoUrl, textSwatchUrl]);
+  }, [decoration, zone, logoUrl]);
 
   return (
     <div

@@ -25,7 +25,6 @@
     "home": "Home",
     "panel": "Panel",
     "models": "Models",
-    "colors": "Colors",
     "requests": "Requests",
     "techniques": "Techniques",
     "logout": "Log out",
@@ -41,7 +40,7 @@
     "svg_no_valido_tras_saneo": "The SVG file isn't a valid drawing after cleaning it up. Try another file.",
     "modelo_no_disponible": "This model is no longer available.",
     "color_no_disponible": "One of the chosen colors is no longer available.",
-    "tallas_no_cuadran": "The size breakdown doesn't add up to the total quantity.",
+    "cantidad_invalida": "Quantity must be an integer greater than or equal to 1.",
     "datos_contacto_invalidos": "Check the email address and the data-processing acceptance.",
     "decoracion_invalida": "One of the decoration elements isn't valid.",
     "publicacion_incompleta": "Images are missing to publish this model.",
@@ -176,9 +175,6 @@
   "solicitud": {
     "title": "Quantity and request",
     "quantity": "Total quantity",
-    "sizeBreakdown": "Size breakdown",
-    "matches": "The sizes add up to the total quantity.",
-    "mismatch": "You've distributed {{total}} of {{quantity}} units. Adjust it to continue.",
     "colors": "Colors",
     "decorations": "Decoration elements",
     "logo": "Logo",
@@ -220,18 +216,7 @@
       "new": "New color",
       "empty": "No colors yet. Create the first one.",
       "editTitle": "Edit color",
-      "supplierRef": "Supplier reference",
-      "material": "Material",
-      "selectMaterial": "Choose a material",
-      "sampleImage": "Sample photo",
-      "status": {
-        "label": "Availability",
-        "available": "Available",
-        "out_of_stock": "Out of stock",
-        "discontinued": "Discontinued"
-      },
-      "deleteConfirm": "Delete this color?",
-      "discontinueInstead": "This color has already been used. Discontinue it instead of deleting it?"
+      "material": "Material"
     },
     "modelos": {
       "new": "New model",
@@ -244,9 +229,9 @@
         "label": "Status"
       },
       "views": "Views",
+      "colors": "Colors",
       "components": "Components",
       "zones": "Decoration zones",
-      "sizes": "Sizes",
       "techniques": "Techniques for this model",
       "moq": "Minimum order quantity (MOQ)",
       "publish": "Publish",
@@ -287,8 +272,7 @@
       "arc": "Arc",
       "tilt": "Tilt",
       "taper": "Taper",
-      "maxTextChars": "Maximum text characters",
-      "sizeLabel": "Size (S, M, L, One size…)"
+      "maxTextChars": "Maximum text characters"
     },
     "solicitudes": {
       "allStatuses": "All statuses",

@@ -14,9 +14,10 @@ import { deletePublicFile } from "@/lib/media/storage";
 
 const VIEWS = ["front", "side", "back"] as const;
 
-// Habilita un color en un componente para una vista puntual (FR-019, RN6,
-// SC-004): el material del color debe coincidir con el del componente, y la
-// vista debe estar activa en el modelo, o se rechaza.
+// Habilita un color en un componente para una vista puntual (FR-019,
+// SC-004): el color debe pertenecer al mismo modelo que el componente
+// (007-colores-por-modelo FR-002), y la vista debe estar activa en el
+// modelo, o se rechaza.
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -52,11 +53,8 @@ export async function POST(
     if (!comp || !col) {
       return NextResponse.json({ error: "no_encontrado" }, { status: 404 });
     }
-    if (comp.material !== col.material) {
-      return apiError(422, "material_no_coincide", {
-        componentMaterial: comp.material,
-        colorMaterial: col.material,
-      });
+    if (col.modelId !== comp.modelId) {
+      return apiError(422, "modelo_no_coincide");
     }
 
     const [activeView] = await db

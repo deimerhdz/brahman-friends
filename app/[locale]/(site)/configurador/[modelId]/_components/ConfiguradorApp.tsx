@@ -74,7 +74,7 @@ export function ConfiguradorApp({
       if (!comp.customizable) continue;
       const colorId = nextColors[comp.id];
       const color = comp.colors.find((c) => c.id === colorId);
-      if (!colorId || !color || color.status !== "available") {
+      if (!colorId || !color) {
         nextColors[comp.id] = defaults[comp.id];
         fixed.push(locale === "es" ? comp.nameEs : comp.nameEn);
       }

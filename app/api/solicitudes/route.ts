@@ -3,13 +3,11 @@ import { eq, inArray } from "drizzle-orm";
 import { db } from "@/lib/db";
 import {
   request as requestTable,
-  requestSize,
   requestImage,
   logoAsset,
 } from "@/lib/db/schema";
 import { loadModelManifest } from "@/lib/catalogo/model-manifest";
 import { buildDesignSnapshot } from "@/lib/solicitud/snapshot";
-import { sizesMatchQuantity, sizesAreValidForModel } from "@/lib/solicitud/tallas";
 import { canPlaceDecoration, clampSizeToZone, clampOffsetToZone } from "@/lib/design/rules";
 import { generateRequestCode } from "@/lib/solicitud/codigo";
 import { errors, handleApiError } from "@/lib/http/errors";
@@ -28,7 +26,6 @@ interface Body {
     decorations: Decoration[];
   };
   quantity: number;
-  sizes: { label: string; quantity: number }[];
   contact: { name: string; email: string; phone: string };
   comments?: string;
   privacyAccepted: boolean;
@@ -67,7 +64,7 @@ export async function POST(request: NextRequest) {
       if (!comp.customizable) continue;
       const colorId = body.design.colors[comp.id];
       const color = comp.colors.find((c) => c.id === colorId);
-      if (!colorId || !color || color.status !== "available") {
+      if (!colorId || !color) {
         unavailableComponentIds.push(comp.id);
       }
     }
@@ -75,13 +72,9 @@ export async function POST(request: NextRequest) {
       return errors.colorNoDisponible(unavailableComponentIds);
     }
 
-    // 4. La suma por tallas iguala el total, y las tallas son del modelo
-    const modelSizeLabels = manifest.sizes.map((s) => s.label);
-    if (
-      !sizesMatchQuantity(body.sizes, body.quantity) ||
-      !sizesAreValidForModel(body.sizes, modelSizeLabels)
-    ) {
-      return errors.tallasNoCuadran();
+    // 4. La cantidad es un entero positivo
+    if (!Number.isInteger(body.quantity) || body.quantity < 1) {
+      return errors.cantidadInvalida();
     }
 
     // 5. Correo válido y aceptación del tratamiento de datos
@@ -122,8 +115,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Todo pasó: en una sola transacción se genera el código, se congela el
-    // diseño y se escriben request, request_size, request_image y se asocia
-    // el logo_asset (FR-052, FR-054, RN4, RN17, RN19).
+    // diseño y se escriben request, request_image y se asocia el logo_asset
+    // (FR-052, FR-054, RN4, RN19).
     const logoIds = body.design.decorations
       .filter((d): d is Extract<Decoration, { kind: "logo" }> => d.kind === "logo")
       .map((d) => d.logoAssetId);
@@ -179,13 +172,6 @@ export async function POST(request: NextRequest) {
               notificationStatus: "pending",
             })
             .returning(),
-          db.insert(requestSize).values(
-            body.sizes.map((s) => ({
-              requestId,
-              sizeLabel: s.label,
-              quantity: s.quantity,
-            })),
-          ),
           ...(body.viewImages.length > 0
             ? [
                 db.insert(requestImage).values(

@@ -15,9 +15,6 @@ export default async function SolicitudPage({
       labels={{
         title: t("solicitud.title"),
         quantity: t("solicitud.quantity"),
-        sizeBreakdown: t("solicitud.sizeBreakdown"),
-        matches: t("solicitud.matches"),
-        mismatch: t("solicitud.mismatch"),
         colors: t("solicitud.colors"),
         decorations: t("solicitud.decorations"),
         logo: t("solicitud.logo"),
@@ -46,7 +43,7 @@ export default async function SolicitudPage({
         networkError: t("solicitud.networkError"),
         modelo_no_disponible: t("errors.modelo_no_disponible"),
         color_no_disponible: t("errors.color_no_disponible"),
-        tallas_no_cuadran: t("errors.tallas_no_cuadran"),
+        cantidad_invalida: t("errors.cantidad_invalida"),
         datos_contacto_invalidos: t("errors.datos_contacto_invalidos"),
         decoracion_invalida: t("errors.decoracion_invalida"),
       }}

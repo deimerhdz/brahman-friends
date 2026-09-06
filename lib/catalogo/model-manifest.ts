@@ -2,12 +2,12 @@ import { eq, and } from "drizzle-orm";
 import { db } from "@/lib/db";
 import {
   capModel,
+  color,
   modelView,
   component,
   componentColor,
   componentImage,
   decorationZone,
-  modelSize,
   modelTechnique,
 } from "@/lib/db/schema";
 import {
@@ -39,17 +39,15 @@ export async function loadModelManifest(modelId: string) {
     colors,
     images,
     zones,
-    sizes,
     techniques,
     modelTechniques,
   ] = await Promise.all([
     db.select().from(modelView).where(eq(modelView.modelId, modelId)),
     componentConNombre().where(eq(component.modelId, modelId)),
     db.select().from(componentColor),
-    colorConNombre(),
+    colorConNombre().where(eq(color.modelId, modelId)),
     db.select().from(componentImage).where(eq(componentImage.modelId, modelId)),
     db.select().from(decorationZone).where(eq(decorationZone.modelId, modelId)),
-    db.select().from(modelSize).where(eq(modelSize.modelId, modelId)),
     techniqueConNombre(),
     db.select().from(modelTechnique).where(eq(modelTechnique.modelId, modelId)),
   ]);
@@ -83,9 +81,6 @@ export async function loadModelManifest(modelId: string) {
           id: c.id,
           nameEs: c.nameEs,
           nameEn: c.nameEn,
-          supplierRef: c.supplierRef,
-          sampleImageUrl: c.sampleImageUrl,
-          status: c.status,
           images: Object.fromEntries(
             images
               .filter(
@@ -132,10 +127,6 @@ export async function loadModelManifest(modelId: string) {
       taper: Number(z.taper),
       maxTextChars: z.maxTextChars,
     })),
-    sizes: sizes
-      .slice()
-      .sort((a, b) => a.sortOrder - b.sortOrder)
-      .map((s) => ({ label: s.label })),
     techniques: modelTechniques
       .map((mt) => techniques.find((t) => t.id === mt.techniqueId))
       .filter((t): t is NonNullable<typeof t> => !!t)

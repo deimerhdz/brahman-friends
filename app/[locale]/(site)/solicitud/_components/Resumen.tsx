@@ -1,12 +1,11 @@
 import type { Locale } from "@/lib/i18n/t";
 import type { ModelManifest } from "@/lib/catalogo/model-manifest";
 import type { Decoration } from "@/lib/design/borrador";
-import type { SizeQuantity } from "@/lib/solicitud/tallas";
 
 /**
- * Resumen con modelo, color por componente, elementos decorativos, técnica,
- * cantidad y tallas, y el aviso de que enviar no genera precio ni compromiso
- * de venta (FR-049, RN18, SC-018).
+ * Resumen con modelo, color por componente, elementos decorativos, técnica y
+ * cantidad, y el aviso de que enviar no genera precio ni compromiso de venta
+ * (FR-049, RN18, SC-018).
  */
 export function Resumen({
   locale,
@@ -15,7 +14,6 @@ export function Resumen({
   decorations,
   technique,
   quantity,
-  sizes,
   labels,
 }: {
   locale: Locale;
@@ -24,7 +22,6 @@ export function Resumen({
   decorations: Decoration[];
   technique: string | null;
   quantity: number;
-  sizes: SizeQuantity[];
   labels: Record<string, string>;
 }) {
   const techniqueLabel = manifest.techniques.find((t) => t.id === technique);
@@ -77,14 +74,6 @@ export function Resumen({
         <span className="text-gray-500">{labels.quantity}: </span>
         {quantity}
       </p>
-
-      <ul className="list-inside list-disc">
-        {sizes.map((s) => (
-          <li key={s.label}>
-            {s.label}: {s.quantity}
-          </li>
-        ))}
-      </ul>
 
       <p className="rounded bg-yellow-50 p-2 text-yellow-800">{labels.noPriceWarning}</p>
     </div>

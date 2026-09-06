@@ -36,7 +36,7 @@ export const errors = {
   modeloNoDisponible: () => apiError(409, "modelo_no_disponible"),
   colorNoDisponible: (componentIds: string[]) =>
     apiError(409, "color_no_disponible", { componentIds }),
-  tallasNoCuadran: () => apiError(422, "tallas_no_cuadran"),
+  cantidadInvalida: () => apiError(422, "cantidad_invalida"),
   datosContactoInvalidos: () => apiError(400, "datos_contacto_invalidos"),
   decoracionInvalida: (detail?: unknown) =>
     apiError(422, "decoracion_invalida", detail),

@@ -30,9 +30,7 @@ export function buildDesignSnapshot(
               id: color.id,
               nameEs: color.nameEs,
               nameEn: color.nameEn,
-              supplierRef: color.supplierRef,
               material: comp.material,
-              sampleImageUrl: color.sampleImageUrl,
             }
           : null,
       };

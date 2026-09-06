@@ -72,11 +72,7 @@ export async function composeView(
       const img = await loadImage(decoration.url);
       drawWarped(ctx, img, box, warpParams);
     } else {
-      const swatchUrl = manifest.components
-        .flatMap((c) => c.colors)
-        .find((c) => c.id === decoration.colorId)?.sampleImageUrl;
-      const swatch = swatchUrl ? await loadImage(swatchUrl).catch(() => null) : null;
-      const source = renderTextSource(decoration.content, decoration.font, swatch);
+      const source = renderTextSource(decoration.content, decoration.font);
       drawWarped(ctx, source, box, warpParams);
     }
   }
@@ -99,10 +95,12 @@ export function loadImage(src: string): Promise<HTMLImageElement> {
   });
 }
 
+// Sin imagen de muestra por color (007-colores-por-modelo, enmienda
+// 2026-09-06), el texto personalizado ya no tiene de dónde sacar un patrón
+// por color: siempre se dibuja con este color de reserva fijo.
 export function renderTextSource(
   content: string,
   fontId: string,
-  swatch: HTMLImageElement | null,
 ): HTMLCanvasElement {
   const canvas = document.createElement("canvas");
   canvas.width = 600;
@@ -111,7 +109,7 @@ export function renderTextSource(
   ctx.font = `bold 90px ${fontCss(fontId)}`;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillStyle = swatch ? (ctx.createPattern(swatch, "repeat") ?? "#111827") : "#111827";
+  ctx.fillStyle = "#111827";
   ctx.fillText(content || " ", canvas.width / 2, canvas.height / 2);
   return canvas;
 }

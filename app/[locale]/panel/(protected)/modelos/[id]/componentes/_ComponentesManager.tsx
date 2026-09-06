@@ -30,8 +30,6 @@ interface ColorRow {
   id: string;
   nameEs: string;
   nameEn: string;
-  material: string;
-  status: string;
 }
 
 interface Cargada {
@@ -336,7 +334,6 @@ export function ComponentesManager({
             {comp.customizable && (
               <div className="mt-3 flex flex-col gap-3">
                 {colors
-                  .filter((c) => c.material === comp.material)
                   .map((c) => {
                     const requiredViews =
                       enabled.find((e) => e.colorId === c.id)?.views ?? [];

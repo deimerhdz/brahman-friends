@@ -6,10 +6,7 @@ import Link from "next/link";
 import type { Locale } from "@/lib/i18n/t";
 import type { ModelManifest } from "@/lib/catalogo/model-manifest";
 import { loadDraft, clearDraft } from "@/lib/design/borrador";
-import type { SizeQuantity } from "@/lib/solicitud/tallas";
-import { sizesMatchQuantity } from "@/lib/solicitud/tallas";
 import { subirVistas } from "../_lib/subir-vistas";
-import { CantidadTallas } from "./CantidadTallas";
 import { Resumen } from "./Resumen";
 import { FormularioContacto, type ContactValue } from "./FormularioContacto";
 import { BotonEnviar } from "./BotonEnviar";
@@ -32,7 +29,6 @@ export function SolicitudApp({
     const qty = Number.parseInt(searchParams.get("qty") ?? "", 10);
     return Number.isInteger(qty) && qty >= 1 ? qty : 0;
   });
-  const [sizes, setSizes] = useState<SizeQuantity[]>([]);
   const [contact, setContact] = useState<ContactValue>({
     name: "",
     email: "",
@@ -74,16 +70,6 @@ export function SolicitudApp({
     return <p className="px-4 py-10 text-center">{labels.loading}</p>;
   }
 
-  const modelSizeLabels = manifest.sizes.map((s) => s.label);
-
-  function onSizeChange(label: string, qty: number) {
-    setSizes((prev) => {
-      const next = prev.filter((s) => s.label !== label);
-      if (qty > 0) next.push({ label, quantity: qty });
-      return next;
-    });
-  }
-
   async function submit() {
     if (!manifest || !draft) return;
     setSubmitting(true);
@@ -102,7 +88,6 @@ export function SolicitudApp({
             decorations: draft.decorations,
           },
           quantity,
-          sizes,
           contact: { name: contact.name, email: contact.email, phone: contact.phone },
           comments: contact.comments || undefined,
           privacyAccepted: contact.privacyAccepted,
@@ -126,7 +111,7 @@ export function SolicitudApp({
     }
   }
 
-  const sizesOk = sizesMatchQuantity(sizes, quantity);
+  const quantityOk = Number.isInteger(quantity) && quantity >= 1;
   const contactOk =
     contact.name && contact.email && contact.phone && contact.privacyAccepted;
 
@@ -134,16 +119,18 @@ export function SolicitudApp({
     <div className="mx-auto flex max-w-lg flex-col gap-6 px-4 py-8">
       <h1 className="text-xl font-semibold">{labels.title}</h1>
 
-      <CantidadTallas
-        modelSizes={modelSizeLabels}
-        quantity={quantity}
-        sizes={sizes}
-        onQuantityChange={setQuantity}
-        onSizeChange={onSizeChange}
-        labels={labels}
-      />
+      <label className="flex flex-col gap-1">
+        <span>{labels.quantity}</span>
+        <input
+          type="number"
+          min={1}
+          value={quantity}
+          onChange={(e) => setQuantity(Number(e.target.value))}
+          className="rounded border border-gray-300 px-3 py-2"
+        />
+      </label>
 
-      {sizesOk && (
+      {quantityOk && (
         <Resumen
           locale={locale}
           manifest={manifest}
@@ -151,16 +138,15 @@ export function SolicitudApp({
           decorations={draft.decorations}
           technique={draft.technique}
           quantity={quantity}
-          sizes={sizes}
           labels={labels}
         />
       )}
 
-      {sizesOk && (
+      {quantityOk && (
         <FormularioContacto locale={locale} value={contact} onChange={(p) => setContact((c) => ({ ...c, ...p }))} labels={labels} />
       )}
 
-      {sizesOk && (
+      {quantityOk && (
         <BotonEnviar
           onSubmit={submit}
           disabled={!contactOk}

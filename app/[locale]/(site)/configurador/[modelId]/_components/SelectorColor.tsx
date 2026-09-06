@@ -17,9 +17,7 @@ export function SelectorColor({
   onSelect: (colorId: string) => void;
   labels: { approximate: string };
 }) {
-  const availableColors = component.colors.filter(
-    (c) => c.status === "available" || c.id === selectedColorId,
-  );
+  const availableColors = component.colors;
 
   return (
     <div>
@@ -33,20 +31,14 @@ export function SelectorColor({
             type="button"
             onClick={() => onSelect(c.id)}
             aria-pressed={c.id === selectedColorId}
-            className={`flex flex-col items-center gap-1 rounded border p-1 text-xs ${
+            className={`rounded border px-3 py-2 text-xs ${
               c.id === selectedColorId
                 ? "border-brand ring-2 ring-brand"
                 : "border-gray-200"
             }`}
             title={locale === "es" ? c.nameEs : c.nameEn}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={c.sampleImageUrl}
-              alt=""
-              className="h-10 w-10 rounded object-cover"
-            />
-            <span className="max-w-[4.5rem] truncate">
+            <span className="max-w-[6rem] truncate">
               {locale === "es" ? c.nameEs : c.nameEn}
             </span>
           </button>

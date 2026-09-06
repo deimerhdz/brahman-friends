@@ -14,9 +14,9 @@ import { PanelHeader } from "../../_PanelHeader";
 
 const SECTION_ICONS: Record<string, string> = {
   vistas: "photo_camera",
+  colores: "palette",
   componentes: "widgets",
   zonas: "crop_free",
-  tallas: "straighten",
 };
 
 export default async function ModeloHubPage({
@@ -37,9 +37,9 @@ export default async function ModeloHubPage({
 
   const sections = [
     { href: "vistas", label: t("panel.modelos.views") },
+    { href: "colores", label: t("panel.modelos.colors") },
     { href: "componentes", label: t("panel.modelos.components") },
     { href: "zonas", label: t("panel.modelos.zones") },
-    { href: "tallas", label: t("panel.modelos.sizes") },
   ];
 
   return (

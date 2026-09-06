@@ -10,7 +10,6 @@ export const PANEL_NAV_LINKS = (locale: Locale) => {
   const base = `/${locale}/panel`;
   return [
     { href: `${base}/modelos`, label: t("nav.models"), icon: "category" },
-    { href: `${base}/colores`, label: t("nav.colors"), icon: "palette" },
     { href: `${base}/tecnicas`, label: t("nav.techniques"), icon: "brush" },
     { href: `${base}/solicitudes`, label: t("nav.requests"), icon: "package_2" },
   ];
