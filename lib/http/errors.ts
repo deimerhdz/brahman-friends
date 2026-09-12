@@ -45,6 +45,10 @@ export const errors = {
     missingBaseViews: string[];
     componentsWithoutColors: string[];
   }) => apiError(422, "publicacion_incompleta", detail),
+  publicacionIncompletaProductoFijo: (detail: {
+    missingPrice: boolean;
+    missingPhoto: boolean;
+  }) => apiError(422, "publicacion_incompleta", detail),
   transicionNoPermitida: (from: string, allowed: string[]) =>
     apiError(409, "transicion_no_permitida", { from, allowed }),
   yaAnonimizada: () => apiError(409, "ya_anonimizada"),

@@ -31,7 +31,7 @@ export default async function PanelProtectedLayout({
       </div>
       <MobilePanelNav locale={locale} userName={session.name} />
       <main className="min-h-screen lg:ml-64">
-        <div>{children}</div>
+        <div className="p-6 lg:p-8">{children}</div>
       </main>
     </div>
   );

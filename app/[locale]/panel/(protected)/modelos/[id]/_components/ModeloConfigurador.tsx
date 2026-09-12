@@ -62,6 +62,7 @@ export function ModeloConfigurador({
   modelId,
   code,
   status,
+  type,
   nameEs,
   nameEn,
   descriptionEs,
@@ -87,6 +88,7 @@ export function ModeloConfigurador({
   modelId: string;
   code: string;
   status: "draft" | "published";
+  type: "configurable" | "fixed_product";
   nameEs: string;
   nameEn: string;
   descriptionEs: string;
@@ -109,7 +111,9 @@ export function ModeloConfigurador({
   labels: Record<string, string>;
 }) {
   const router = useRouter();
-  const [step, setStep] = useState<1 | 2 | 3>(2);
+  // Un "Producto fijo" (009-modelos-producto-fijo) no tiene pasos de
+  // colores ni personalización: arranca (y se queda) en el paso de vistas.
+  const [step, setStep] = useState<1 | 2 | 3>(type === "fixed_product" ? 1 : 2);
   const [activeView, setActiveView] = useState<View>("front");
   const [sidePosition, setSidePosition] = useState<"left" | "right">("left");
   const [zones, setZones] = useState(zonesByPosition);
@@ -212,11 +216,14 @@ export function ModeloConfigurador({
     window.open(`/${locale}/configurador/${modelId}`, "_blank");
   }
 
-  const stepTabs: { step: 1 | 2 | 3; label: string }[] = [
-    { step: 1, label: labels.tabViews },
-    { step: 2, label: labels.tabColors },
-    { step: 3, label: labels.tabPersonalization },
-  ];
+  const stepTabs: { step: 1 | 2 | 3; label: string }[] =
+    type === "fixed_product"
+      ? [{ step: 1, label: labels.tabViews }]
+      : [
+          { step: 1, label: labels.tabViews },
+          { step: 2, label: labels.tabColors },
+          { step: 3, label: labels.tabPersonalization },
+        ];
 
   return (
     <div className="flex flex-col rounded-xl border border-outline-variant/60 bg-surface-container-lowest ambient-shadow lg:flex-row lg:items-start">
@@ -328,12 +335,16 @@ export function ModeloConfigurador({
             modelId={modelId}
             code={code}
             status={status}
+            type={type}
             value={header}
             onChange={setHeader}
             labels={labels}
           />
 
-          <div className="mt-4 grid grid-cols-3 gap-1 rounded-xl bg-surface-container-low p-1">
+          <div
+            className="mt-4 grid gap-1 rounded-xl bg-surface-container-low p-1"
+            style={{ gridTemplateColumns: `repeat(${stepTabs.length}, minmax(0, 1fr))` }}
+          >
             {stepTabs.map((tab) => (
               <button
                 key={tab.step}

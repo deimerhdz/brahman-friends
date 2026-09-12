@@ -30,6 +30,7 @@ export function capModelConNombre() {
       id: capModel.id,
       code: capModel.code,
       status: capModel.status,
+      type: capModel.type,
       imageWidth: capModel.imageWidth,
       imageHeight: capModel.imageHeight,
       moq: capModel.moq,
@@ -64,6 +65,8 @@ export function capModelConNombreYPortada() {
     .select({
       id: capModel.id,
       publishedAt: capModel.publishedAt,
+      type: capModel.type,
+      price: capModel.price,
       nameEs: capModelEs.name,
       nameEn: capModelEn.name,
       descriptionEs: capModelEs.description,

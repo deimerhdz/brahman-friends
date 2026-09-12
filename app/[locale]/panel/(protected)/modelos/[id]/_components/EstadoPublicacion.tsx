@@ -2,21 +2,30 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import type { PublicacionResultado } from "@/lib/catalogo/publicacion";
+import type {
+  PublicacionResultado,
+  PublicacionProductoFijoResultado,
+} from "@/lib/catalogo/publicacion";
 import { EstadoBadge } from "../../../_EstadoBadge";
 
 // Lista exacta de combinaciones faltantes al intentar publicar (FR-012, SC-023).
+// Para un modelo "Producto fijo" (009-modelos-producto-fijo), la forma del
+// resultado es distinta (missingPrice/missingPhoto en vez de colores).
 export function EstadoPublicacion({
   modelId,
   status,
+  type,
   labels,
 }: {
   modelId: string;
   status: "draft" | "published";
+  type: "configurable" | "fixed_product";
   labels: Record<string, string>;
 }) {
   const router = useRouter();
-  const [result, setResult] = useState<PublicacionResultado | null>(null);
+  const [result, setResult] = useState<
+    PublicacionResultado | PublicacionProductoFijoResultado | null
+  >(null);
   const [busy, setBusy] = useState(false);
 
   async function publicar() {
@@ -67,23 +76,35 @@ export function EstadoPublicacion({
         </button>
       )}
 
-      {result && (
+      {result && type === "fixed_product" && (
         <div className="w-64 max-w-[80vw] rounded-lg border border-error/30 bg-error-container p-3 text-left font-body-md text-[11px] text-on-error-container">
           <p className="mb-1 font-semibold">{labels.incomplete}</p>
-          {result.missingBaseViews.length > 0 && (
+          {(result as PublicacionProductoFijoResultado).missingPrice && (
+            <p>{labels.missingPrice}</p>
+          )}
+          {(result as PublicacionProductoFijoResultado).missingPhoto && (
+            <p>{labels.missingPhoto}</p>
+          )}
+        </div>
+      )}
+      {result && type !== "fixed_product" && (
+        <div className="w-64 max-w-[80vw] rounded-lg border border-error/30 bg-error-container p-3 text-left font-body-md text-[11px] text-on-error-container">
+          <p className="mb-1 font-semibold">{labels.incomplete}</p>
+          {(result as PublicacionResultado).missingBaseViews.length > 0 && (
             <p>
-              {labels.missingBaseViews}: {result.missingBaseViews.join(", ")}
+              {labels.missingBaseViews}:{" "}
+              {(result as PublicacionResultado).missingBaseViews.join(", ")}
             </p>
           )}
-          {result.componentsWithoutColors.length > 0 && (
+          {(result as PublicacionResultado).componentsWithoutColors.length > 0 && (
             <p>
               {labels.componentsWithoutColors}:{" "}
-              {result.componentsWithoutColors.join(", ")}
+              {(result as PublicacionResultado).componentsWithoutColors.join(", ")}
             </p>
           )}
-          {result.missing.length > 0 && (
+          {(result as PublicacionResultado).missing.length > 0 && (
             <ul className="mt-1 list-inside list-disc">
-              {result.missing.map((m, i) => (
+              {(result as PublicacionResultado).missing.map((m, i) => (
                 <li key={i}>
                   {m.component} · {m.color} · {m.view}
                 </li>

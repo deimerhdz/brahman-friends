@@ -109,6 +109,7 @@ export default async function ModeloConfigPage({
     // Encabezado
     name: t("common.name"),
     description: t("common.description"),
+    descriptionPlaceholder: t("panel.modelos.descriptionPlaceholder"),
     price: t("panel.modelos.price"),
     code: t("panel.modelos.code"),
     switchEs: t("panel.switchIdioma.es"),
@@ -120,6 +121,10 @@ export default async function ModeloConfigPage({
     incomplete: t("errors.publicacion_incompleta"),
     missingBaseViews: t("panel.modelos.missingBaseViews"),
     componentsWithoutColors: t("panel.modelos.componentsWithoutColors"),
+    missingPrice: t("panel.modelos.missingPrice"),
+    missingPhoto: t("panel.modelos.missingPhoto"),
+    typeConfigurable: t("panel.modelos.type.configurable"),
+    typeFixedProduct: t("panel.modelos.type.fixed_product"),
     // Tabs
     tabViews: t("panel.modelos.tabViews"),
     tabColors: t("panel.modelos.tabColors"),
@@ -200,6 +205,7 @@ export default async function ModeloConfigPage({
       modelId={id}
       code={model.code}
       status={model.status}
+      type={model.type}
       nameEs={model.nameEs}
       nameEn={model.nameEn}
       descriptionEs={model.descriptionEs}

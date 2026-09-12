@@ -91,7 +91,9 @@
     "collection": {
       "eyebrow": "SILUETAS",
       "title": "La Colección",
-      "exploreAll": "Ver todo"
+      "exploreAll": "Ver todo",
+      "viewDetails": "Ver detalles",
+      "customize": "Personalizar"
     },
     "b2b": {
       "eyebrow": "EMPRESAS",
@@ -195,6 +197,9 @@
     "notificationPending": "El correo de confirmación puede demorar unos minutos.",
     "followUpNotice": "El equipo comercial va a responder con la cotización por fuera de este sistema."
   },
+  "producto": {
+    "orderTitle": "Pedir este producto"
+  },
   "privacidad": {
     "title": "Tratamiento de datos personales",
     "intro": "Esta página explica qué datos pedimos al enviar una solicitud de cotización y cómo los tratamos, conforme a la Ley 1581 de 2012.",
@@ -222,12 +227,20 @@
       "new": "Nuevo modelo",
       "editTitle": "Editar modelo",
       "empty": "Todavía no hay modelos. Creá el primero.",
+      "descriptionPlaceholder": "Escribí algo…",
       "code": "Código interno",
       "status": {
         "draft": "Borrador",
         "published": "Publicado",
         "label": "Estado"
       },
+      "type": {
+        "label": "Tipo",
+        "hint": "El tipo se elige una sola vez y no se puede cambiar después de crear el modelo.",
+        "configurable": "Configurable",
+        "fixed_product": "Producto fijo"
+      },
+      "priceRequired": "El precio es obligatorio para un producto fijo",
       "views": "Vistas",
       "colors": "Colores",
       "components": "Componentes",
@@ -238,6 +251,8 @@
       "unpublish": "Despublicar",
       "missingBaseViews": "Vistas sin imagen base",
       "componentsWithoutColors": "Componentes sin color disponible",
+      "missingPrice": "Falta definir el precio",
+      "missingPhoto": "Falta subir al menos una foto",
       "view": {
         "front": "Frontal",
         "side": "Lateral",

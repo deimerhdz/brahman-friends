@@ -78,6 +78,13 @@
       "when": 1788743552844,
       "tag": "0010_complex_red_hulk",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1789246636044,
+      "tag": "0011_polite_champions",
+      "breakpoints": true
     }
   ]
 }

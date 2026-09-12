@@ -91,7 +91,9 @@
     "collection": {
       "eyebrow": "SILHOUETTES",
       "title": "The Collection",
-      "exploreAll": "Explore All"
+      "exploreAll": "Explore All",
+      "viewDetails": "View details",
+      "customize": "Customize"
     },
     "b2b": {
       "eyebrow": "ENTERPRISE",
@@ -195,6 +197,9 @@
     "notificationPending": "The confirmation email may take a few minutes.",
     "followUpNotice": "Our sales team will follow up with a quote outside this system."
   },
+  "producto": {
+    "orderTitle": "Order this product"
+  },
   "privacidad": {
     "title": "Personal data processing",
     "intro": "This page explains what data we ask for when submitting a quote request and how we handle it, under Colombian Law 1581 of 2012.",
@@ -222,12 +227,20 @@
       "new": "New model",
       "editTitle": "Edit model",
       "empty": "No models yet. Create the first one.",
+      "descriptionPlaceholder": "Write something…",
       "code": "Internal code",
       "status": {
         "draft": "Draft",
         "published": "Published",
         "label": "Status"
       },
+      "type": {
+        "label": "Type",
+        "hint": "The type is chosen once and can't be changed after the model is created.",
+        "configurable": "Configurable",
+        "fixed_product": "Fixed product"
+      },
+      "priceRequired": "Price is required for a fixed product",
       "views": "Views",
       "colors": "Colors",
       "components": "Components",
@@ -238,6 +251,8 @@
       "unpublish": "Unpublish",
       "missingBaseViews": "Views without a base image",
       "componentsWithoutColors": "Components without an available color",
+      "missingPrice": "Price is missing",
+      "missingPhoto": "At least one photo is missing",
       "view": {
         "front": "Front",
         "side": "Side",

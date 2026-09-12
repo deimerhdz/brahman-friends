@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { Locale } from "@/lib/i18n/t";
+import { RichTextEditor } from "./RichTextEditor";
 
 export interface ValorTraducido {
   es: string;
@@ -19,17 +20,23 @@ export function CampoTraducible({
   value,
   onChange,
   multiline = false,
+  richText = false,
   required = false,
   defaultLocale,
   switchLabels,
+  placeholder,
 }: {
   label: string;
   value: ValorTraducido;
   onChange: (value: ValorTraducido) => void;
   multiline?: boolean;
+  /** Reemplaza el `<textarea>` por un editor de texto enriquecido
+   * (009-modelos-producto-fijo). Solo tiene efecto junto con `multiline`. */
+  richText?: boolean;
   required?: boolean;
   defaultLocale: Locale;
   switchLabels: { es: string; en: string };
+  placeholder?: string;
 }) {
   const [active, setActive] = useState<Locale>(defaultLocale);
 
@@ -55,7 +62,14 @@ export function CampoTraducible({
           ))}
         </div>
       </div>
-      {multiline ? (
+      {multiline && richText ? (
+        <RichTextEditor
+          editorKey={active}
+          value={value[active]}
+          onChange={(html) => onChange({ ...value, [active]: html })}
+          placeholder={placeholder}
+        />
+      ) : multiline ? (
         <textarea
           value={value[active]}
           onChange={(e) => onChange({ ...value, [active]: e.target.value })}

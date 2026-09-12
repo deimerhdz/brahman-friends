@@ -71,40 +71,54 @@ export default async function SolicitudDetallePage({
         <h2 className="mb-3 font-body-md text-body-md font-semibold text-on-surface">
           {t("panel.solicitudes.technicalSheet")}
         </h2>
-        <p>
-          {locale === "es" ? snapshot.model.nameEs : snapshot.model.nameEn} (
-          {snapshot.model.code})
-        </p>
-        <p>
-          {t("solicitud.quantity")}: {req.quantity}
-        </p>
-        {snapshot.technique && (
-          <p>
-            {t("solicitud.technique")}:{" "}
-            {locale === "es" ? snapshot.technique.nameEs : snapshot.technique.nameEn}
-          </p>
-        )}
-        <ul className="list-inside list-disc">
-          {snapshot.components.map((c) => (
-            <li key={c.id}>
-              {locale === "es" ? c.nameEs : c.nameEn}:{" "}
-              {c.color
-                ? locale === "es"
-                  ? c.color.nameEs
-                  : c.color.nameEn
-                : "—"}
-            </li>
-          ))}
-        </ul>
-        {snapshot.decorations.length > 0 && (
-          <ul className="list-inside list-disc">
-            {snapshot.decorations.map((d, i) => (
-              <li key={i}>
-                {d.zone} — {d.kind === "logo" ? d.logoFilename : `"${d.content}"`} —{" "}
-                {d.widthCm.toFixed(1)}×{d.heightCm.toFixed(1)} cm
-              </li>
-            ))}
-          </ul>
+        {snapshot.kind === "fixed_product" ? (
+          <>
+            <p>{locale === "es" ? snapshot.nameEs : snapshot.nameEn}</p>
+            <p>
+              {t("solicitud.quantity")}: {req.quantity}
+            </p>
+            <p>
+              {t("panel.modelos.price")}: {snapshot.price ?? "—"}
+            </p>
+          </>
+        ) : (
+          <>
+            <p>
+              {locale === "es" ? snapshot.model.nameEs : snapshot.model.nameEn} (
+              {snapshot.model.code})
+            </p>
+            <p>
+              {t("solicitud.quantity")}: {req.quantity}
+            </p>
+            {snapshot.technique && (
+              <p>
+                {t("solicitud.technique")}:{" "}
+                {locale === "es" ? snapshot.technique.nameEs : snapshot.technique.nameEn}
+              </p>
+            )}
+            <ul className="list-inside list-disc">
+              {snapshot.components.map((c) => (
+                <li key={c.id}>
+                  {locale === "es" ? c.nameEs : c.nameEn}:{" "}
+                  {c.color
+                    ? locale === "es"
+                      ? c.color.nameEs
+                      : c.color.nameEn
+                    : "—"}
+                </li>
+              ))}
+            </ul>
+            {snapshot.decorations.length > 0 && (
+              <ul className="list-inside list-disc">
+                {snapshot.decorations.map((d, i) => (
+                  <li key={i}>
+                    {d.zone} — {d.kind === "logo" ? d.logoFilename : `"${d.content}"`} —{" "}
+                    {d.widthCm.toFixed(1)}×{d.heightCm.toFixed(1)} cm
+                  </li>
+                ))}
+              </ul>
+            )}
+          </>
         )}
       </section>
 

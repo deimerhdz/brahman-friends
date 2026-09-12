@@ -27,6 +27,14 @@ export const requestViewEnum = pgEnum("request_view", [
 
 export const modelStatusEnum = pgEnum("model_status", ["draft", "published"]);
 
+// Tipo de modelo (009-modelos-producto-fijo): "configurable" se cotiza y se
+// personaliza (comportamiento histórico); "fixed_product" es una gorra ya
+// definida, con precio y fotos fijas, sin colores ni personalización.
+export const modelTypeEnum = pgEnum("model_type", [
+  "configurable",
+  "fixed_product",
+]);
+
 export const zonePositionEnum = pgEnum("zone_position", [
   "front",
   "left",
@@ -116,6 +124,10 @@ export const capModel = pgTable("cap_model", {
   id: uuid("id").primaryKey().defaultRandom(),
   code: text("code").notNull().unique(),
   status: modelStatusEnum("status").notNull().default("draft"),
+  // Tipo del modelo (009-modelos-producto-fijo): se fija al crear y no se
+  // vuelve a exponer para editar. Default 'configurable' cubre los modelos
+  // creados antes de esta funcionalidad sin backfill manual.
+  type: modelTypeEnum("type").notNull().default("configurable"),
   imageWidth: integer("image_width"),
   imageHeight: integer("image_height"),
   // Cantidad mínima de pedido (006-configurador-stepper FR-010, FR-012).

@@ -29,7 +29,12 @@ export default async function HomePage({
     name: locale === "es" ? m.nameEs : m.nameEn,
     description: locale === "es" ? m.descriptionEs : m.descriptionEn,
     frontImageUrl: m.frontImageUrl,
-    href: `/${locale}/configurador/${m.id}`,
+    type: m.type,
+    price: m.type === "fixed_product" ? m.price : null,
+    href:
+      m.type === "fixed_product"
+        ? `/${locale}/producto/${m.id}`
+        : `/${locale}/configurador/${m.id}`,
   }));
 
   return (

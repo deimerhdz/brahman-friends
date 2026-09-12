@@ -1,12 +1,17 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { T } from "@/lib/i18n/t";
+import { formatUsd } from "@/lib/catalogo/precio";
 
 export type TarjetaModelo = {
   id: string;
   name: string;
   description: string;
   frontImageUrl: string | null;
+  type: "configurable" | "fixed_product";
+  // Solo un "Producto fijo" (009-modelos-producto-fijo) trae precio; un
+  // modelo configurable se cotiza, así que queda en null.
+  price: string | null;
   href: string;
 };
 
@@ -62,13 +67,33 @@ export function Collection({
                     />
                   )}
                 </div>
-                <div className="ghost-border flex items-center justify-between bg-surface-container-lowest p-4">
+                <div className="ghost-border flex flex-col gap-3 bg-surface-container-lowest p-4">
                   <div>
                     <h3 className="text-body-lg font-body-lg font-medium text-on-surface">
                       {model.name}
                     </h3>
-                    <span className="mt-1 block text-label-caps font-label-caps text-on-surface-variant">
-                      {model.description}
+                    {/* Descripción con formato del editor de texto
+                        enriquecido del panel (009-modelos-producto-fijo);
+                        ya se saneó al guardarla, no al mostrarla. Se recorta
+                        a 3 líneas: la tarjeta es una vista previa, no el
+                        detalle completo del producto. */}
+                    <span
+                      className="mt-1 line-clamp-3 block text-label-caps font-label-caps text-on-surface-variant [&_h3]:font-body-lg [&_h3]:text-body-lg [&_h3]:font-medium [&_h3]:text-on-surface [&_ol]:list-decimal [&_ol]:pl-4 [&_p]:m-0 [&_ul]:list-disc [&_ul]:pl-4"
+                      dangerouslySetInnerHTML={{ __html: model.description }}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between gap-3">
+                    {model.price ? (
+                      <span className="text-body-lg font-body-lg font-medium text-on-surface">
+                        {formatUsd(model.price)}
+                      </span>
+                    ) : (
+                      <span />
+                    )}
+                    <span className="whitespace-nowrap rounded-full border border-on-surface px-4 py-1.5 text-button font-button text-on-surface transition-colors group-hover:bg-on-surface group-hover:text-on-primary">
+                      {model.type === "fixed_product"
+                        ? t("landing.collection.viewDetails")
+                        : t("landing.collection.customize")}
                     </span>
                   </div>
                 </div>

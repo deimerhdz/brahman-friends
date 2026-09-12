@@ -2,6 +2,8 @@ import { describe, it, expect } from "vitest";
 import {
   checkPublicacion,
   canPublish,
+  checkPublicacionProductoFijo,
+  canPublishProductoFijo,
   type PublicacionInput,
 } from "@/lib/catalogo/publicacion";
 
@@ -110,5 +112,51 @@ describe("lib/catalogo/publicacion — qué falta para publicar (FR-012, RN2, RN
     const result = checkPublicacion(input);
     expect(result.missing).toEqual([]);
     expect(canPublish(result)).toBe(true);
+  });
+});
+
+describe("lib/catalogo/publicacion — producto fijo (009-modelos-producto-fijo, FR-002, FR-006)", () => {
+  it("con precio y al menos una foto, se puede publicar", () => {
+    const result = checkPublicacionProductoFijo({
+      price: "35.00",
+      viewsWithBaseImage: ["front"],
+    });
+    expect(result).toEqual({ missingPrice: false, missingPhoto: false });
+    expect(canPublishProductoFijo(result)).toBe(true);
+  });
+
+  it("sin precio, señala missingPrice y no se puede publicar", () => {
+    const result = checkPublicacionProductoFijo({
+      price: null,
+      viewsWithBaseImage: ["front"],
+    });
+    expect(result.missingPrice).toBe(true);
+    expect(canPublishProductoFijo(result)).toBe(false);
+  });
+
+  it("sin ninguna foto, señala missingPhoto y no se puede publicar", () => {
+    const result = checkPublicacionProductoFijo({
+      price: "35.00",
+      viewsWithBaseImage: [],
+    });
+    expect(result.missingPhoto).toBe(true);
+    expect(canPublishProductoFijo(result)).toBe(false);
+  });
+
+  it("sin precio ni fotos, señala ambos", () => {
+    const result = checkPublicacionProductoFijo({
+      price: null,
+      viewsWithBaseImage: [],
+    });
+    expect(result).toEqual({ missingPrice: true, missingPhoto: true });
+    expect(canPublishProductoFijo(result)).toBe(false);
+  });
+
+  it("no le importan colores ni componentes, a diferencia de un modelo configurable", () => {
+    const result = checkPublicacionProductoFijo({
+      price: "10.00",
+      viewsWithBaseImage: ["front", "side", "back"],
+    });
+    expect(canPublishProductoFijo(result)).toBe(true);
   });
 });

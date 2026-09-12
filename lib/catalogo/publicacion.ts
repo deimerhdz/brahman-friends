@@ -53,6 +53,32 @@ export function canPublish(result: PublicacionResultado): boolean {
   );
 }
 
+export interface PublicacionProductoFijoResultado {
+  missingPrice: boolean;
+  missingPhoto: boolean;
+}
+
+export function canPublishProductoFijo(
+  result: PublicacionProductoFijoResultado,
+): boolean {
+  return !result.missingPrice && !result.missingPhoto;
+}
+
+/**
+ * Regla de publicación de un modelo "Producto fijo" (009-modelos-producto-fijo,
+ * FR-002, FR-006): no depende de colores ni componentes, solo de tener precio
+ * y al menos una foto (vista activa con imagen base).
+ */
+export function checkPublicacionProductoFijo(input: {
+  price: string | null;
+  viewsWithBaseImage: View[];
+}): PublicacionProductoFijoResultado {
+  return {
+    missingPrice: input.price === null,
+    missingPhoto: input.viewsWithBaseImage.length === 0,
+  };
+}
+
 export function checkPublicacion(
   input: PublicacionInput,
 ): PublicacionResultado {

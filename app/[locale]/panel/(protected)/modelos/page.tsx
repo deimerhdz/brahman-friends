@@ -43,6 +43,9 @@ export default async function ModelosPage({
                   <th className="px-6 py-4 text-label-caps font-label-caps text-on-surface-variant">
                     {t("panel.modelos.status.label")}
                   </th>
+                  <th className="px-6 py-4 text-label-caps font-label-caps text-on-surface-variant">
+                    {t("panel.modelos.type.label")}
+                  </th>
                   <th className="px-6 py-4 text-right text-label-caps font-label-caps text-on-surface-variant">
                     {t("common.edit")}
                   </th>
@@ -69,6 +72,12 @@ export default async function ModelosPage({
                       <EstadoBadge
                         label={t(`panel.modelos.status.${m.status}`)}
                         tone={m.status === "published" ? "success" : "neutral"}
+                      />
+                    </td>
+                    <td className="px-6 py-4">
+                      <EstadoBadge
+                        label={t(`panel.modelos.type.${m.type}`)}
+                        tone="neutral"
                       />
                     </td>
                     <td className="px-6 py-4 text-right">

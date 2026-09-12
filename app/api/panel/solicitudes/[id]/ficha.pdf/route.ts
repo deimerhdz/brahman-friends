@@ -45,25 +45,32 @@ export async function GET(
     };
 
     draw(`Brahman Friends — ${req.code}`, { size: 18, useBold: true });
-    draw(`${snapshot.model.nameEs} / ${snapshot.model.nameEn} (${snapshot.model.code})`);
-    draw(`Cantidad: ${req.quantity}`);
-    if (snapshot.technique) {
-      draw(`Técnica: ${snapshot.technique.nameEs} / ${snapshot.technique.nameEn}`);
-    }
 
-    y -= 10;
-    draw("Componentes", { useBold: true, size: 13 });
-    for (const comp of snapshot.components) {
-      draw(`${comp.nameEs}: ${comp.color ? comp.color.nameEs : "—"}`);
-    }
+    if (snapshot.kind === "fixed_product") {
+      draw(`${snapshot.nameEs} / ${snapshot.nameEn}`);
+      draw(`Cantidad: ${req.quantity}`);
+      draw(`Precio: ${snapshot.price ?? "—"}`);
+    } else {
+      draw(`${snapshot.model.nameEs} / ${snapshot.model.nameEn} (${snapshot.model.code})`);
+      draw(`Cantidad: ${req.quantity}`);
+      if (snapshot.technique) {
+        draw(`Técnica: ${snapshot.technique.nameEs} / ${snapshot.technique.nameEn}`);
+      }
 
-    if (snapshot.decorations.length > 0) {
       y -= 10;
-      draw("Decoración", { useBold: true, size: 13 });
-      for (const d of snapshot.decorations) {
-        const detail =
-          d.kind === "logo" ? `logo (${d.logoFilename})` : `texto "${d.content}"`;
-        draw(`${d.zone}: ${detail} — ${d.widthCm.toFixed(1)}×${d.heightCm.toFixed(1)} cm`);
+      draw("Componentes", { useBold: true, size: 13 });
+      for (const comp of snapshot.components) {
+        draw(`${comp.nameEs}: ${comp.color ? comp.color.nameEs : "—"}`);
+      }
+
+      if (snapshot.decorations.length > 0) {
+        y -= 10;
+        draw("Decoración", { useBold: true, size: 13 });
+        for (const d of snapshot.decorations) {
+          const detail =
+            d.kind === "logo" ? `logo (${d.logoFilename})` : `texto "${d.content}"`;
+          draw(`${d.zone}: ${detail} — ${d.widthCm.toFixed(1)}×${d.heightCm.toFixed(1)} cm`);
+        }
       }
     }
 

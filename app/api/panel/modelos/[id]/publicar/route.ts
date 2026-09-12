@@ -15,7 +15,12 @@ import {
 } from "@/lib/catalogo/consultas-traducidas";
 import { getSession } from "@/lib/auth/session";
 import { errors, handleApiError, apiError } from "@/lib/http/errors";
-import { checkPublicacion, canPublish } from "@/lib/catalogo/publicacion";
+import {
+  checkPublicacion,
+  canPublish,
+  checkPublicacionProductoFijo,
+  canPublishProductoFijo,
+} from "@/lib/catalogo/publicacion";
 
 async function loadPublicacionInput(modelId: string) {
   const [views, components, links, colors, images] = await Promise.all([
@@ -72,9 +77,23 @@ export async function POST(
       return NextResponse.json({ error: "no_encontrado" }, { status: 404 });
     }
 
-    const result = checkPublicacion(await loadPublicacionInput(id));
-    if (!canPublish(result)) {
-      return errors.publicacionIncompleta(result);
+    if (model.type === "fixed_product") {
+      const views = await db
+        .select()
+        .from(modelView)
+        .where(and(eq(modelView.modelId, id), eq(modelView.active, true)));
+      const result = checkPublicacionProductoFijo({
+        price: model.price,
+        viewsWithBaseImage: views.filter((v) => v.baseImageUrl).map((v) => v.view),
+      });
+      if (!canPublishProductoFijo(result)) {
+        return errors.publicacionIncompletaProductoFijo(result);
+      }
+    } else {
+      const result = checkPublicacion(await loadPublicacionInput(id));
+      if (!canPublish(result)) {
+        return errors.publicacionIncompleta(result);
+      }
     }
 
     const [updated] = await db

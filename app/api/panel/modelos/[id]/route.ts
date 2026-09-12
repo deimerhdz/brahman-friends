@@ -6,6 +6,7 @@ import { capModel, capModelTranslation, color } from "@/lib/db/schema";
 import { getSession } from "@/lib/auth/session";
 import { apiError, errors, handleApiError } from "@/lib/http/errors";
 import { validarNombreTraducido } from "@/lib/catalogo/traduccion";
+import { sanitizeDescriptionHtml } from "@/lib/media/sanitize-html";
 
 export async function PATCH(
   request: NextRequest,
@@ -19,6 +20,25 @@ export async function PATCH(
     const body = await request.json();
     const patch: Partial<typeof capModel.$inferInsert> = {};
 
+    // El tipo del modelo no se edita por esta vía (009-modelos-producto-fijo,
+    // FR-010): se fija al crear. Si el modelo es "fixed_product", el precio
+    // no se puede vaciar (FR-002) — hace falta saber el tipo actual antes de
+    // validar `price` más abajo.
+    const [currentModel] = await db
+      .select({ type: capModel.type })
+      .from(capModel)
+      .where(eq(capModel.id, id))
+      .limit(1);
+    if (!currentModel) {
+      return NextResponse.json({ error: "no_encontrado" }, { status: 404 });
+    }
+    if (
+      currentModel.type === "fixed_product" &&
+      body.price === null
+    ) {
+      return errors.datosInvalidos();
+    }
+
     let name: { es: string; en: string } | null = null;
     if (body.name !== undefined) {
       name = validarNombreTraducido(body.name);
@@ -29,10 +49,16 @@ export async function PATCH(
 
     let description: { es: string; en: string } | null = null;
     if (body.description !== undefined) {
+      // Descripción del editor de texto enriquecido (009-modelos-producto-fijo):
+      // se sanea acá, la única vez que se confía en el HTML que manda el panel.
       const descriptionEs =
-        typeof body.description?.es === "string" ? body.description.es.trim() : "";
+        typeof body.description?.es === "string"
+          ? sanitizeDescriptionHtml(body.description.es.trim())
+          : "";
       const descriptionEn =
-        typeof body.description?.en === "string" ? body.description.en.trim() : "";
+        typeof body.description?.en === "string"
+          ? sanitizeDescriptionHtml(body.description.en.trim())
+          : "";
       description = { es: descriptionEs, en: descriptionEn };
     }
 
