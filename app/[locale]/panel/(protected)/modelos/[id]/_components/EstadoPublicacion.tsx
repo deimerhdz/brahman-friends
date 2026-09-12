@@ -42,36 +42,34 @@ export function EstadoPublicacion({
   }
 
   return (
-    <div className="mb-6 rounded-lg border border-outline-variant/60 bg-surface-container-lowest p-6 ambient-shadow">
-      <div className="flex items-center justify-between">
-        <EstadoBadge
-          label={labels[`status_${status}`]}
-          tone={status === "published" ? "success" : "neutral"}
-        />
-        {status === "draft" ? (
-          <button
-            type="button"
-            onClick={publicar}
-            disabled={busy}
-            className="rounded bg-on-surface px-4 py-2 font-button text-button text-on-primary transition-colors duration-200 hover:bg-primary disabled:opacity-50"
-          >
-            {labels.publish}
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={despublicar}
-            disabled={busy}
-            className="rounded border border-outline-variant px-4 py-2 font-button text-button text-on-surface-variant transition-colors hover:border-on-surface hover:text-on-surface disabled:opacity-50"
-          >
-            {labels.unpublish}
-          </button>
-        )}
-      </div>
+    <div className="flex flex-col items-end gap-1.5">
+      <EstadoBadge
+        label={labels[`status_${status}`]}
+        tone={status === "published" ? "success" : "neutral"}
+      />
+      {status === "draft" ? (
+        <button
+          type="button"
+          onClick={publicar}
+          disabled={busy}
+          className="whitespace-nowrap rounded bg-on-surface px-3 py-1.5 font-button text-[11px] text-on-primary transition-colors duration-200 hover:bg-primary disabled:opacity-50"
+        >
+          {labels.publish}
+        </button>
+      ) : (
+        <button
+          type="button"
+          onClick={despublicar}
+          disabled={busy}
+          className="whitespace-nowrap rounded border border-outline-variant px-3 py-1.5 font-button text-[11px] text-on-surface-variant transition-colors hover:border-on-surface hover:text-on-surface disabled:opacity-50"
+        >
+          {labels.unpublish}
+        </button>
+      )}
 
       {result && (
-        <div className="mt-4 rounded-lg border border-error/30 bg-error-container p-4 font-body-md text-body-md text-on-error-container">
-          <p className="mb-2 font-semibold">{labels.incomplete}</p>
+        <div className="w-64 max-w-[80vw] rounded-lg border border-error/30 bg-error-container p-3 text-left font-body-md text-[11px] text-on-error-container">
+          <p className="mb-1 font-semibold">{labels.incomplete}</p>
           {result.missingBaseViews.length > 0 && (
             <p>
               {labels.missingBaseViews}: {result.missingBaseViews.join(", ")}
@@ -84,7 +82,7 @@ export function EstadoPublicacion({
             </p>
           )}
           {result.missing.length > 0 && (
-            <ul className="mt-2 list-inside list-disc">
+            <ul className="mt-1 list-inside list-disc">
               {result.missing.map((m, i) => (
                 <li key={i}>
                   {m.component} · {m.color} · {m.view}

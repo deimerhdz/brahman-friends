@@ -1,0 +1,469 @@
+<!DOCTYPE html><html lang="es" class="h-full" style="width: 1320px; height: 872px; overflow: hidden; position: relative;"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configurador de Modelos - Gorra Trucker Classic</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts & Material Symbols -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f8fafc',
+              100: '#f1f5f9',
+              900: '#0f172a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    /* Custom dashed bounding box animation or styles */
+    .dashed-box {
+      border: 2px dashed #0052ff;
+      background: rgba(0, 82, 255, 0.04);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.8) inset;
+    }
+    .resize-handle {
+      width: 10px;
+      height: 10px;
+      background-color: #ffffff;
+      border: 2px solid #0052ff;
+      position: absolute;
+      border-radius: 2px;
+    }
+  </style>
+</head>
+<body class="h-full bg-slate-50 text-slate-900 flex flex-col antialiased overflow-hidden">
+
+  <!-- Top Global Admin Bar -->
+  <header class="h-16 bg-white border-b border-slate-200 px-6 flex items-center justify-between z-30 shrink-0">
+    <div class="flex items-center gap-4">
+      <a href="#" class="flex items-center gap-2 text-slate-500 hover:text-slate-800 transition-colors p-1.5 rounded-lg hover:bg-slate-100">
+        <span class="material-symbols-outlined text-xl">arrow_back</span>
+      </a>
+      <div class="h-5 w-px bg-slate-200"></div>
+      <div class="flex items-center gap-3">
+        <span class="font-bold tracking-tight text-slate-900 text-lg uppercase font-mono">HEADWEAR LAB</span>
+        <span class="text-xs px-2 py-0.5 rounded font-medium bg-slate-100 text-slate-600 border border-slate-200">Admin Platform</span>
+      </div>
+      <span class="text-slate-300">/</span>
+      <span class="text-sm font-medium text-slate-500">Catálogo de Productos</span>
+      <span class="text-slate-300">/</span>
+      <span class="text-sm font-semibold text-slate-800">Gorra Trucker Classic</span>
+    </div>
+
+    <!-- Quick Status & Actions -->
+    <div class="flex items-center gap-5">
+      <div class="flex items-center gap-2 text-xs text-slate-500 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-200">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span class="">Autoguardado activo</span>
+      </div>
+      <div class="h-5 w-px bg-slate-200"></div>
+      <button class="flex items-center gap-1.5 text-xs font-medium text-slate-600 hover:text-slate-900 px-3 py-1.5 rounded-md hover:bg-slate-100 transition-colors">
+        <span class="material-symbols-outlined text-base">help</span>
+        Ayuda
+      </button>
+      <div class="flex items-center gap-2 pl-2">
+        <div class="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-medium text-xs">
+          HL
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Body Split (70% Workspace / 30% Configuration Panel) -->
+  <main class="flex-1 flex flex-row overflow-hidden">
+    
+    <!-- LEFT AREA (70% Width): Main Workspace -->
+    <section class="w-[60%] h-full flex flex-col bg-[#F3F4F6] relative border-r border-slate-200 overflow-hidden">
+      
+      <!-- Top Workspace Toolbar -->
+      <div class="h-14 px-6 flex items-center justify-between border-b border-slate-200/80 bg-white/60 backdrop-blur-md z-20 shrink-0">
+        <div class="flex items-center gap-3">
+          
+          
+        </div>
+
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-1 text-xs text-slate-600 bg-white/80 px-2.5 py-1 rounded-lg border border-slate-200 shadow-sm">
+            <span class="material-symbols-outlined text-base text-blue-600">drag_pan</span>
+            
+          </div>
+          <div class="flex items-center gap-1 bg-white border border-slate-200 p-1 rounded-lg shadow-sm">
+            <button class="p-1 rounded hover:bg-slate-100 text-slate-600" title="Zoom Out">
+              <span class="material-symbols-outlined text-base">remove</span>
+            </button>
+            <span class="text-xs font-medium px-1 text-slate-700">100%</span>
+            <button class="p-1 rounded hover:bg-slate-100 text-slate-600" title="Zoom In">
+              <span class="material-symbols-outlined text-base">add</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Center Interactive 2D/3D Cap Canvas Preview -->
+      <div class="flex-1 flex items-center justify-center p-8 relative overflow-hidden select-none bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:20px_20px]">
+        
+        <!-- Cap Product Stage -->
+        <div class="relative w-full max-w-[560px] aspect-square flex items-center justify-center">
+          
+          <!-- Shadow Base -->
+          <div class="absolute bottom-10 w-4/5 h-12 bg-slate-400/20 rounded-full blur-xl -z-10 pointer-events-none"></div>
+
+          <!-- Cap Photographic Render / Preview -->
+          <img id="capPreviewImage" src="https://lh3.googleusercontent.com/aida/AEtjO1WH9XBliVcrKcFh7XsY5H9dr-4dAkJiN-nX0oOlveap7b3kJqEddVNGKC-peOIkJPw613d_knDCSu5miyzS_jm6g7FNMc-MOFAbm1ZwLWj-8jDELl1hr0JosVdVWYmXFFB6SGvUsBqJYxH590dS6wxNElQJBLu3zW2VXuQrUj0FJ9rap4nG4kVMbyQcO3SNtr1QlJcFmcZgW0JR64iVowMvcFl5A59T_lYTkJo8lB313lINof8JAIZA5Jqx" alt="Trucker Cap Preview" class="w-full h-full object-contain filter drop-shadow-md pointer-events-none transition-all duration-300">
+
+          <!-- Interactive Bounding Box: Personalization Zone (Drag & Drop box) -->
+          <div id="personalizationZone" class="dashed-box absolute cursor-move group transition-shadow hover:ring-2 hover:ring-blue-500/30 rounded-sm" style="top: 40%; left: 33%; width: 34%; height: 22%;">
+            <!-- Badge Indicator -->
+            <div class="absolute -top-7 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-[10px] font-semibold tracking-wider px-2 py-0.5 rounded shadow-sm flex items-center gap-1 whitespace-nowrap">
+              <span class="material-symbols-outlined text-xs">select_all</span>
+              ÁREA DE PERSONALIZACIÓN
+            </div>
+
+            <!-- Inside Grid Guides -->
+            <div class="w-full h-full relative pointer-events-none opacity-40 group-hover:opacity-70 transition-opacity">
+              <div class="absolute top-1/2 left-0 right-0 h-px bg-blue-400 border-t border-dotted border-blue-400"></div>
+              <div class="absolute left-1/2 top-0 bottom-0 w-px bg-blue-400 border-l border-dotted border-blue-400"></div>
+              <!-- Placeholder artwork inside bounding box -->
+              <div class="w-full h-full flex items-center justify-center">
+                <span class="text-[11px] font-medium text-blue-700 bg-blue-100/80 px-2 py-0.5 rounded border border-blue-200">Zona Frontal Principal</span>
+              </div>
+            </div>
+
+            <!-- Resize Handles -->
+            <div class="resize-handle -top-1.5 -left-1.5 cursor-nwse-resize"></div>
+            <div class="resize-handle -top-1.5 -right-1.5 cursor-nesw-resize"></div>
+            <div class="resize-handle -bottom-1.5 -left-1.5 cursor-nesw-resize"></div>
+            <div class="resize-handle -bottom-1.5 -right-1.5 cursor-nwse-resize"></div>
+            <!-- Middle Handles -->
+            <div class="resize-handle -top-1.5 left-1/2 -translate-x-1/2 cursor-ns-resize"></div>
+            <div class="resize-handle -bottom-1.5 left-1/2 -translate-x-1/2 cursor-ns-resize"></div>
+            <div class="resize-handle -left-1.5 top-1/2 -translate-y-1/2 cursor-ew-resize"></div>
+            <div class="resize-handle -right-1.5 top-1/2 -translate-y-1/2 cursor-ew-resize"></div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Bottom View Switcher Pills: [Front] [Side] [Back] -->
+      <div class="h-20 flex items-center justify-center shrink-0 z-20 pb-4">
+        <div class="bg-white/95 backdrop-blur shadow-lg border border-slate-200/90 p-1.5 rounded-full flex items-center gap-1.5">
+          <button id="viewFrontBtn" onclick="switchView('front')" class="px-5 py-2 rounded-full text-xs font-semibold transition-all flex items-center gap-2 bg-slate-900 text-white shadow-sm">
+            <span class="material-symbols-outlined text-sm">view_in_ar</span>
+            Frontal (Front)
+          </button>
+          <button id="viewSideBtn" onclick="switchView('side')" class="px-5 py-2 rounded-full text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all flex items-center gap-2">
+            <span class="material-symbols-outlined text-sm">rotate_90_degrees_ccw</span>
+            Lateral (Side)
+          </button>
+          <button id="viewBackBtn" onclick="switchView('back')" class="px-5 py-2 rounded-full text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all flex items-center gap-2">
+            <span class="material-symbols-outlined text-sm">flip_camera_android</span>
+            Trasera (Back)
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- RIGHT AREA (30% Width): Step-by-Step Configuration Panel -->
+    <aside class="w-[40%] h-full bg-white flex flex-col border-l border-slate-200 shadow-sm z-30">
+      
+      <!-- Clean Top Header with Product Name, SKU, & Status Toggle -->
+      <div class="p-5 border-b border-slate-200 shrink-0 bg-white">
+        <div class="space-y-3 mb-2">
+  <div class="flex items-start justify-between gap-3">
+    <div class="flex-1">
+      <label class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider mb-1">Nombre del Modelo / Producto</label>
+      <input type="text" value="Gorra Trucker Classic" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900 transition-all" placeholder="Ej. Gorra Trucker Classic">
+    </div>
+    <div class="flex flex-col items-end shrink-0 pt-0.5">
+      <label class="relative inline-flex items-center cursor-pointer">
+        <input type="checkbox" id="statusToggle" class="sr-only peer" checked="">
+        <div class="w-10 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600"></div>
+      </label>
+      <span id="statusLabel" class="text-[10px] font-medium text-emerald-600 mt-1 uppercase tracking-wider">Publicado</span>
+    </div>
+  </div>
+  <div class="grid grid-cols-2 gap-2">
+    <div>
+      <label class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider mb-1">Precio Base (USD)</label>
+      <div class="relative flex items-center">
+        <span class="absolute left-2.5 text-xs font-medium text-slate-400">$</span>
+        <input type="text" value="24.50" class="w-full bg-slate-50 border border-slate-200 rounded-lg pl-6 pr-2.5 py-1.5 text-xs font-semibold font-mono text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900 transition-all">
+      </div>
+    </div>
+    <div>
+      <label class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider mb-1">Código SKU</label>
+      <div class="flex items-center h-8 bg-slate-100 border border-slate-200 rounded-lg px-2.5">
+        <span class="text-[11px] font-mono font-medium text-slate-600">TRK-100</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    <label class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider mb-1">Descripción</label>
+    <textarea rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-slate-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900 transition-all resize-none" placeholder="Descripción del modelo...">Configuración de modelo base y zonas personalizables</textarea>
+  </div>
+</div>
+
+        <!-- 3-Step Wizard Tab Navigation Bar -->
+        <div class="grid grid-cols-3 gap-1 bg-slate-100 p-1 rounded-xl mt-4">
+          <button id="stepTab1" onclick="showStep(1)" class="py-2 px-1 text-center rounded-lg text-xs font-semibold text-slate-500 hover:text-slate-800 transition-all"><div class="flex items-center justify-center gap-1"><span class="w-4 h-4 rounded-full bg-slate-200 text-slate-600 text-[10px] flex items-center justify-center font-bold">1</span><span class="w-4 h-4 rounded-full bg-slate-200 text-slate-600 text-[10px] flex items-center justify-center font-bold">Vistas</span></div></button>
+          <button id="stepTab2" onclick="showStep(2)" class="py-2 px-1 text-center rounded-lg text-xs font-semibold transition-all shadow-sm bg-white text-slate-900"><div class="flex items-center justify-center gap-1.5"><span class="w-4 h-4 rounded-full bg-slate-200 text-slate-600 text-[10px] flex items-center justify-center font-bold">2</span><span class="text-xs font-semibold">Colores</span></div></button>
+          <button id="stepTab3" onclick="showStep(3)" class="py-2 px-1 text-center rounded-lg text-xs font-semibold text-slate-500 hover:text-slate-800 transition-all">
+            <div class="flex items-center justify-center gap-1">
+              <span class="w-4 h-4 rounded-full bg-slate-200 text-slate-600 text-[10px] flex items-center justify-center font-bold">3</span>
+              <span class="">Personalización</span>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step Content Container (Scrollable) -->
+      <div class="flex-1 overflow-y-auto p-5 space-y-6">
+
+        <!-- STEP 1: FOTOS Y VISTAS -->
+        <div id="stepContent1" class="space-y-5 hidden"><div class="flex items-center justify-between"><div><h2 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Paso 1: Vistas y Fotos de Catálogo</h2><p class="text-xs text-slate-500 mt-0.5">Configura la foto de portada principal, miniaturas por variante y las vistas base.</p></div><span class="material-symbols-outlined text-slate-400 text-lg">photo_library</span></div><div class="space-y-2 p-3.5 bg-blue-50/40 border border-blue-200 rounded-xl"><div class="flex items-center justify-between"><div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-blue-600 text-base">storefront</span><span class="text-xs font-bold text-slate-900">Foto de Portada / Card de Producto</span></div><span class="text-[10px] font-semibold bg-blue-600 text-white px-2 py-0.5 rounded-full">Foto Principal</span></div><p class="text-[11px] text-slate-600 leading-relaxed">Esta imagen es la que se mostrará por defecto en el catálogo, tarjetas de producto y búsquedas de la tienda (Recomendado 1:1 o 4:3, fondo limpio transparente o blanco neutro).</p><div class="border-2 border-dashed border-blue-400 bg-white rounded-xl p-3 flex items-center gap-3 relative shadow-xs"><div class="w-16 h-16 bg-slate-50 rounded-lg border border-slate-200 overflow-hidden shrink-0 flex items-center justify-center p-1 relative"><img src="https://lh3.googleusercontent.com/aida/AEtjO1WH9XBliVcrKcFh7XsY5H9dr-4dAkJiN-nX0oOlveap7b3kJqEddVNGKC-peOIkJPw613d_knDCSu5miyzS_jm6g7FNMc-MOFAbm1ZwLWj-8jDELl1hr0JosVdVWYmXFFB6SGvUsBqJYxH590dS6wxNElQJBLu3zW2VXuQrUj0FJ9rap4nG4kVMbyQcO3SNtr1QlJcFmcZgW0JR64iVowMvcFl5A59T_lYTkJo8lB313lINof8JAIZA5Jqx" class="w-full h-full object-contain" alt="Portada Principal"><span class="absolute bottom-0 inset-x-0 bg-slate-900/80 text-white text-[8px] font-mono text-center py-0.5">Cover</span></div><div class="flex-1 min-w-0"><div class="flex items-center gap-1.5"><p class="text-xs font-semibold text-slate-900 truncate">trucker_catalog_cover.png</p><span class="text-[10px] text-emerald-600 font-medium flex items-center gap-0.5"><span class="material-symbols-outlined text-xs">check_circle</span> Activa</span></div><p class="text-[11px] text-slate-500 mt-0.5">1200 x 1200 px • Formato WEBP optimizado</p><div class="flex items-center gap-3 mt-1.5"><button class="text-[11px] text-blue-600 hover:underline font-semibold flex items-center gap-1"><span class="material-symbols-outlined text-xs">swap_horiz</span> Reemplazar Foto</button><span class="text-slate-300">•</span><button class="text-[11px] text-slate-600 hover:text-slate-900 hover:underline font-medium flex items-center gap-1"><span class="material-symbols-outlined text-xs">preview</span> Vista previa en Card</button></div></div></div></div><div class="pt-2"><button onclick="showStep(2)" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold rounded-lg transition flex items-center justify-center gap-1"><span class="">Continuar a Colores</span><span class="material-symbols-outlined text-sm">arrow_forward</span></button></div></div>
+
+        <!-- STEP 2: COLORES -->
+        <div id="stepContent2" class="space-y-5"><div class="flex items-center justify-between"><div><h2 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Paso 2: Colores y Variantes</h2><p class="text-xs text-slate-500 mt-0.5">Gestiona las variantes de color y define la vista por defecto de la tienda.</p></div><span class="material-symbols-outlined text-slate-400 text-lg">palette</span></div><div class="p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-2.5"><span class="material-symbols-outlined text-amber-700 text-base shrink-0 mt-0.5">star</span><div class="text-xs text-slate-700 leading-relaxed"><p class="font-bold text-amber-700 flex items-center gap-1">Variante por defecto (Default en catálogo y tienda)</p><p class="text-[11px] text-slate-600 mt-0.5">Esta variante se cargará automáticamente cuando el cliente seleccione el producto en la tienda y acceda al detalle del producto o al configurador.</p></div></div><div class="space-y-3"><div class="flex items-center justify-between"><span class="text-xs font-semibold text-slate-800">Variantes de Color Configuradas (4)</span><span class="text-[11px] text-emerald-600 font-medium flex items-center gap-1"><span class="material-symbols-outlined text-xs">check_circle</span> Sincronizado</span></div><div class="p-3.5 rounded-xl border-2 border-slate-900 bg-white shadow-sm space-y-3"><div class="flex items-start justify-between gap-2"><div><div class="flex items-center gap-2"><input type="radio" name="defaultVariantRadio" id="var1" checked="" class="w-4 h-4 text-slate-900 focus:ring-slate-900"><label for="var1" class="text-xs font-bold text-slate-900 cursor-pointer">Obsidian Black / Charcoal Mesh</label></div><div class="flex items-center gap-2 mt-1.5 pl-6"><span class="text-[10px] text-slate-500 uppercase font-medium">Partes:</span><div class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded-full bg-[#111827] border border-white shadow-xs" title="Corona: Obsidian Black"></span><span class="text-[10px] text-slate-600 font-medium">Corona</span><span class="text-slate-300">•</span><span class="w-3.5 h-3.5 rounded-full bg-[#374151] border border-white shadow-xs" title="Visera: Charcoal"></span><span class="text-[10px] text-slate-600 font-medium">Visera</span><span class="text-slate-300">•</span><span class="w-3.5 h-3.5 rounded-full bg-[#18181b] border border-white shadow-xs" title="Malla: Black Mesh"></span><span class="text-[10px] text-slate-600 font-medium">Malla</span></div></div></div><div class="flex flex-col items-end gap-1"><span class="text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200 px-2 py-0.5 rounded-full flex items-center gap-0.5 shadow-xs"><span class="material-symbols-outlined text-[11px]">grade</span> Predeterminada</span><span class="text-[10px] font-mono font-medium px-2 py-0.5 bg-slate-100 text-slate-700 rounded border border-slate-200">TRK-100-BLK</span></div></div><div class="pl-6 pt-1"><div class="text-[11px] font-semibold text-slate-700 mb-1.5 flex items-center justify-between"><span class="">Vistas del Producto (3/3 completadas)</span><span class="text-[10px] text-emerald-600 font-medium flex items-center gap-0.5"><span class="material-symbols-outlined text-xs">check</span> Listo para tienda</span></div><div class="grid grid-cols-3 gap-2"><div class="border border-slate-200 rounded-lg p-1.5 bg-slate-50/50 hover:bg-white hover:border-slate-300 transition group"><div class="aspect-square w-full rounded bg-slate-100 overflow-hidden relative flex items-center justify-center border border-slate-200/60"><img src="https://lh3.googleusercontent.com/aida/AEtjO1WH9XBliVcrKcFh7XsY5H9dr-4dAkJiN-nX0oOlveap7b3kJqEddVNGKC-peOIkJPw613d_knDCSu5miyzS_jm6g7FNMc-MOFAbm1ZwLWj-8jDELl1hr0JosVdVWYmXFFB6SGvUsBqJYxH590dS6wxNElQJBLu3zW2VXuQrUj0FJ9rap4nG4kVMbyQcO3SNtr1QlJcFmcZgW0JR64iVowMvcFl5A59T_lYTkJo8lB313lINof8JAIZA5Jqx" class="w-full h-full object-contain" alt="Frontal"><span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-500"></span></div><div class="mt-1 text-center"><span class="text-[10px] font-semibold text-slate-700 block truncate">Frontal</span><div class="flex items-center justify-center gap-1.5 mt-0.5"><button type="button" class="text-[9px] text-blue-600 hover:underline font-medium">Cambiar</button><span class="text-slate-300 text-[9px]">•</span><button type="button" class="text-[9px] text-slate-500 hover:text-red-600 hover:underline font-medium" title="Eliminar imagen">Eliminar</button></div></div></div><div class="border border-slate-200 rounded-lg p-1.5 bg-slate-50/50 hover:bg-white hover:border-slate-300 transition group"><div class="aspect-square w-full rounded bg-slate-100 overflow-hidden relative flex items-center justify-center border border-slate-200/60"><img src="https://lh3.googleusercontent.com/aida/AEtjO1WH9XBliVcrKcFh7XsY5H9dr-4dAkJiN-nX0oOlveap7b3kJqEddVNGKC-peOIkJPw613d_knDCSu5miyzS_jm6g7FNMc-MOFAbm1ZwLWj-8jDELl1hr0JosVdVWYmXFFB6SGvUsBqJYxH590dS6wxNElQJBLu3zW2VXuQrUj0FJ9rap4nG4kVMbyQcO3SNtr1QlJcFmcZgW0JR64iVowMvcFl5A59T_lYTkJo8lB313lINof8JAIZA5Jqx" class="w-full h-full object-contain" alt="Lateral"><span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-500"></span></div><div class="mt-1 text-center"><span class="text-[10px] font-semibold text-slate-700 block truncate">Lateral</span><div class="flex items-center justify-center gap-1.5 mt-0.5"><button type="button" class="text-[9px] text-blue-600 hover:underline font-medium">Cambiar</button><span class="text-slate-300 text-[9px]">•</span><button type="button" class="text-[9px] text-slate-500 hover:text-red-600 hover:underline font-medium" title="Eliminar imagen">Eliminar</button></div></div></div><div class="border border-slate-200 rounded-lg p-1.5 bg-slate-50/50 hover:bg-white hover:border-slate-300 transition group"><div class="aspect-square w-full rounded bg-slate-100 overflow-hidden relative flex items-center justify-center border border-slate-200/60"><img src="https://lh3.googleusercontent.com/aida/AEtjO1WH9XBliVcrKcFh7XsY5H9dr-4dAkJiN-nX0oOlveap7b3kJqEddVNGKC-peOIkJPw613d_knDCSu5miyzS_jm6g7FNMc-MOFAbm1ZwLWj-8jDELl1hr0JosVdVWYmXFFB6SGvUsBqJYxH590dS6wxNElQJBLu3zW2VXuQrUj0FJ9rap4nG4kVMbyQcO3SNtr1QlJcFmcZgW0JR64iVowMvcFl5A59T_lYTkJo8lB313lINof8JAIZA5Jqx" class="w-full h-full object-contain" alt="Trasera"><span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-500"></span></div><div class="mt-1 text-center"><span class="text-[10px] font-semibold text-slate-700 block truncate">Trasera</span><div class="flex items-center justify-center gap-1.5 mt-0.5"><button type="button" class="text-[9px] text-blue-600 hover:underline font-medium">Cambiar</button><span class="text-slate-300 text-[9px]">•</span><button type="button" class="text-[9px] text-slate-500 hover:text-red-600 hover:underline font-medium" title="Eliminar imagen">Eliminar</button></div></div></div></div></div></div><div class="p-3.5 rounded-xl border border-slate-200 bg-white hover:border-slate-300 transition space-y-3"><div class="flex items-start justify-between gap-2"><div><div class="flex items-center gap-2"><input type="radio" name="defaultVariantRadio" id="var2" class="w-4 h-4 text-slate-900 focus:ring-slate-900"><label for="var2" class="text-xs font-bold text-slate-900 cursor-pointer">Crimson Red / White Mesh</label></div><div class="flex items-center gap-2 mt-1.5 pl-6"><span class="text-[10px] text-slate-500 uppercase font-medium">Partes:</span><div class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded-full bg-[#bf3003] border border-white shadow-xs"></span><span class="text-[10px] text-slate-600 font-medium">Corona</span><span class="text-slate-300">•</span><span class="w-3.5 h-3.5 rounded-full bg-[#bf3003] border border-white shadow-xs"></span><span class="text-[10px] text-slate-600 font-medium">Visera</span><span class="text-slate-300">•</span><span class="w-3.5 h-3.5 rounded-full bg-white border border-slate-300 shadow-xs"></span><span class="text-[10px] text-slate-600 font-medium">Malla</span></div></div></div><div class="flex flex-col items-end gap-1"><button type="button" class="text-[10px] font-medium text-slate-600 hover:text-slate-900 border border-slate-200 hover:border-slate-400 bg-white px-2 py-0.5 rounded-md transition flex items-center gap-1"><span class="material-symbols-outlined text-[11px]">star</span> Marcar como predeterminada</button><span class="text-[10px] font-mono font-medium px-2 py-0.5 bg-slate-100 text-slate-600 rounded border border-slate-200">TRK-100-RED</span></div></div><div class="pl-6 pt-1"><div class="text-[11px] font-semibold text-slate-700 mb-1.5 flex items-center justify-between"><span class="">Vistas del Producto (1/3 cargadas)</span><span class="text-[10px] text-amber-700 font-medium">Pendiente fotos</span></div><div class="grid grid-cols-3 gap-2"><div class="border border-slate-200 rounded-lg p-1.5 bg-slate-50/50 hover:bg-white hover:border-slate-300 transition group"><div class="aspect-square w-full rounded bg-slate-100 overflow-hidden relative flex items-center justify-center border border-slate-200/60"><img src="https://lh3.googleusercontent.com/aida/AEtjO1WH9XBliVcrKcFh7XsY5H9dr-4dAkJiN-nX0oOlveap7b3kJqEddVNGKC-peOIkJPw613d_knDCSu5miyzS_jm6g7FNMc-MOFAbm1ZwLWj-8jDELl1hr0JosVdVWYmXFFB6SGvUsBqJYxH590dS6wxNElQJBLu3zW2VXuQrUj0FJ9rap4nG4kVMbyQcO3SNtr1QlJcFmcZgW0JR64iVowMvcFl5A59T_lYTkJo8lB313lINof8JAIZA5Jqx" class="w-full h-full object-contain" alt="Frontal"><span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-500"></span></div><div class="mt-1 text-center"><span class="text-[10px] font-semibold text-slate-700 block truncate">Frontal</span><div class="flex items-center justify-center gap-1.5 mt-0.5"><button type="button" class="text-[9px] text-blue-600 hover:underline font-medium">Cambiar</button><span class="text-slate-300 text-[9px]">•</span><button type="button" class="text-[9px] text-slate-500 hover:text-red-600 hover:underline font-medium" title="Eliminar imagen">Eliminar</button></div></div></div><div class="border border-dashed border-slate-300 rounded-lg p-1.5 bg-slate-50 hover:border-blue-400 hover:bg-blue-50/20 transition cursor-pointer flex flex-col items-center justify-center"><div class="aspect-square w-full rounded flex flex-col items-center justify-center text-slate-400 hover:text-blue-600"><span class="material-symbols-outlined text-lg mb-0.5">add_photo_alternate</span><span class="text-[9px] font-medium">Subir</span></div><div class="mt-1 text-center"><span class="text-[10px] font-medium text-slate-500 block truncate">Lateral</span><span class="text-[9px] text-amber-700 font-medium">Falta foto</span></div></div><div class="border border-dashed border-slate-300 rounded-lg p-1.5 bg-slate-50 hover:border-blue-400 hover:bg-blue-50/20 transition cursor-pointer flex flex-col items-center justify-center"><div class="aspect-square w-full rounded flex flex-col items-center justify-center text-slate-400 hover:text-blue-600"><span class="material-symbols-outlined text-lg mb-0.5">add_photo_alternate</span><span class="text-[9px] font-medium">Subir</span></div><div class="mt-1 text-center"><span class="text-[10px] font-medium text-slate-500 block truncate">Trasera</span><span class="text-[9px] text-amber-700 font-medium">Falta foto</span></div></div></div></div></div><div class="p-3.5 rounded-xl border border-slate-200 bg-white hover:border-slate-300 transition space-y-3"><div class="flex items-start justify-between gap-2"><div><div class="flex items-center gap-2"><input type="radio" name="defaultVariantRadio" id="var3" class="w-4 h-4 text-slate-900 focus:ring-slate-900"><label for="var3" class="text-xs font-bold text-slate-900 cursor-pointer">Midnight Navy / White Mesh</label></div><div class="flex items-center gap-2 mt-1.5 pl-6"><span class="text-[10px] text-slate-500 uppercase font-medium">Partes:</span><div class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded-full bg-blue-600 border border-white shadow-xs"></span><span class="text-[10px] text-slate-600 font-medium">Corona</span><span class="text-slate-300">•</span><span class="w-3.5 h-3.5 rounded-full bg-blue-600 border border-white shadow-xs"></span><span class="text-[10px] text-slate-600 font-medium">Visera</span><span class="text-slate-300">•</span><span class="w-3.5 h-3.5 rounded-full bg-white border border-slate-300 shadow-xs"></span><span class="text-[10px] text-slate-600 font-medium">Malla</span></div></div></div><div class="flex flex-col items-end gap-1"><button type="button" class="text-[10px] font-medium text-slate-600 hover:text-slate-900 border border-slate-200 hover:border-slate-400 bg-white px-2 py-0.5 rounded-md transition flex items-center gap-1"><span class="material-symbols-outlined text-[11px]">star</span> Marcar como predeterminada</button><span class="text-[10px] font-mono font-medium px-2 py-0.5 bg-slate-100 text-slate-600 rounded border border-slate-200">TRK-100-NVY</span></div></div><div class="pl-6 pt-1"><div class="text-[11px] font-semibold text-slate-700 mb-1.5 flex items-center justify-between"><span class="">Vistas del Producto (3/3 completadas)</span><span class="text-[10px] text-emerald-600 font-medium flex items-center gap-0.5"><span class="material-symbols-outlined text-xs">check</span> Listo para tienda</span></div><div class="grid grid-cols-3 gap-2"><div class="border border-slate-200 rounded-lg p-1.5 bg-slate-50/50 hover:bg-white hover:border-slate-300 transition group"><div class="aspect-square w-full rounded bg-slate-100 overflow-hidden relative flex items-center justify-center border border-slate-200/60"><img src="https://lh3.googleusercontent.com/aida/AEtjO1WH9XBliVcrKcFh7XsY5H9dr-4dAkJiN-nX0oOlveap7b3kJqEddVNGKC-peOIkJPw613d_knDCSu5miyzS_jm6g7FNMc-MOFAbm1ZwLWj-8jDELl1hr0JosVdVWYmXFFB6SGvUsBqJYxH590dS6wxNElQJBLu3zW2VXuQrUj0FJ9rap4nG4kVMbyQcO3SNtr1QlJcFmcZgW0JR64iVowMvcFl5A59T_lYTkJo8lB313lINof8JAIZA5Jqx" class="w-full h-full object-contain" alt="Frontal"><span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-500"></span></div><div class="mt-1 text-center"><span class="text-[10px] font-semibold text-slate-700 block truncate">Frontal</span><div class="flex items-center justify-center gap-1.5 mt-0.5"><button type="button" class="text-[9px] text-blue-600 hover:underline font-medium">Cambiar</button><span class="text-slate-300 text-[9px]">•</span><button type="button" class="text-[9px] text-slate-500 hover:text-red-600 hover:underline font-medium" title="Eliminar imagen">Eliminar</button></div></div></div><div class="border border-slate-200 rounded-lg p-1.5 bg-slate-50/50 hover:bg-white hover:border-slate-300 transition group"><div class="aspect-square w-full rounded bg-slate-100 overflow-hidden relative flex items-center justify-center border border-slate-200/60"><img src="https://lh3.googleusercontent.com/aida/AEtjO1WH9XBliVcrKcFh7XsY5H9dr-4dAkJiN-nX0oOlveap7b3kJqEddVNGKC-peOIkJPw613d_knDCSu5miyzS_jm6g7FNMc-MOFAbm1ZwLWj-8jDELl1hr0JosVdVWYmXFFB6SGvUsBqJYxH590dS6wxNElQJBLu3zW2VXuQrUj0FJ9rap4nG4kVMbyQcO3SNtr1QlJcFmcZgW0JR64iVowMvcFl5A59T_lYTkJo8lB313lINof8JAIZA5Jqx" class="w-full h-full object-contain" alt="Lateral"><span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-500"></span></div><div class="mt-1 text-center"><span class="text-[10px] font-semibold text-slate-700 block truncate">Lateral</span><div class="flex items-center justify-center gap-1.5 mt-0.5"><button type="button" class="text-[9px] text-blue-600 hover:underline font-medium">Cambiar</button><span class="text-slate-300 text-[9px]">•</span><button type="button" class="text-[9px] text-slate-500 hover:text-red-600 hover:underline font-medium" title="Eliminar imagen">Eliminar</button></div></div></div><div class="border border-slate-200 rounded-lg p-1.5 bg-slate-50/50 hover:bg-white hover:border-slate-300 transition group"><div class="aspect-square w-full rounded bg-slate-100 overflow-hidden relative flex items-center justify-center border border-slate-200/60"><img src="https://lh3.googleusercontent.com/aida/AEtjO1WH9XBliVcrKcFh7XsY5H9dr-4dAkJiN-nX0oOlveap7b3kJqEddVNGKC-peOIkJPw613d_knDCSu5miyzS_jm6g7FNMc-MOFAbm1ZwLWj-8jDELl1hr0JosVdVWYmXFFB6SGvUsBqJYxH590dS6wxNElQJBLu3zW2VXuQrUj0FJ9rap4nG4kVMbyQcO3SNtr1QlJcFmcZgW0JR64iVowMvcFl5A59T_lYTkJo8lB313lINof8JAIZA5Jqx" class="w-full h-full object-contain" alt="Trasera"><span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-500"></span></div><div class="mt-1 text-center"><span class="text-[10px] font-semibold text-slate-700 block truncate">Trasera</span><div class="flex items-center justify-center gap-1.5 mt-0.5"><button type="button" class="text-[9px] text-blue-600 hover:underline font-medium">Cambiar</button><span class="text-slate-300 text-[9px]">•</span><button type="button" class="text-[9px] text-slate-500 hover:text-red-600 hover:underline font-medium" title="Eliminar imagen">Eliminar</button></div></div></div></div></div></div><div class="p-3.5 rounded-xl border border-slate-200 bg-white hover:border-slate-300 transition space-y-3"><div class="flex items-start justify-between gap-2"><div><div class="flex items-center gap-2"><input type="radio" name="defaultVariantRadio" id="var4" class="w-4 h-4 text-slate-900 focus:ring-slate-900"><label for="var4" class="text-xs font-bold text-slate-900 cursor-pointer">Sandstone Tan / Khaki Mesh</label></div><div class="flex items-center gap-2 mt-1.5 pl-6"><span class="text-[10px] text-slate-500 uppercase font-medium">Partes:</span><div class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded-full bg-amber-50 border border-slate-300 shadow-xs"></span><span class="text-[10px] text-slate-600 font-medium">Corona</span><span class="text-slate-300">•</span><span class="w-3.5 h-3.5 rounded-full bg-slate-200 border border-white shadow-xs"></span><span class="text-[10px] text-slate-600 font-medium">Visera</span><span class="text-slate-300">•</span><span class="w-3.5 h-3.5 rounded-full bg-slate-100 border border-slate-300 shadow-xs"></span><span class="text-[10px] text-slate-600 font-medium">Malla</span></div></div></div><div class="flex flex-col items-end gap-1"><button type="button" class="text-[10px] font-medium text-slate-600 hover:text-slate-900 border border-slate-200 hover:border-slate-400 bg-white px-2 py-0.5 rounded-md transition flex items-center gap-1"><span class="material-symbols-outlined text-[11px]">star</span> Marcar como predeterminada</button><span class="text-[10px] font-mono font-medium px-2 py-0.5 bg-slate-100 text-slate-600 rounded border border-slate-200">TRK-100-TAN</span></div></div><div class="pl-6 pt-1"><div class="text-[11px] font-semibold text-slate-700 mb-1.5 flex items-center justify-between"><span class="">Vistas del Producto (2/3 cargadas)</span><span class="text-[10px] text-amber-700 font-medium">Pendiente trasera</span></div><div class="grid grid-cols-3 gap-2"><div class="border border-slate-200 rounded-lg p-1.5 bg-slate-50/50 hover:bg-white hover:border-slate-300 transition group"><div class="aspect-square w-full rounded bg-slate-100 overflow-hidden relative flex items-center justify-center border border-slate-200/60"><img src="https://lh3.googleusercontent.com/aida/AEtjO1WH9XBliVcrKcFh7XsY5H9dr-4dAkJiN-nX0oOlveap7b3kJqEddVNGKC-peOIkJPw613d_knDCSu5miyzS_jm6g7FNMc-MOFAbm1ZwLWj-8jDELl1hr0JosVdVWYmXFFB6SGvUsBqJYxH590dS6wxNElQJBLu3zW2VXuQrUj0FJ9rap4nG4kVMbyQcO3SNtr1QlJcFmcZgW0JR64iVowMvcFl5A59T_lYTkJo8lB313lINof8JAIZA5Jqx" class="w-full h-full object-contain" alt="Frontal"><span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-500"></span></div><div class="mt-1 text-center"><span class="text-[10px] font-semibold text-slate-700 block truncate">Frontal</span><div class="flex items-center justify-center gap-1.5 mt-0.5"><button type="button" class="text-[9px] text-blue-600 hover:underline font-medium">Cambiar</button><span class="text-slate-300 text-[9px]">•</span><button type="button" class="text-[9px] text-slate-500 hover:text-red-600 hover:underline font-medium" title="Eliminar imagen">Eliminar</button></div></div></div><div class="border border-slate-200 rounded-lg p-1.5 bg-slate-50/50 hover:bg-white hover:border-slate-300 transition group"><div class="aspect-square w-full rounded bg-slate-100 overflow-hidden relative flex items-center justify-center border border-slate-200/60"><img src="https://lh3.googleusercontent.com/aida/AEtjO1WH9XBliVcrKcFh7XsY5H9dr-4dAkJiN-nX0oOlveap7b3kJqEddVNGKC-peOIkJPw613d_knDCSu5miyzS_jm6g7FNMc-MOFAbm1ZwLWj-8jDELl1hr0JosVdVWYmXFFB6SGvUsBqJYxH590dS6wxNElQJBLu3zW2VXuQrUj0FJ9rap4nG4kVMbyQcO3SNtr1QlJcFmcZgW0JR64iVowMvcFl5A59T_lYTkJo8lB313lINof8JAIZA5Jqx" class="w-full h-full object-contain" alt="Lateral"><span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-500"></span></div><div class="mt-1 text-center"><span class="text-[10px] font-semibold text-slate-700 block truncate">Lateral</span><div class="flex items-center justify-center gap-1.5 mt-0.5"><button type="button" class="text-[9px] text-blue-600 hover:underline font-medium">Cambiar</button><span class="text-slate-300 text-[9px]">•</span><button type="button" class="text-[9px] text-slate-500 hover:text-red-600 hover:underline font-medium" title="Eliminar imagen">Eliminar</button></div></div></div><div class="border border-dashed border-slate-300 rounded-lg p-1.5 bg-slate-50 hover:border-blue-400 hover:bg-blue-50/20 transition cursor-pointer flex flex-col items-center justify-center"><div class="aspect-square w-full rounded flex flex-col items-center justify-center text-slate-400 hover:text-blue-600"><span class="material-symbols-outlined text-lg mb-0.5">add_photo_alternate</span><span class="text-[9px] font-medium">Subir</span></div><div class="mt-1 text-center"><span class="text-[10px] font-medium text-slate-500 block truncate">Trasera</span><span class="text-[9px] text-amber-700 font-medium">Falta foto</span></div></div></div></div></div></div><div class="pt-1 flex gap-2"><button onclick="showStep(1)" class="w-1/3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition">Atrás</button><button onclick="showStep(3)" class="w-2/3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold rounded-lg transition flex items-center justify-center gap-1"><span class="">Personalización</span><span class="material-symbols-outlined text-sm">arrow_forward</span></button></div></div>
+
+        <!-- STEP 3: ÁREA DE PERSONALIZACIÓN -->
+        <div id="stepContent3" class="space-y-5 hidden">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Paso 3: Área de Personalización</h2>
+              <p class="text-xs text-slate-500 mt-0.5">Parámetros dimensionales y técnicas admitidas.</p>
+            </div>
+            <span class="material-symbols-outlined text-slate-400 text-lg">tune</span>
+          </div>
+
+          <!-- Dimension Sliders (Width / Height) -->
+          <div class="space-y-4 p-3.5 rounded-xl border border-slate-200 bg-slate-50/40">
+            <div>
+              <div class="flex justify-between items-center text-xs mb-1.5">
+                <span class="font-medium text-slate-700">Ancho Máximo (Max Width)</span>
+                <span id="widthValue" class="font-mono font-semibold text-slate-900 bg-white px-2 py-0.5 rounded border border-slate-200 text-[11px]">10.0 cm</span>
+              </div>
+              <input type="range" min="4" max="14" step="0.5" value="10" id="widthSlider" oninput="updateDimensions()" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-900">
+              <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                <span class="">4 cm</span>
+                <span class="">14 cm</span>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between items-center text-xs mb-1.5">
+                <span class="font-medium text-slate-700">Alto Máximo (Max Height)</span>
+                <span id="heightValue" class="font-mono font-semibold text-slate-900 bg-white px-2 py-0.5 rounded border border-slate-200 text-[11px]">5.5 cm</span>
+              </div>
+              <input type="range" min="2" max="8" step="0.5" value="5.5" id="heightSlider" oninput="updateDimensions()" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-900">
+              <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                <span class="">2 cm</span>
+                <span class="">8 cm</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Allowed Techniques (Bordado, Estampado) -->
+          <div class="space-y-2.5">
+            <span class="text-xs font-semibold text-slate-800 block">Técnicas de Marcaje Permitidas</span>
+            
+            
+
+            <label class="flex items-center justify-between p-3 rounded-xl border border-slate-200 hover:border-slate-300 bg-white cursor-pointer transition">
+              <div class="flex items-center gap-2.5">
+                <div class="w-7 h-7 rounded-lg bg-indigo-50 text-indigo-700 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-base">print</span>
+                </div>
+                <div>
+                  <p class="text-xs font-semibold text-slate-800">Estampado / Parche DTF</p>
+                  <p class="text-[10px] text-slate-500">Alta definición y gradientes a todo color</p>
+                </div>
+              </div>
+              <input type="checkbox" checked="" class="w-4 h-4 rounded text-slate-900 focus:ring-slate-900 border-slate-300">
+            </label>
+
+            <label class="flex items-center justify-between p-3 rounded-xl border border-slate-200 hover:border-slate-300 bg-white cursor-pointer transition">
+              <div class="flex items-center gap-2.5">
+                <div class="w-7 h-7 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-base">sell</span>
+                </div>
+                <div>
+                  <p class="text-xs font-semibold text-slate-800">Parche de Cuero Grabado</p>
+                  <p class="text-[10px] text-slate-500">Acabado artesanal premium con pespunte</p>
+                </div>
+              </div>
+              <input type="checkbox" class="w-4 h-4 rounded text-slate-900 focus:ring-slate-900 border-slate-300">
+            </label>
+          </div>
+
+          <!-- Character Limit Field -->
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-medium text-slate-700">Límite de Caracteres para Texto</span>
+              <span class="text-[11px] text-slate-400">Por línea</span>
+            </div>
+            <div class="relative">
+              <input type="number" value="16" min="1" max="40" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs font-medium text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900">
+              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] text-slate-400 font-mono">caracteres máx.</span>
+            </div>
+            <p class="text-[10px] text-slate-500">Asegura que el texto bordado mantenga legibilidad mínima (12pt).</p>
+          </div>
+
+          <div class="pt-1">
+            <button onclick="showStep(2)" class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition">
+              Volver a Colores
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bottom Action Bar (Fixed at bottom of right panel) -->
+      <div class="p-4 border-t border-slate-200 bg-white shrink-0 space-y-2.5">
+        <div class="flex items-center gap-2">
+          <button onclick="triggerPreviewModal()" class="w-1/2 py-2.5 px-3 border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5 shadow-sm">
+            <span class="material-symbols-outlined text-base">visibility</span>
+            <span class="">Vista Previa</span>
+          </button>
+          <button onclick="saveConfiguration()" class="w-1/2 py-2.5 px-3 bg-slate-900 hover:bg-black text-white rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5 shadow-md active:scale-95">
+            <span class="material-symbols-outlined text-base">check</span>
+            <span class="">Guardar Cambios</span>
+          </button>
+        </div>
+        <p class="text-[10px] text-center text-slate-400">Los cambios se reflejarán instantáneamente en el configurador de clientes.</p>
+      </div>
+
+    </aside>
+
+  </main>
+
+  <!-- Notification Toast -->
+  <div id="saveToast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-4 py-2.5 rounded-xl shadow-xl flex items-center gap-2.5 text-xs font-medium transition-opacity duration-300 z-50 opacity-0 pointer-events-none">
+    <span class="material-symbols-outlined text-emerald-400 text-base">check_circle</span>
+    <span class="">Configuración guardada exitosamente para Gorra Trucker Classic</span>
+  </div>
+
+  <!-- Interactive JavaScript Logic -->
+  <script>
+    // Tab Step Navigation
+    function showStep(stepNum) {
+      // Hide all step contents
+      document.getElementById('stepContent1').classList.add('hidden');
+      document.getElementById('stepContent2').classList.add('hidden');
+      document.getElementById('stepContent3').classList.add('hidden');
+
+      // Reset Tab styles
+      for(let i=1; i<=3; i++) {
+        const tab = document.getElementById('stepTab' + i);
+        tab.className = "py-2 px-1 text-center rounded-lg text-xs font-semibold text-slate-500 hover:text-slate-800 transition-all";
+        const badge = tab.querySelector('span');
+        badge.className = "w-4 h-4 rounded-full bg-slate-200 text-slate-600 text-[10px] flex items-center justify-center font-bold";
+      }
+
+      // Activate selected
+      document.getElementById('stepContent' + stepNum).classList.remove('hidden');
+      const activeTab = document.getElementById('stepTab' + stepNum);
+      activeTab.className = "py-2 px-1 text-center rounded-lg text-xs font-semibold transition-all shadow-sm bg-white text-slate-900";
+      const activeBadge = activeTab.querySelector('span');
+      activeBadge.className = "w-4 h-4 rounded-full bg-slate-900 text-white text-[10px] flex items-center justify-center font-bold";
+    }
+
+    // View switcher pills
+    function switchView(view) {
+      const frontBtn = document.getElementById('viewFrontBtn');
+      const sideBtn = document.getElementById('viewSideBtn');
+      const backBtn = document.getElementById('viewBackBtn');
+      const zone = document.getElementById('personalizationZone');
+
+      const normalClass = "px-5 py-2 rounded-full text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all flex items-center gap-2";
+      const activeClass = "px-5 py-2 rounded-full text-xs font-semibold transition-all flex items-center gap-2 bg-slate-900 text-white shadow-sm";
+
+      frontBtn.className = normalClass;
+      sideBtn.className = normalClass;
+      backBtn.className = normalClass;
+
+      if(view === 'front') {
+        frontBtn.className = activeClass;
+        zone.style.top = "40%";
+        zone.style.left = "33%";
+        zone.style.width = "34%";
+        zone.style.height = "22%";
+        zone.querySelector('span.text-\\[11px\\]').innerText = "Zona Frontal Principal";
+      } else if(view === 'side') {
+        sideBtn.className = activeClass;
+        zone.style.top = "45%";
+        zone.style.left = "28%";
+        zone.style.width = "22%";
+        zone.style.height = "18%";
+        zone.querySelector('span.text-\\[11px\\]').innerText = "Zona Lateral Izquierda";
+      } else if(view === 'back') {
+        backBtn.className = activeClass;
+        zone.style.top = "52%";
+        zone.style.left = "36%";
+        zone.style.width = "28%";
+        zone.style.height = "16%";
+        zone.querySelector('span.text-\\[11px\\]').innerText = "Zona Sobre el Broche Trasero";
+      }
+    }
+
+    // Sliders to Box Dimension updates
+    function updateDimensions() {
+      const widthVal = document.getElementById('widthSlider').value;
+      const heightVal = document.getElementById('heightSlider').value;
+      document.getElementById('widthValue').innerText = widthVal + ' cm';
+      document.getElementById('heightValue').innerText = heightVal + ' cm';
+
+      const zone = document.getElementById('personalizationZone');
+      // Proportional scale visually
+      zone.style.width = (widthVal * 3.4) + '%';
+      zone.style.height = (heightVal * 4.0) + '%';
+    }
+
+    // Status toggle
+    const toggle = document.getElementById('statusToggle');
+    const statusLabel = document.getElementById('statusLabel');
+    toggle.addEventListener('change', function() {
+      if(this.checked) {
+        statusLabel.innerText = "Publicado";
+        statusLabel.className = "text-[10px] font-medium text-emerald-600 mt-1 uppercase tracking-wider";
+      } else {
+        statusLabel.innerText = "Borrador";
+        statusLabel.className = "text-[10px] font-medium text-slate-400 mt-1 uppercase tracking-wider";
+      }
+    });
+
+    // Save notification
+    function saveConfiguration() {
+      const toast = document.getElementById('saveToast');
+      toast.classList.remove('opacity-0', 'pointer-events-none');
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'pointer-events-none');
+      }, 2500);
+    }
+
+    function triggerPreviewModal() {
+      alert("Abriendo vista previa interactiva 3D con la zona de personalización delimitada.");
+    }
+  </script>
+
+
+
+
+
+
+</body></html>

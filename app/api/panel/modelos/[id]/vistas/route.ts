@@ -9,7 +9,9 @@ import { deletePublicFile } from "@/lib/media/storage";
 const VIEWS = ["front", "side", "back"] as const;
 
 // Activa o desactiva una vista y, opcionalmente, fija su imagen base
-// (FR-006, FR-008). `front` nunca puede desactivarse.
+// (FR-006, FR-008). `front` nunca puede desactivarse. Desactivar una vista
+// NO borra su imagen ni el archivo en R2: solo la oculta del catálogo, para
+// poder reactivarla sin volver a subir la foto.
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -31,14 +33,22 @@ export async function POST(
     }
 
     if (!active) {
-      const [removed] = await db
-        .delete(modelView)
+      const [existingRow] = await db
+        .select()
+        .from(modelView)
         .where(and(eq(modelView.modelId, modelId), eq(modelView.view, view)))
-        .returning({ baseImageUrl: modelView.baseImageUrl });
-      if (removed?.baseImageUrl) {
-        await deletePublicFile(removed.baseImageUrl).catch(() => {});
-      }
-      return new NextResponse(null, { status: 204 });
+        .limit(1);
+      const [updated] = existingRow
+        ? await db
+            .update(modelView)
+            .set({ active: false })
+            .where(and(eq(modelView.modelId, modelId), eq(modelView.view, view)))
+            .returning()
+        : await db
+            .insert(modelView)
+            .values({ modelId, view, active: false })
+            .returning();
+      return NextResponse.json(updated);
     }
 
     const baseImageUrl: string | undefined = body.baseImageUrl;
@@ -76,7 +86,7 @@ export async function POST(
       }
       const [updated] = await db
         .update(modelView)
-        .set({ baseImageUrl: baseImageUrl ?? existing.baseImageUrl })
+        .set({ baseImageUrl: baseImageUrl ?? existing.baseImageUrl, active: true })
         .where(and(eq(modelView.modelId, modelId), eq(modelView.view, view)))
         .returning();
       return NextResponse.json(updated);
@@ -84,7 +94,7 @@ export async function POST(
 
     const [created] = await db
       .insert(modelView)
-      .values({ modelId, view, baseImageUrl: baseImageUrl ?? null })
+      .values({ modelId, view, baseImageUrl: baseImageUrl ?? null, active: true })
       .returning();
     return NextResponse.json(created, { status: 201 });
   } catch (error) {

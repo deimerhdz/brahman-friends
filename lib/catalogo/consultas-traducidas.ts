@@ -33,6 +33,8 @@ export function capModelConNombre() {
       imageWidth: capModel.imageWidth,
       imageHeight: capModel.imageHeight,
       moq: capModel.moq,
+      price: capModel.price,
+      defaultColorId: capModel.defaultColorId,
       publishedAt: capModel.publishedAt,
       createdAt: capModel.createdAt,
       nameEs: capModelEs.name,

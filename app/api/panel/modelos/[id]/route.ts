@@ -2,9 +2,9 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { eq, and } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { capModel, capModelTranslation } from "@/lib/db/schema";
+import { capModel, capModelTranslation, color } from "@/lib/db/schema";
 import { getSession } from "@/lib/auth/session";
-import { errors, handleApiError } from "@/lib/http/errors";
+import { apiError, errors, handleApiError } from "@/lib/http/errors";
 import { validarNombreTraducido } from "@/lib/catalogo/traduccion";
 
 export async function PATCH(
@@ -49,6 +49,35 @@ export async function PATCH(
         return errors.datosInvalidos();
       }
       patch.moq = body.moq;
+    }
+
+    // Precio base en USD.
+    if (body.price !== undefined) {
+      if (
+        body.price !== null &&
+        (typeof body.price !== "number" || !Number.isFinite(body.price) || body.price < 0)
+      ) {
+        return errors.datosInvalidos();
+      }
+      patch.price = body.price === null ? null : body.price.toFixed(2);
+    }
+
+    // Variante predeterminada de tienda/catálogo — debe pertenecer a este modelo.
+    if (body.defaultColorId !== undefined) {
+      if (body.defaultColorId !== null) {
+        if (typeof body.defaultColorId !== "string") {
+          return errors.datosInvalidos();
+        }
+        const [matchingColor] = await db
+          .select({ id: color.id })
+          .from(color)
+          .where(and(eq(color.id, body.defaultColorId), eq(color.modelId, id)))
+          .limit(1);
+        if (!matchingColor) {
+          return apiError(422, "modelo_no_coincide");
+        }
+      }
+      patch.defaultColorId = body.defaultColorId;
     }
 
     const [updated] =

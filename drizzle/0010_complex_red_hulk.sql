@@ -1,0 +1,1 @@
+ALTER TABLE "model_view" ADD COLUMN "active" boolean DEFAULT true NOT NULL;

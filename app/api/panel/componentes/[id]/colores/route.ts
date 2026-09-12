@@ -60,7 +60,13 @@ export async function POST(
     const [activeView] = await db
       .select()
       .from(modelView)
-      .where(and(eq(modelView.modelId, comp.modelId), eq(modelView.view, view)))
+      .where(
+        and(
+          eq(modelView.modelId, comp.modelId),
+          eq(modelView.view, view),
+          eq(modelView.active, true),
+        ),
+      )
       .limit(1);
     if (!activeView) {
       return apiError(422, "vista_no_activa");

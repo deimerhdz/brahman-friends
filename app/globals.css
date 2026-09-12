@@ -126,6 +126,23 @@
   color: #003ec7;
 }
 
+/* Caja de la zona de personalización sobre la foto del modelo (panel de
+   configuración de modelos) — usa el color primario del proyecto en vez del
+   azul fijo del mockup original. */
+.dashed-box {
+  border: 2px dashed var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 5%, transparent);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.8) inset;
+}
+.resize-handle {
+  width: 10px;
+  height: 10px;
+  background-color: #ffffff;
+  border: 2px solid var(--color-primary);
+  position: absolute;
+  border-radius: 2px;
+}
+
 @keyframes landing-spin-slow {
   to {
     transform: rotate(360deg);

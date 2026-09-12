@@ -4,13 +4,20 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { SubidaArchivo } from "@/app/[locale]/panel/_components/SubidaArchivo";
 import { leerDimensiones } from "@/lib/media/leer-dimensiones";
-import { EstadoBadge } from "../../../_EstadoBadge";
 
 type View = "front" | "side" | "back";
 
-export function ColorVariante({
+/**
+ * Bloque de un componente (corona/visera/malla) dentro de la tarjeta de una
+ * variante de color: qué vistas están habilitadas para ese componente+color
+ * y sus imágenes. Misma lógica que la antigua _ColorVariante.tsx, ahora
+ * anidada dentro del paso "Colores" en vez de vivir en una página de
+ * "Componentes" separada.
+ */
+export function ParteColorVariante({
   modelId,
   componentId,
+  componentName,
   color,
   activeViews,
   requiredViews,
@@ -21,6 +28,7 @@ export function ColorVariante({
 }: {
   modelId: string;
   componentId: string;
+  componentName: string;
   color: { id: string; nameEs: string };
   activeViews: View[];
   requiredViews: View[];
@@ -118,104 +126,114 @@ export function ColorVariante({
     router.refresh();
   }
 
+  const loadedCount = activeViews.filter((v) => images[v]).length;
+  const complete = loadedCount === activeViews.length && activeViews.length > 0;
+
   return (
-    <div className="rounded-lg border border-outline-variant/40 p-4">
-      <div className="flex items-center justify-between gap-3">
-        <span className="font-body-md text-body-md font-semibold text-on-surface">
-          {color.nameEs}
+    <div className="rounded-lg border border-outline-variant/40 bg-surface p-3">
+      <div className="mb-2 flex items-center justify-between gap-2">
+        <span className="font-label-caps text-label-caps uppercase text-on-surface-variant">
+          {componentName}
         </span>
-        {requiredViews.length > 0 && (
-          <button
-            type="button"
-            onClick={deleteVariant}
-            className="font-label-caps text-label-caps text-error underline-offset-2 hover:underline"
+        <div className="flex items-center gap-2">
+          <span
+            className={`font-label-caps text-label-caps ${complete ? "text-[#2E7D32]" : "text-[#8D6E00]"}`}
           >
-            {labels.deleteVariant}
-          </button>
-        )}
+            {labels.viewsProgress} ({loadedCount}/{activeViews.length}) ·{" "}
+            {complete ? labels.readyForStore : labels.pendingPhotos}
+          </span>
+          {requiredViews.length > 0 && (
+            <button
+              type="button"
+              onClick={deleteVariant}
+              className="font-label-caps text-label-caps text-error underline-offset-2 hover:underline"
+            >
+              {labels.deleteVariant}
+            </button>
+          )}
+        </div>
       </div>
 
-      <div className="mt-2 flex flex-col gap-2">
+      <div className="grid grid-cols-3 gap-2">
         {activeViews.map((v) => {
           const checked = requiredViews.includes(v);
           const imageUrl = images[v];
           return (
             <div key={v} className="flex flex-col gap-1">
-              <label className="flex items-center gap-2 font-body-md text-body-md text-on-surface">
+              <label className="flex items-center gap-1.5 font-body-md text-[11px] text-on-surface">
                 <input
                   type="checkbox"
                   checked={checked}
                   onChange={(e) => toggleView(v, e.target.checked)}
-                  className="accent-primary"
+                  className="h-3.5 w-3.5 accent-primary"
                 />
                 <span>{labels[`view_${v}`]}</span>
               </label>
 
-              {checked && (
-                <div className="ml-6 flex flex-col gap-2">
-                  {imageUrl && editingView !== v ? (
-                    <div className="flex items-center gap-3">
+              {checked &&
+                (imageUrl && editingView !== v ? (
+                  <div className="group rounded-lg border border-outline-variant/60 bg-surface-container-low/50 p-1.5">
+                    <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded border border-outline-variant/40 bg-surface-container-lowest">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={imageUrl}
                         alt=""
-                        className="h-10 w-10 rounded border border-outline-variant/60 object-cover"
+                        className="h-full w-full object-contain"
                       />
-                      <EstadoBadge label={labels.loaded} tone="success" />
+                      <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-[#2E7D32]" />
+                    </div>
+                    <div className="mt-1 flex items-center justify-center gap-1.5">
                       <button
                         type="button"
                         onClick={() => setEditingView(v)}
-                        className="font-label-caps text-label-caps text-primary underline-offset-2 hover:underline"
+                        className="text-[9px] font-medium text-primary hover:underline"
                       >
                         {labels.edit}
                       </button>
+                      <span className="text-[9px] text-outline-variant">•</span>
                       <button
                         type="button"
                         onClick={() => deleteImage(v)}
-                        className="font-label-caps text-label-caps text-error underline-offset-2 hover:underline"
+                        className="text-[9px] font-medium text-error hover:underline"
                       >
                         {labels.delete}
                       </button>
                     </div>
-                  ) : (
-                    <div className="flex flex-col gap-2">
-                      {!imageUrl && (
-                        <EstadoBadge label={labels.missing} tone="danger" />
-                      )}
-                      <SubidaArchivo
-                        key={`${componentId}-${color.id}-${v}`}
-                        presignEndpoint="/api/panel/subidas/presignar"
-                        pathPrefix={`modelos/${modelId}`}
-                        accept={["image/png", "image/jpeg", "image/webp"]}
-                        currentUrl={imageUrl}
-                        onUploaded={(url, file) => handleUploaded(v, url, file)}
-                        labels={{
-                          select: labels[`view_${v}`],
-                          upload: labels.upload,
-                          uploading: labels.uploading,
-                          success: labels.uploadSuccess,
-                          error: labels.error,
-                          retry: labels.retry,
-                        }}
-                      />
-                    </div>
-                  )}
-                </div>
-              )}
+                  </div>
+                ) : (
+                  <div className="rounded-lg border border-dashed border-outline-variant bg-surface-container-low p-1.5">
+                    <SubidaArchivo
+                      key={`${componentId}-${color.id}-${v}`}
+                      presignEndpoint="/api/panel/subidas/presignar"
+                      pathPrefix={`modelos/${modelId}`}
+                      accept={["image/png", "image/jpeg", "image/webp"]}
+                      currentUrl={imageUrl}
+                      onUploaded={(url, file) => handleUploaded(v, url, file)}
+                      labels={{
+                        select: labels[`view_${v}`],
+                        upload: labels.upload,
+                        uploading: labels.uploading,
+                        success: labels.uploadSuccess,
+                        error: labels.error,
+                        retry: labels.retry,
+                      }}
+                    />
+                  </div>
+                ))}
             </div>
           );
         })}
       </div>
 
       {requiredViews.length > 0 && (
-        <label className="mt-3 flex items-center gap-1 font-label-caps text-label-caps text-on-surface-variant">
+        <label className="mt-2 flex items-center gap-1.5 font-label-caps text-label-caps text-on-surface-variant">
           <input
             type="radio"
             checked={isDefault}
             onChange={onSetDefault}
-            className="accent-primary"
+            className="h-3.5 w-3.5 accent-primary"
           />
-          {labels.default}
+          {labels.defaultColor}
         </label>
       )}
 

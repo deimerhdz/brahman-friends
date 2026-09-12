@@ -67,6 +67,24 @@ export function computeStrips(
  * `box` (en píxeles del canvas destino). No se prueba automáticamente: usa la
  * API del DOM (research.md, decisión 8: "se prueba" se refiere a `computeStrips`).
  */
+/**
+ * Ancho/alto reales de la fuente a dibujar. `naturalWidth/Height` solo existe
+ * en `<img>`; un `<canvas>` (p. ej. el texto ya renderizado, ver
+ * lib/design/compose.ts) expone su tamaño en `width`/`height`. Antes de este
+ * fix, una fuente de tipo canvas caía siempre al `else` y tomaba el tamaño de
+ * la caja DESTINO como si fuera el de la fuente ORIGEN, recortando una
+ * esquina diminuta y vacía del canvas de texto en vez del texto real.
+ */
+function sourceSize(image: CanvasImageSource): { width: number; height: number } {
+  if ("naturalWidth" in image) {
+    return { width: image.naturalWidth, height: image.naturalHeight };
+  }
+  if ("width" in image && "height" in image) {
+    return { width: Number(image.width), height: Number(image.height) };
+  }
+  return { width: 0, height: 0 };
+}
+
 export function drawWarped(
   ctx: CanvasRenderingContext2D,
   image: CanvasImageSource,
@@ -75,8 +93,8 @@ export function drawWarped(
   stripCount = 48,
 ): void {
   const strips = computeStrips(stripCount, params);
-  const sourceWidth = "naturalWidth" in image ? image.naturalWidth : box.w;
-  const sourceHeight = "naturalHeight" in image ? image.naturalHeight : box.h;
+  const { width: sourceWidth, height: sourceHeight } = sourceSize(image);
+  if (sourceWidth <= 0 || sourceHeight <= 0) return;
 
   for (const strip of strips) {
     const sx = strip.u * sourceWidth - (strip.width * sourceWidth) / 2;

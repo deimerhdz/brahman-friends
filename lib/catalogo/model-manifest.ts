@@ -42,7 +42,10 @@ export async function loadModelManifest(modelId: string) {
     techniques,
     modelTechniques,
   ] = await Promise.all([
-    db.select().from(modelView).where(eq(modelView.modelId, modelId)),
+    db
+      .select()
+      .from(modelView)
+      .where(and(eq(modelView.modelId, modelId), eq(modelView.active, true))),
     componentConNombre().where(eq(component.modelId, modelId)),
     db.select().from(componentColor),
     colorConNombre().where(eq(color.modelId, modelId)),

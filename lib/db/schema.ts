@@ -11,6 +11,7 @@ import {
   uniqueIndex,
   index,
   pgEnum,
+  type AnyPgColumn,
 } from "drizzle-orm/pg-core";
 
 // Catálogo fijo de vistas (Assumption 5). Ver data-model.md#model_view.
@@ -120,6 +121,14 @@ export const capModel = pgTable("cap_model", {
   // Cantidad mínima de pedido (006-configurador-stepper FR-010, FR-012).
   // NULL = no configurado todavía; el código lo trata como 1.
   moq: integer("moq"),
+  // Precio base del modelo en USD. NULL = no configurado todavía.
+  price: numeric("price", { precision: 10, scale: 2 }),
+  // Variante que se carga por defecto en tienda/configurador (distinto del
+  // color por defecto de cada componente, que es solo para el renderizado).
+  defaultColorId: uuid("default_color_id").references(
+    (): AnyPgColumn => color.id,
+    { onDelete: "set null" },
+  ),
   publishedAt: timestamp("published_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
@@ -149,6 +158,10 @@ export const modelView = pgTable(
       .references(() => capModel.id, { onDelete: "cascade" }),
     view: viewEnum("view").notNull(),
     baseImageUrl: text("base_image_url"),
+    // Si se muestra en catálogo/tienda. Desactivar una vista NO borra su
+    // imagen ni el archivo en R2: solo la oculta, para que el admin pueda
+    // reactivarla sin volver a subir la foto.
+    active: boolean("active").notNull().default(true),
   },
   (t) => [primaryKey({ columns: [t.modelId, t.view] })],
 );
