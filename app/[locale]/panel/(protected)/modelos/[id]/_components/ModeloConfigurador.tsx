@@ -9,6 +9,7 @@ import { PasoVistas } from "./PasoVistas";
 import { PasoColores } from "./PasoColores";
 import { PasoPersonalizacion, type Position, type ZonaValue } from "./PasoPersonalizacion";
 import { ZonaOverlay, type BoxPx } from "./ZonaOverlay";
+import { ZonaWarpPreview } from "./ZonaWarpPreview";
 
 type View = "front" | "side" | "back";
 
@@ -113,6 +114,7 @@ export function ModeloConfigurador({
   const [sidePosition, setSidePosition] = useState<"left" | "right">("left");
   const [zones, setZones] = useState(zonesByPosition);
   const [savingZone, setSavingZone] = useState(false);
+  const [previewColor, setPreviewColor] = useState<"#ffffff" | "#111827">("#111827");
   const [enabledTechniques, setEnabledTechniques] = useState(enabledTechniqueIds);
 
   const [header, setHeader] = useState<EncabezadoValue>({
@@ -131,7 +133,31 @@ export function ModeloConfigurador({
   const zoneLabel = labels[`zone_${position}`];
 
   function updateZone(patch: Partial<ZonaValue>) {
-    setZones((z) => ({ ...z, [position]: { ...zoneValue, ...patch } }));
+    setZones((z) => {
+      const current = z[position] ?? defaultZona(position, defaultZoneChars);
+      const next: ZonaValue = { ...current, ...patch };
+
+      // Los sliders de ancho/alto máximo (cm) no tienen una escala px↔cm
+      // calibrada, pero el admin necesita ver algún efecto al moverlos: se
+      // redimensiona la caja de la zona en la misma proporción, manteniendo
+      // su centro fijo, para dar retroalimentación visual inmediata.
+      if (patch.maxWidthCm !== undefined && current.maxWidthCm > 0) {
+        const scale = patch.maxWidthCm / current.maxWidthCm;
+        const boxW = Math.min(effectiveImageWidth, Math.max(20, Math.round(current.boxW * scale)));
+        const centerX = current.boxX + current.boxW / 2;
+        next.boxW = boxW;
+        next.boxX = Math.min(Math.max(0, Math.round(centerX - boxW / 2)), effectiveImageWidth - boxW);
+      }
+      if (patch.maxHeightCm !== undefined && current.maxHeightCm > 0) {
+        const scale = patch.maxHeightCm / current.maxHeightCm;
+        const boxH = Math.min(effectiveImageHeight, Math.max(20, Math.round(current.boxH * scale)));
+        const centerY = current.boxY + current.boxH / 2;
+        next.boxH = boxH;
+        next.boxY = Math.min(Math.max(0, Math.round(centerY - boxH / 2)), effectiveImageHeight - boxH);
+      }
+
+      return { ...z, [position]: next };
+    });
   }
 
   function updateBox(box: BoxPx) {
@@ -199,6 +225,29 @@ export function ModeloConfigurador({
           para igualar la altura del wizard cuando este tiene mucho contenido. */}
       <section className="relative flex h-[360px] flex-col overflow-hidden rounded-t-xl border-b border-outline-variant/60 bg-surface-container-low sm:h-[440px] lg:sticky lg:top-4 lg:h-[min(calc(100vh-2rem),640px)] lg:w-[60%] lg:rounded-l-xl lg:rounded-tr-none lg:border-b-0 lg:border-r">
         <div className="flex h-12 shrink-0 items-center justify-end gap-3 border-b border-outline-variant/40 bg-surface-container-lowest/60 px-4">
+          <div className="flex items-center gap-1.5 rounded-lg border border-outline-variant/60 bg-surface-container-lowest px-2 py-1 shadow-xs">
+            <span className="text-[10px] text-on-surface-variant">{labels.previewColorLabel}</span>
+            <button
+              type="button"
+              onClick={() => setPreviewColor("#111827")}
+              title={labels.previewColorBlack}
+              aria-label={labels.previewColorBlack}
+              aria-pressed={previewColor === "#111827"}
+              className={`h-4 w-4 rounded-full border border-outline-variant/60 bg-[#111827] transition-shadow ${
+                previewColor === "#111827" ? "ring-2 ring-primary ring-offset-1 ring-offset-surface-container-lowest" : ""
+              }`}
+            />
+            <button
+              type="button"
+              onClick={() => setPreviewColor("#ffffff")}
+              title={labels.previewColorWhite}
+              aria-label={labels.previewColorWhite}
+              aria-pressed={previewColor === "#ffffff"}
+              className={`h-4 w-4 rounded-full border border-outline-variant/60 bg-white transition-shadow ${
+                previewColor === "#ffffff" ? "ring-2 ring-primary ring-offset-1 ring-offset-surface-container-lowest" : ""
+              }`}
+            />
+          </div>
           <div className="flex items-center gap-1 rounded-lg border border-outline-variant/60 bg-surface-container-lowest px-2.5 py-1 text-xs text-on-surface-variant shadow-xs">
             <span className="material-symbols-outlined text-base text-primary">drag_pan</span>
           </div>
@@ -219,6 +268,15 @@ export function ModeloConfigurador({
                 <span className="font-label-caps text-label-caps">{labels.noImage}</span>
               </div>
             )}
+
+            <ZonaWarpPreview
+              box={{ x: zoneValue.boxX, y: zoneValue.boxY, w: zoneValue.boxW, h: zoneValue.boxH }}
+              imageWidth={effectiveImageWidth}
+              imageHeight={effectiveImageHeight}
+              params={{ arc: zoneValue.arc, tilt: zoneValue.tilt, taper: zoneValue.taper }}
+              placeholderText={labels.previewLogo}
+              color={previewColor}
+            />
 
             <ZonaOverlay
               box={{ x: zoneValue.boxX, y: zoneValue.boxY, w: zoneValue.boxW, h: zoneValue.boxH }}

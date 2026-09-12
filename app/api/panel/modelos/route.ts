@@ -20,9 +20,19 @@ export async function POST(request: NextRequest) {
     const descriptionEn =
       typeof body.description?.en === "string" ? body.description.en.trim() : "";
 
+    // Precio base en USD, opcional (008-formulario-creacion-modelo): misma
+    // regla de validación que ya usa el PATCH de [id]/route.ts.
+    let price: string | null = null;
+    if (body.price !== undefined && body.price !== null) {
+      if (typeof body.price !== "number" || !Number.isFinite(body.price) || body.price < 0) {
+        return errors.datosInvalidos();
+      }
+      price = body.price.toFixed(2);
+    }
+
     const [created] = await db
       .insert(capModel)
-      .values({ code: body.code })
+      .values({ code: body.code, price })
       .returning();
 
     await db.insert(capModelTranslation).values([

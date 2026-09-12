@@ -96,11 +96,15 @@ export function loadImage(src: string): Promise<HTMLImageElement> {
 }
 
 // Sin imagen de muestra por color (007-colores-por-modelo, enmienda
-// 2026-09-06), el texto personalizado ya no tiene de dónde sacar un patrón
-// por color: siempre se dibuja con este color de reserva fijo.
+// 2026-09-06), el texto personalizado del cliente ya no tiene de dónde sacar
+// un patrón por color: siempre se dibuja con este color de reserva fijo por
+// defecto. `color` es un override opcional para otros usos (p. ej. la
+// previsualización del panel admin, donde no hay una prenda real detrás y el
+// color fijo se ve mal según la vista).
 export function renderTextSource(
   content: string,
   fontId: string,
+  color = "#111827",
 ): HTMLCanvasElement {
   const canvas = document.createElement("canvas");
   canvas.width = 600;
@@ -109,7 +113,7 @@ export function renderTextSource(
   ctx.font = `bold 90px ${fontCss(fontId)}`;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillStyle = "#111827";
+  ctx.fillStyle = color;
   ctx.fillText(content || " ", canvas.width / 2, canvas.height / 2);
   return canvas;
 }
