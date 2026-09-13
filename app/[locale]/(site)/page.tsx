@@ -60,7 +60,6 @@ export default async function HomePage({
   const models: TarjetaModelo[] = rows.map((m) => ({
     id: m.id,
     name: locale === "es" ? m.nameEs : m.nameEn,
-    description: locale === "es" ? m.descriptionEs : m.descriptionEn,
     frontImageUrl: m.frontImageUrl,
     type: m.type,
     price: m.type === "fixed_product" ? m.price : null,
@@ -73,7 +72,7 @@ export default async function HomePage({
   return (
     <div className="bg-surface text-on-surface">
       <Hero t={t} bannerUrl={ajustes.bannerUrl} />
-      <Collection t={t} models={models} />
+      <Collection t={t} locale={locale} models={models} />
       <B2BSection t={t} />
       <ProcessSection t={t} />
       <Footer t={t} siteName={siteName} socialLinks={ajustes.socialLinks} />

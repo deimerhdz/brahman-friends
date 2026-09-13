@@ -14,7 +14,18 @@ import {
   techniqueConNombre,
 } from "@/lib/catalogo/consultas-traducidas";
 
-const VIEW_ORDER = ["front", "side", "back"] as const;
+const VIEW_ORDER = ["front", "left", "right", "back"] as const;
+type RealView = (typeof VIEW_ORDER)[number];
+
+// "side" es un valor histórico del enum `view`, ya migrado a left/right (ver
+// scripts/migrar-vista-lateral-izq-der.ts): no debería quedar ninguna fila
+// así, pero el tipo de la columna todavía lo permite (Postgres no puede
+// borrar un valor de un enum sin recrear el tipo).
+function isRealView<T extends { view: string }>(
+  row: T,
+): row is T & { view: RealView } {
+  return row.view !== "side";
+}
 
 /**
  * Todo lo que el configurador necesita para un modelo publicado (FR-031a).
@@ -42,7 +53,9 @@ export async function loadModelManifest(modelId: string) {
       db.select().from(modelTechnique).where(eq(modelTechnique.modelId, modelId)),
     ]);
 
-  const sortedViews = [...views].sort(
+  const realViews = views.filter(isRealView);
+  const realImages = images.filter(isRealView);
+  const sortedViews = [...realViews].sort(
     (a, b) => VIEW_ORDER.indexOf(a.view) - VIEW_ORDER.indexOf(b.view),
   );
 
@@ -55,8 +68,8 @@ export async function loadModelManifest(modelId: string) {
       nameEs: c.nameEs,
       nameEn: c.nameEn,
       images: Object.fromEntries(
-        images.filter((img) => img.colorId === c.id).map((img) => [img.view, img.imageUrl]),
-      ) as Partial<Record<"front" | "side" | "back", string>>,
+        realImages.filter((img) => img.colorId === c.id).map((img) => [img.view, img.imageUrl]),
+      ) as Partial<Record<"front" | "left" | "right" | "back", string>>,
     }));
 
   return {
@@ -71,7 +84,7 @@ export async function loadModelManifest(modelId: string) {
     views: sortedViews.map((v) => v.view),
     baseImages: Object.fromEntries(
       sortedViews.map((v) => [v.view, v.baseImageUrl]),
-    ) as Partial<Record<"front" | "side" | "back", string | null>>,
+    ) as Partial<Record<"front" | "left" | "right" | "back", string | null>>,
     colors: colorsPayload,
     defaultColorId: model.defaultColorId,
     zones: zones.map((z) => ({

@@ -15,7 +15,11 @@ import {
 import { ZonaOverlay, type BoxPx } from "./ZonaOverlay";
 import { ZonaWarpPreview } from "./ZonaWarpPreview";
 
-type View = "front" | "side" | "back";
+// Las fotos del modelo (front/left/right/back) y las zonas decorables usan
+// el mismo catálogo de 4 posiciones: cada lado tiene su propia foto real,
+// así que `View` es literalmente `Position` (antes "side" era una única
+// foto compartida por las zonas "left"/"right", antes de 010-lateral-real).
+type View = Position;
 
 interface ColorRow {
   id: string;
@@ -97,12 +101,18 @@ export function ModeloConfigurador({
   // Un "Producto fijo" (009-modelos-producto-fijo) no tiene pasos de
   // colores ni personalización: arranca (y se queda) en el paso de vistas.
   const [step, setStep] = useState<1 | 2 | 3>(type === "fixed_product" ? 1 : 2);
-  const [activeView, setActiveView] = useState<View>("front");
-  const [sidePosition, setSidePosition] = useState<"left" | "right">("left");
+  // Posición activa: front/left/right/back. Es a la vez la foto que se
+  // muestra en el canvas y la zona decorable que se edita en el paso 3 — ya
+  // no hace falta distinguir "vista de la foto" de "posición de la zona"
+  // porque cada lado tiene su propia foto real.
+  const [position, setPosition] = useState<Position>("front");
   const [zones, setZones] = useState(zonesByPosition);
   const [savingZone, setSavingZone] = useState(false);
   const [previewColor, setPreviewColor] = useState<"#ffffff" | "#111827">(
     "#111827",
+  );
+  const [previewColorId, setPreviewColorId] = useState<string | null>(
+    defaultColorId,
   );
   const [enabledTechniques, setEnabledTechniques] =
     useState(enabledTechniqueIds);
@@ -115,15 +125,15 @@ export function ModeloConfigurador({
   const [savingHeader, setSavingHeader] = useState(false);
   const [toast, setToast] = useState(false);
 
-  const position: Position =
-    activeView === "side"
-      ? sidePosition
-      : activeView === "front"
-        ? "front"
-        : "back";
   const zoneValue = zones[position] ?? defaultZona(position, defaultZoneChars);
   const effectiveImageWidth = imageWidth ?? 1000;
   const effectiveImageHeight = imageHeight ?? 1000;
+  // El canvas muestra la foto real del color seleccionado en el paso 2
+  // (frontal/izquierdo/derecho/trasera); si ese color aún no tiene foto para
+  // esa posición, se cae a la imagen base genérica del modelo.
+  const previewImage =
+    (previewColorId && colorImages[previewColorId]?.[position]) ||
+    views[position];
 
   const zoneLabel = labels[`zone_${position}`];
 
@@ -274,11 +284,21 @@ export function ModeloConfigurador({
         )}
 
         <div className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden p-6 [background-image:radial-gradient(var(--color-outline-variant)_1px,transparent_1px)] [background-size:20px_20px] sm:p-8">
-          <div className="relative flex aspect-square h-full max-h-full max-w-full items-center justify-center">
-            {views[activeView] ? (
+          {/* La proporción tiene que coincidir con la de la imagen real
+              (`effectiveImageWidth/effectiveImageHeight`), no ser siempre
+              cuadrada: si la foto no es cuadrada, un contenedor 1:1 la deja
+              con barras y las cajas de zona (calculadas como % de
+              imageWidth/imageHeight) quedan desalineadas frente a como se
+              ven en el configurador de cliente (`ConfiguradorApp.tsx`), que
+              sí usa esta misma proporción. */}
+          <div
+            className="relative flex h-full max-h-full max-w-full items-center justify-center"
+            style={{ aspectRatio: effectiveImageWidth / effectiveImageHeight }}
+          >
+            {previewImage ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                src={views[activeView]}
+                src={previewImage}
                 alt=""
                 className="pointer-events-none h-full w-full object-contain drop-shadow-md"
               />
@@ -336,25 +356,30 @@ export function ModeloConfigurador({
           <div className="flex items-center gap-1.5 rounded-full border border-outline-variant/60 bg-surface-container-lowest p-1.5 shadow-md">
             {(
               [
-                { view: "front", icon: "view_in_ar", label: labels.view_front },
+                { position: "front", icon: "view_in_ar", label: labels.zone_front },
                 {
-                  view: "side",
+                  position: "left",
                   icon: "rotate_90_degrees_ccw",
-                  label: labels.view_side,
+                  label: labels.zone_left,
                 },
                 {
-                  view: "back",
+                  position: "right",
+                  icon: "rotate_90_degrees_cw",
+                  label: labels.zone_right,
+                },
+                {
+                  position: "back",
                   icon: "flip_camera_android",
-                  label: labels.view_back,
+                  label: labels.zone_back,
                 },
               ] as const
             ).map((p) => (
               <button
-                key={p.view}
+                key={p.position}
                 type="button"
-                onClick={() => setActiveView(p.view)}
+                onClick={() => setPosition(p.position)}
                 className={
-                  activeView === p.view
+                  position === p.position
                     ? "flex items-center gap-2 rounded-full bg-on-surface px-5 py-2 text-xs font-semibold text-on-primary shadow-sm"
                     : "flex items-center gap-2 rounded-full px-5 py-2 text-xs font-semibold text-on-surface-variant transition-all hover:bg-surface-container-low hover:text-on-surface"
                 }
@@ -433,14 +458,14 @@ export function ModeloConfigurador({
               activeViews={activeViews}
               colorImages={colorImages}
               labels={labels}
+              previewColorId={previewColorId}
+              onPreviewColor={setPreviewColorId}
             />
           )}
           {step === 3 && (
             <PasoPersonalizacion
               locale={locale}
               position={position}
-              showSideToggle={activeView === "side"}
-              onPositionChange={setSidePosition}
               value={zoneValue}
               onChange={updateZone}
               onCommit={() => commitZone()}

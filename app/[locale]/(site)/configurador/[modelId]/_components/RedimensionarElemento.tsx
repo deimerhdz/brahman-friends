@@ -60,40 +60,66 @@ function distanceBetween(pointers: Map<number, { x: number; y: number }>): numbe
   return Math.hypot(a.x - b.x, a.y - b.y);
 }
 
-export function DeslizadorTamano({
-  size,
+/**
+ * Redimensionado arrastrando una esquina del marco que rodea al elemento
+ * (equivalente con mouse al pellizco táctil): la escala depende de cuánto se
+ * aleja el puntero del centro respecto de dónde empezó a arrastrar, igual
+ * que el gesto de pellizco. Se detiene en el máximo de la zona (FR-043,
+ * SC-014).
+ */
+export function useRedimensionarBorde({
+  containerRef,
   zone,
   onChange,
-  label,
 }: {
-  size: SizeCm;
+  containerRef: React.RefObject<HTMLElement | null>;
   zone: ZoneLimits;
   onChange: (size: SizeCm) => void;
-  label: string;
 }) {
-  const ratio = size.widthCm / zone.maxWidthCm;
+  const drag = useRef<{
+    centerX: number;
+    centerY: number;
+    startDistance: number;
+    startSize: SizeCm;
+  } | null>(null);
 
-  function onSlide(value: number) {
-    const scale = value / ratio;
+  function onPointerDown(event: React.PointerEvent<HTMLElement>, current: SizeCm) {
+    event.stopPropagation();
+    event.currentTarget.setPointerCapture(event.pointerId);
+    const rect = containerRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    drag.current = {
+      centerX,
+      centerY,
+      startDistance: Math.hypot(event.clientX - centerX, event.clientY - centerY),
+      startSize: current,
+    };
+  }
+
+  function onPointerMove(event: React.PointerEvent<HTMLElement>) {
+    if (!drag.current || drag.current.startDistance === 0) return;
+    const distance = Math.hypot(
+      event.clientX - drag.current.centerX,
+      event.clientY - drag.current.centerY,
+    );
+    const scale = distance / drag.current.startDistance;
     onChange(
       clampSizeToZone(
-        { widthCm: size.widthCm * scale, heightCm: size.heightCm * scale },
+        {
+          widthCm: drag.current.startSize.widthCm * scale,
+          heightCm: drag.current.startSize.heightCm * scale,
+        },
         zone,
       ),
     );
   }
 
-  return (
-    <label className="flex items-center gap-2 text-xs">
-      <span>{label}</span>
-      <input
-        type="range"
-        min={0.1}
-        max={1}
-        step={0.02}
-        value={ratio}
-        onChange={(e) => onSlide(Number(e.target.value))}
-      />
-    </label>
-  );
+  function onPointerUp(event: React.PointerEvent<HTMLElement>) {
+    event.currentTarget.releasePointerCapture(event.pointerId);
+    drag.current = null;
+  }
+
+  return { onPointerDown, onPointerMove, onPointerUp };
 }

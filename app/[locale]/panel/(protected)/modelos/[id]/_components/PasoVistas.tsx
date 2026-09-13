@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { SubidaArchivo } from "@/app/[locale]/panel/_components/SubidaArchivo";
 import { leerDimensiones } from "@/lib/media/leer-dimensiones";
 
-const VIEWS = ["front", "side", "back"] as const;
+const VIEWS = ["front", "left", "right", "back"] as const;
 type View = (typeof VIEWS)[number];
 
 interface ViewRow {

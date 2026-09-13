@@ -10,10 +10,21 @@ import {
   canPublish,
   checkPublicacionProductoFijo,
   canPublishProductoFijo,
+  type View,
 } from "@/lib/catalogo/publicacion";
 
+// "side" es un valor histórico del enum `view`, ya migrado a left/right (ver
+// scripts/migrar-vista-lateral-izq-der.ts): no debería quedar ninguna fila
+// así, pero el tipo de la columna todavía lo permite (Postgres no puede
+// borrar un valor de un enum sin recrear el tipo).
+function isRealView<T extends { view: string }>(
+  row: T,
+): row is T & { view: View } {
+  return row.view !== "side";
+}
+
 async function loadPublicacionInput(modelId: string) {
-  const [views, colors, images] = await Promise.all([
+  const [viewsRaw, colors, imagesRaw] = await Promise.all([
     db
       .select()
       .from(modelView)
@@ -21,6 +32,8 @@ async function loadPublicacionInput(modelId: string) {
     colorConNombre().where(eq(color.modelId, modelId)),
     db.select().from(colorImage).where(eq(colorImage.modelId, modelId)),
   ]);
+  const views = viewsRaw.filter(isRealView);
+  const images = imagesRaw.filter(isRealView);
 
   return {
     activeViews: views.map((v) => v.view),
@@ -57,7 +70,10 @@ export async function POST(
         .where(and(eq(modelView.modelId, id), eq(modelView.active, true)));
       const result = checkPublicacionProductoFijo({
         price: model.price,
-        viewsWithBaseImage: views.filter((v) => v.baseImageUrl).map((v) => v.view),
+        viewsWithBaseImage: views
+          .filter(isRealView)
+          .filter((v) => v.baseImageUrl)
+          .map((v) => v.view),
       });
       if (!canPublishProductoFijo(result)) {
         return errors.publicacionIncompletaProductoFijo(result);

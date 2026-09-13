@@ -8,7 +8,10 @@
 export const STORAGE_KEY = "bf.design.v1";
 // v2: `colors` (un color por componente) pasó a ser `colorId` (un solo
 // color para toda la gorra) al eliminar el modelo por "partes".
-export const DESIGN_VERSION = 2;
+// v3: el color del texto de una decoración deja de ser un `colorId` del
+// catálogo de colores del modelo y pasa a ser un valor hexadecimal libre
+// elegido por el cliente con un selector de color.
+export const DESIGN_VERSION = 3;
 
 export interface DecorationLogo {
   zone: "front" | "left" | "right" | "back";
@@ -32,7 +35,8 @@ export interface DecorationText {
   kind: "text";
   content: string;
   font: string;
-  colorId: string;
+  /** Color hexadecimal (ej. "#111827") elegido libremente por el cliente. */
+  color: string;
   widthCm: number;
   heightCm: number;
   offsetXPct: number;
@@ -42,7 +46,7 @@ export interface DecorationText {
 export type Decoration = DecorationLogo | DecorationText;
 
 export interface Draft {
-  version: 2;
+  version: 3;
   modelId: string;
   submissionId: string;
   colorId: string | null;

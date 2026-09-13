@@ -7,7 +7,14 @@ import { drawWarped } from "@/lib/design/warp";
 import { loadImage, renderTextSource, VIEW_FOR_ZONE } from "@/lib/design/compose";
 import type { DisplayView } from "./CapasGorra";
 import { useArrastrarElemento } from "./ArrastrarElemento";
-import { useRedimensionarPellizco, DeslizadorTamano } from "./RedimensionarElemento";
+import { useRedimensionarPellizco, useRedimensionarBorde } from "./RedimensionarElemento";
+
+const RESIZE_HANDLES = [
+  { key: "nw", className: "-top-1.5 -left-1.5 cursor-nwse-resize" },
+  { key: "ne", className: "-top-1.5 -right-1.5 cursor-nesw-resize" },
+  { key: "se", className: "-bottom-1.5 -right-1.5 cursor-nwse-resize" },
+  { key: "sw", className: "-bottom-1.5 -left-1.5 cursor-nesw-resize" },
+] as const;
 
 /**
  * Dibuja cada elemento decorativo deformado sobre su zona (FR-041, SC-013),
@@ -21,14 +28,12 @@ export function Decoracion({
   view,
   decorations,
   onChange,
-  onRemove,
   labels,
 }: {
   manifest: ModelManifest;
   view: DisplayView;
   decorations: Decoration[];
   onChange: (index: number, patch: Partial<Decoration>) => void;
-  onRemove: (index: number) => void;
   labels: Record<string, string>;
 }) {
   const imageWidth = manifest.model.imageWidth ?? 1;
@@ -50,7 +55,6 @@ export function Decoracion({
             imageHeight={imageHeight}
             logoUrl={decoration.kind === "logo" ? decoration.url : undefined}
             onChange={(patch) => onChange(index, patch)}
-            onRemove={() => onRemove(index)}
             labels={labels}
           />
         );
@@ -66,7 +70,6 @@ function ElementoDecorativo({
   imageHeight,
   logoUrl,
   onChange,
-  onRemove,
   labels,
 }: {
   decoration: Decoration;
@@ -75,10 +78,10 @@ function ElementoDecorativo({
   imageHeight: number;
   logoUrl: string | undefined;
   onChange: (patch: Partial<Decoration>) => void;
-  onRemove: () => void;
   labels: Record<string, string>;
 }) {
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const drag = useArrastrarElemento({
@@ -88,6 +91,11 @@ function ElementoDecorativo({
     onChange: (offset) => onChange(offset),
   });
   const pinch = useRedimensionarPellizco({
+    zone,
+    onChange: (size) => onChange(size),
+  });
+  const resize = useRedimensionarBorde({
+    containerRef: frameRef,
     zone,
     onChange: (size) => onChange(size),
   });
@@ -120,7 +128,7 @@ function ElementoDecorativo({
         if (cancelled) return;
         drawWarped(ctx, img, box, warpParams);
       } else {
-        const source = renderTextSource(decoration.content, decoration.font);
+        const source = renderTextSource(decoration.content, decoration.font, decoration.color);
         drawWarped(ctx, source, box, warpParams);
       }
     }
@@ -155,31 +163,39 @@ function ElementoDecorativo({
         pinch.onPointerUp(e);
       }}
     >
-      {/* El wrapper ocupa toda la zona (área de arrastre); el canvas
-          adentro se centra y escala al tamaño real de widthCm/heightCm,
-          en vez de estirarse siempre al tamaño completo de la zona. */}
-      <canvas
-        ref={canvasRef}
-        className="pointer-events-none"
+      {/* El wrapper ocupa toda la zona (área de arrastre) y coincide
+          exactamente con los límites que definió el administrador
+          (`decoration_zone.box_*`, mismo rectángulo que `ZonaOverlay.tsx`
+          en el panel admin): este borde tenue es fijo y no cambia con el
+          tamaño del elemento, para que el cliente vea siempre hasta dónde
+          puede llegar. El marco de adentro sí se centra y escala al tamaño
+          real de widthCm/heightCm, y es el que se arrastra para
+          redimensionar. */}
+      <div className="pointer-events-none absolute inset-0 rounded-sm border-2 border-dashed border-outline-variant" />
+      <div
+        ref={frameRef}
+        className="dashed-box relative rounded-sm"
         style={{
           width: `${Math.min(100, (destW / zone.box.w) * 100)}%`,
           height: `${Math.min(100, (destH / zone.box.h) * 100)}%`,
         }}
-      />
-      <button
-        type="button"
-        onClick={onRemove}
-        className="pointer-events-auto absolute -top-6 right-0 rounded bg-white/90 px-1 text-xs text-red-600 shadow"
       >
-        {labels.remove}
-      </button>
-      <div className="pointer-events-auto absolute -bottom-6 left-0">
-        <DeslizadorTamano
-          size={{ widthCm: decoration.widthCm, heightCm: decoration.heightCm }}
-          zone={zone}
-          onChange={(size) => onChange(size)}
-          label={labels.resize}
-        />
+        <canvas ref={canvasRef} className="pointer-events-none h-full w-full" />
+        {RESIZE_HANDLES.map((h) => (
+          <div
+            key={h.key}
+            onPointerDown={(e) =>
+              resize.onPointerDown(e, {
+                widthCm: decoration.widthCm,
+                heightCm: decoration.heightCm,
+              })
+            }
+            onPointerMove={resize.onPointerMove}
+            onPointerUp={resize.onPointerUp}
+            aria-label={labels.resize}
+            className={`resize-handle pointer-events-auto absolute ${h.className}`}
+          />
+        ))}
       </div>
     </div>
   );

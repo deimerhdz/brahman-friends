@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { SubidaArchivo } from "@/app/[locale]/panel/_components/SubidaArchivo";
 import { leerDimensiones } from "@/lib/media/leer-dimensiones";
 
-type View = "front" | "side" | "back";
+type View = "front" | "left" | "right" | "back";
 
 /**
  * Fotos de la gorra completa en un color, una por vista activa del modelo.
@@ -73,18 +73,18 @@ export function ColorImagenes({
         </span>
       </div>
 
-      <div className="grid grid-cols-3 gap-2">
+      <div className="flex flex-wrap gap-3">
         {activeViews.map((v) => {
           const imageUrl = images[v];
           return (
-            <div key={v} className="flex flex-col gap-1">
+            <div key={v} className="flex w-fit flex-col gap-1">
               <span className="font-body-md text-[11px] text-on-surface">
                 {labels[`view_${v}`]}
               </span>
 
               {imageUrl && editingView !== v ? (
                 <div className="group rounded-lg border border-outline-variant/60 bg-surface-container-low/50 p-1.5">
-                  <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded border border-outline-variant/40 bg-surface-container-lowest">
+                  <div className="relative flex h-[90px] w-[90px] items-center justify-center overflow-hidden rounded border border-outline-variant/40 bg-surface-container-lowest">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={imageUrl}

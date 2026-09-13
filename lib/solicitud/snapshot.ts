@@ -19,8 +19,6 @@ export function buildDesignSnapshot(
     ? { id: selectedColor.id, nameEs: selectedColor.nameEs, nameEn: selectedColor.nameEn }
     : null;
 
-  const allColors = manifest.colors;
-
   const decorations = draft.decorations.map((d) => {
     const zone = manifest.zones.find((z) => z.position === d.zone);
     const base = {
@@ -44,14 +42,12 @@ export function buildDesignSnapshot(
       };
     }
 
-    const textColor = allColors.find((c) => c.id === d.colorId);
     return {
       ...base,
       kind: "text" as const,
       content: d.content,
       font: d.font,
-      colorNameEs: textColor?.nameEs ?? "",
-      colorNameEn: textColor?.nameEn ?? "",
+      color: d.color,
     };
   });
 

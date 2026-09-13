@@ -145,8 +145,8 @@
     "nextView": "Vista siguiente",
     "view": {
       "front": "Frente",
-      "side": "Lateral",
-      "sideMirrored": "Lateral derecho",
+      "left": "Lateral izquierdo",
+      "right": "Lateral derecho",
       "back": "Atrás"
     },
     "approximateColor": "El color en pantalla es aproximado.",
@@ -256,7 +256,8 @@
       "missingPhoto": "Falta subir al menos una foto",
       "view": {
         "front": "Frontal",
-        "side": "Lateral",
+        "left": "Lateral izquierdo",
+        "right": "Lateral derecho",
         "back": "Trasera"
       },
       "frontRequired": "La vista frontal no se puede desactivar",
@@ -422,5 +423,11 @@
         "platform_linkedin": "LinkedIn"
       }
     }
+  },
+  "catalogo": {
+    "title": "Todos los modelos",
+    "sortRecent": "Recientes",
+    "sortAlpha": "A-Z",
+    "sortPriceDesc": "Precio: mayor a menor"
   }
 }

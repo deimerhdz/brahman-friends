@@ -6,7 +6,7 @@ import { getSession } from "@/lib/auth/session";
 import { errors, handleApiError, apiError } from "@/lib/http/errors";
 import { deletePublicFile } from "@/lib/media/storage";
 
-const VIEWS = ["front", "side", "back"] as const;
+const VIEWS = ["front", "left", "right", "back"] as const;
 
 // Activa o desactiva una vista y, opcionalmente, fija su imagen base
 // (FR-006, FR-008). `front` nunca puede desactivarse. Desactivar una vista

@@ -10,13 +10,7 @@ export function Footer({
   siteName: string;
   socialLinks?: { id: string; platform: SocialPlatform; url: string }[];
 }) {
-  const footerLinks = [
-    t("landing.footer.support"),
-    t("landing.footer.trackOrder"),
-    t("landing.footer.b2bBulk"),
-    t("landing.footer.sustainability"),
-    t("landing.footer.terms"),
-  ];
+  const footerLinks = [t("landing.footer.terms")];
 
   return (
     <footer className="flex w-full flex-col items-center justify-between gap-8 border-t border-outline-variant bg-surface-container-lowest px-margin-mobile py-16 md:flex-row md:px-margin-desktop">

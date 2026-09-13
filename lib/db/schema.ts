@@ -15,13 +15,28 @@ import {
 } from "drizzle-orm/pg-core";
 
 // Catálogo fijo de vistas (Assumption 5). Ver data-model.md#model_view.
-export const viewEnum = pgEnum("view", ["front", "side", "back"]);
+// "side" queda en el enum solo por compatibilidad histórica de Postgres (no
+// se puede eliminar un valor de un enum sin recrear el tipo): ya no se
+// escribe en filas nuevas, reemplazado por "left"/"right" como fotos reales
+// e independientes por lado (antes ambos compartían la misma foto "side"
+// espejada — ver lib/design/compose.ts).
+export const viewEnum = pgEnum("view", [
+  "front",
+  "side",
+  "left",
+  "right",
+  "back",
+]);
 
-// Vistas de la solicitud congelada: incluye el lateral reflejado (FR-053).
+// Vistas de la solicitud congelada. "side"/"side_mirrored" quedan solo por
+// compatibilidad con solicitudes históricas (ver nota de viewEnum): las
+// nuevas solicitudes usan "left"/"right" directamente, sin espejado.
 export const requestViewEnum = pgEnum("request_view", [
   "front",
   "side",
   "side_mirrored",
+  "left",
+  "right",
   "back",
 ]);
 

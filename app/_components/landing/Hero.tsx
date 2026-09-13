@@ -39,14 +39,6 @@ export function Hero({ t, bannerUrl }: { t: T; bannerUrl?: string | null }) {
                 style={bannerUrl ? { backgroundImage: `url(${bannerUrl})` } : undefined}
               />
             </div>
-            <div className="absolute bottom-8 right-8 flex items-center gap-2 rounded-[0.75rem] border border-outline-variant bg-surface/90 px-4 py-2 shadow-sm backdrop-blur-sm">
-              <span className="material-symbols-outlined animate-spin-slow text-[16px] text-on-surface">
-                360
-              </span>
-              <span className="text-label-caps font-label-caps text-on-surface">
-                {t("landing.hero.dragToRotate")}
-              </span>
-            </div>
           </div>
         </div>
       </div>

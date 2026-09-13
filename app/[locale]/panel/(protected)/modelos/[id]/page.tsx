@@ -19,7 +19,7 @@ import { env } from "@/lib/config/env";
 import { ModeloConfigurador } from "./_components/ModeloConfigurador";
 import type { ZonaValue, Position } from "./_components/PasoPersonalizacion";
 
-type View = "front" | "side" | "back";
+type View = "front" | "left" | "right" | "back";
 
 export default async function ModeloConfigPage({
   params,
@@ -52,6 +52,9 @@ export default async function ModeloConfigPage({
 
   const colorImagesByColor: Record<string, Partial<Record<View, string>>> = {};
   for (const img of images) {
+    // "side" es un valor histórico del enum, ya migrado a left/right (ver
+    // scripts/migrar-vista-lateral-izq-der.ts); no debería quedar ninguno.
+    if (img.view === "side") continue;
     const entry = (colorImagesByColor[img.colorId] ??= {});
     entry[img.view] = img.imageUrl;
   }
@@ -59,10 +62,12 @@ export default async function ModeloConfigPage({
   const views: Partial<Record<View, string>> = {};
   const viewRows: Record<View, { baseImageUrl: string | null; active: boolean }> = {
     front: { baseImageUrl: null, active: true },
-    side: { baseImageUrl: null, active: false },
+    left: { baseImageUrl: null, active: false },
+    right: { baseImageUrl: null, active: false },
     back: { baseImageUrl: null, active: false },
   };
   for (const v of existingViews) {
+    if (v.view === "side") continue;
     if (v.baseImageUrl) views[v.view] = v.baseImageUrl;
     viewRows[v.view] = { baseImageUrl: v.baseImageUrl, active: v.active };
   }
@@ -120,7 +125,8 @@ export default async function ModeloConfigPage({
     coverPhoto: t("panel.modelos.coverPhoto"),
     coverPhotoHint: t("panel.modelos.coverPhotoHint"),
     view_front: t("panel.modelos.view.front"),
-    view_side: t("panel.modelos.view.side"),
+    view_left: t("panel.modelos.view.left"),
+    view_right: t("panel.modelos.view.right"),
     view_back: t("panel.modelos.view.back"),
     frontRequired: t("panel.modelos.frontRequired"),
     hiddenFromCatalog: t("panel.modelos.hiddenFromCatalog"),

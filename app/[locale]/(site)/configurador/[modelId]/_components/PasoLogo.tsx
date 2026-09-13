@@ -94,7 +94,6 @@ export function PasoLogo({
       )}
 
       <PanelDecoracion
-        locale={locale}
         manifest={manifest}
         view={view}
         decorations={decorations}

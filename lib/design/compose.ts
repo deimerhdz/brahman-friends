@@ -3,12 +3,17 @@ import type { Decoration } from "@/lib/design/borrador";
 import { drawWarped, type WarpParams } from "@/lib/design/warp";
 import { fontCss } from "@/lib/design/fonts";
 
-export type ComposableView = "front" | "side" | "side_mirrored" | "back";
+export type ComposableView = "front" | "left" | "right" | "back";
 
+// Cada zona decorable vive en su propia foto/vista real (antes "left" y
+// "right" compartían la misma foto "side", espejada por CSS/canvas para el
+// lado derecho); el mapeo queda como identidad, pero se conserva para no
+// acoplar el resto del código a que `Decoration["zone"]` y `ComposableView`
+// sean el mismo tipo.
 export const VIEW_FOR_ZONE: Record<Decoration["zone"], ComposableView> = {
   front: "front",
-  left: "side",
-  right: "side_mirrored",
+  left: "left",
+  right: "right",
   back: "back",
 };
 
@@ -33,28 +38,18 @@ export async function composeView(
   const ctx = canvas.getContext("2d");
   if (!ctx) throw new Error("No se pudo crear el lienzo de composición");
 
-  const sourceView = view === "side_mirrored" ? "side" : view;
-  const mirrored = view === "side_mirrored";
-
-  ctx.save();
-  if (mirrored) {
-    ctx.translate(width, 0);
-    ctx.scale(-1, 1);
-  }
-
-  const baseUrl = manifest.baseImages[sourceView];
+  const baseUrl = manifest.baseImages[view];
   if (baseUrl) {
     const base = await loadImage(baseUrl);
     ctx.drawImage(base, 0, 0, width, height);
   }
 
   const selectedColor = manifest.colors.find((c) => c.id === colorId);
-  const colorImageUrl = selectedColor?.images[sourceView];
+  const colorImageUrl = selectedColor?.images[view];
   if (colorImageUrl) {
     const img = await loadImage(colorImageUrl);
     ctx.drawImage(img, 0, 0, width, height);
   }
-  ctx.restore();
 
   const visibleDecorations = decorations.filter(
     (d) => VIEW_FOR_ZONE[d.zone] === view,
@@ -69,7 +64,7 @@ export async function composeView(
       const img = await loadImage(decoration.url);
       drawWarped(ctx, img, box, warpParams);
     } else {
-      const source = renderTextSource(decoration.content, decoration.font);
+      const source = renderTextSource(decoration.content, decoration.font, decoration.color);
       drawWarped(ctx, source, box, warpParams);
     }
   }
@@ -92,12 +87,9 @@ export function loadImage(src: string): Promise<HTMLImageElement> {
   });
 }
 
-// Sin imagen de muestra por color (007-colores-por-modelo, enmienda
-// 2026-09-06), el texto personalizado del cliente ya no tiene de dónde sacar
-// un patrón por color: siempre se dibuja con este color de reserva fijo por
-// defecto. `color` es un override opcional para otros usos (p. ej. la
-// previsualización del panel admin, donde no hay una prenda real detrás y el
-// color fijo se ve mal según la vista).
+// `color` es el color hexadecimal elegido por el cliente para el texto
+// (borrador.ts `DecorationText.color`); el valor por defecto solo cubre
+// llamadas que no editorializan un color propio (p. ej. placeholders).
 export function renderTextSource(
   content: string,
   fontId: string,

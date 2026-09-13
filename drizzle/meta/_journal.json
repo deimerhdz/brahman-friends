@@ -120,6 +120,13 @@
       "when": 1789310915690,
       "tag": "0016_awesome_bill_hollister",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1789319019918,
+      "tag": "0017_soft_rumiko_fujikawa",
+      "breakpoints": true
     }
   ]
 }

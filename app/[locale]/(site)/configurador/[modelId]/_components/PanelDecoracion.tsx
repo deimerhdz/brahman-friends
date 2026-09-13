@@ -1,6 +1,5 @@
 "use client";
 
-import type { Locale } from "@/lib/i18n/t";
 import type { ModelManifest } from "@/lib/catalogo/model-manifest";
 import type { Decoration } from "@/lib/design/borrador";
 import { canPlaceDecoration } from "@/lib/design/rules";
@@ -14,7 +13,6 @@ import { EditorTexto } from "./EditorTexto";
  * el único elemento por zona con sus mensajes (FR-045, SC-015).
  */
 export function PanelDecoracion({
-  locale,
   manifest,
   view,
   decorations,
@@ -24,7 +22,6 @@ export function PanelDecoracion({
   onRemove,
   labels,
 }: {
-  locale: Locale;
   manifest: ModelManifest;
   view: DisplayView;
   decorations: Decoration[];
@@ -63,12 +60,10 @@ export function PanelDecoracion({
               </div>
               {decoration.kind === "text" ? (
                 <EditorTexto
-                  locale={locale}
                   content={decoration.content}
                   font={decoration.font}
-                  colorId={decoration.colorId}
+                  color={decoration.color}
                   maxChars={zone.maxTextChars}
-                  colors={manifest.colors}
                   onChange={(patch) => onUpdate(index, patch)}
                   labels={{ content: labels.textContent, font: labels.textFont, color: labels.textColor }}
                 />
@@ -115,13 +110,12 @@ export function PanelDecoracion({
                 <button
                   type="button"
                   onClick={() => {
-                    const firstColor = manifest.colors[0];
                     onAdd({
                       zone: zone.position,
                       kind: "text",
                       content: "",
                       font: "sans-bold",
-                      colorId: firstColor?.id ?? "",
+                      color: "#111827",
                       widthCm: Math.min(zone.maxWidthCm, zone.maxWidthCm * 0.6),
                       heightCm: Math.min(zone.maxHeightCm, zone.maxHeightCm * 0.4),
                       offsetXPct: 0,

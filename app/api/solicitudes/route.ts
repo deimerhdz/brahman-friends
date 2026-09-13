@@ -170,7 +170,7 @@ export async function POST(request: NextRequest) {
     const snapshot = buildDesignSnapshot(
       manifest,
       {
-        version: 2,
+        version: 3,
         modelId: body.design.modelId,
         submissionId: body.submissionId,
         colorId: body.design.colorId,
@@ -252,7 +252,7 @@ async function writeRequestAndRespond(input: {
               db.insert(requestImage).values(
                 viewImages.map((img) => ({
                   requestId,
-                  view: img.view as "front" | "side" | "side_mirrored" | "back",
+                  view: img.view as "front" | "left" | "right" | "back",
                   imageUrl: img.url,
                 })),
               ),

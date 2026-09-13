@@ -3,7 +3,7 @@
  * que la usa arma estas estructuras a partir de la base de datos.
  */
 
-export type View = "front" | "side" | "back";
+export type View = "front" | "left" | "right" | "back";
 
 export interface PublicacionColor {
   id: string;

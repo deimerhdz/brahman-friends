@@ -9,17 +9,17 @@ import {
 
 function baseInput(): PublicacionInput {
   return {
-    activeViews: ["front", "side"],
-    viewsWithBaseImage: ["front", "side"],
+    activeViews: ["front", "left"],
+    viewsWithBaseImage: ["front", "left"],
     colors: [
       { id: "azul", nameEs: "Azul Rey", nameEn: "Royal Blue" },
       { id: "rojo", nameEs: "Rojo", nameEn: "Red" },
     ],
     colorImages: [
       { colorId: "azul", view: "front" },
-      { colorId: "azul", view: "side" },
+      { colorId: "azul", view: "left" },
       { colorId: "rojo", view: "front" },
-      { colorId: "rojo", view: "side" },
+      { colorId: "rojo", view: "left" },
     ],
   };
 }
@@ -36,10 +36,10 @@ describe("lib/catalogo/publicacion — qué falta para publicar (FR-012, RN2)", 
   it("señala exactamente la combinación de imagen faltante", () => {
     const input = baseInput();
     input.colorImages = input.colorImages.filter(
-      (img) => !(img.colorId === "rojo" && img.view === "side"),
+      (img) => !(img.colorId === "rojo" && img.view === "left"),
     );
     const result = checkPublicacion(input);
-    expect(result.missing).toEqual([{ color: "Rojo", view: "side" }]);
+    expect(result.missing).toEqual([{ color: "Rojo", view: "left" }]);
     expect(canPublish(result)).toBe(false);
   });
 
@@ -47,7 +47,7 @@ describe("lib/catalogo/publicacion — qué falta para publicar (FR-012, RN2)", 
     const input = baseInput();
     input.viewsWithBaseImage = ["front"];
     const result = checkPublicacion(input);
-    expect(result.missingBaseViews).toEqual(["side"]);
+    expect(result.missingBaseViews).toEqual(["left"]);
     expect(canPublish(result)).toBe(false);
   });
 
@@ -110,7 +110,7 @@ describe("lib/catalogo/publicacion — producto fijo (009-modelos-producto-fijo,
   it("no le importan colores ni componentes, a diferencia de un modelo configurable", () => {
     const result = checkPublicacionProductoFijo({
       price: "10.00",
-      viewsWithBaseImage: ["front", "side", "back"],
+      viewsWithBaseImage: ["front", "left", "back"],
     });
     expect(canPublishProductoFijo(result)).toBe(true);
   });

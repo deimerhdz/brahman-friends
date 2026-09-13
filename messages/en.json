@@ -145,8 +145,8 @@
     "nextView": "Next view",
     "view": {
       "front": "Front",
-      "side": "Side",
-      "sideMirrored": "Right side",
+      "left": "Left side",
+      "right": "Right side",
       "back": "Back"
     },
     "approximateColor": "The color on screen is approximate.",
@@ -256,7 +256,8 @@
       "missingPhoto": "At least one photo is missing",
       "view": {
         "front": "Front",
-        "side": "Side",
+        "left": "Left side",
+        "right": "Right side",
         "back": "Back"
       },
       "frontRequired": "The front view can't be deactivated",
@@ -422,5 +423,11 @@
         "platform_linkedin": "LinkedIn"
       }
     }
+  },
+  "catalogo": {
+    "title": "All models",
+    "sortRecent": "Recent",
+    "sortAlpha": "A-Z",
+    "sortPriceDesc": "Price: high to low"
   }
 }

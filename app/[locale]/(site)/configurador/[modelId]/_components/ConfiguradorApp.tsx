@@ -165,16 +165,22 @@ export function ConfiguradorApp({
           labels={{ title: labels.unavailableTitle }}
         />
 
-        <div className="relative w-full overflow-hidden rounded lg:bg-inverse-surface" style={{ aspectRatio }}>
-          <CapasGorra manifest={manifest} colorId={draft.colorId} view={view} />
-          <Decoracion
-            manifest={manifest}
-            view={view}
-            decorations={draft.decorations}
-            onChange={updateDecoration}
-            onRemove={removeDecoration}
-            labels={{ remove: labels.removeElement, resize: labels.resize }}
-          />
+        {/* La altura queda acotada al viewport (antes solo se fijaba el
+            ancho al 100% y la altura salía de `aspectRatio`): con una foto
+            cuadrada o vertical eso hacía crecer el contenedor sin límite en
+            pantallas anchas, empujando los controles de vista fuera de la
+            pantalla y forzando scroll de toda la página. */}
+        <div className="relative flex h-[360px] w-full items-center justify-center overflow-hidden rounded sm:h-[440px] lg:h-[min(calc(100vh-8rem),640px)] lg:bg-inverse-surface">
+          <div className="relative h-full max-w-full" style={{ aspectRatio }}>
+            <CapasGorra manifest={manifest} colorId={draft.colorId} view={view} />
+            <Decoracion
+              manifest={manifest}
+              view={view}
+              decorations={draft.decorations}
+              onChange={updateDecoration}
+              labels={{ resize: labels.resize }}
+            />
+          </div>
         </div>
 
         <Vistas
@@ -184,10 +190,6 @@ export function ConfiguradorApp({
           labels={{
             previous: labels.previousView,
             next: labels.nextView,
-            view_front: labels.viewFront,
-            view_side: labels.viewSide,
-            view_side_mirrored: labels.viewSideMirrored,
-            view_back: labels.viewBack,
           }}
         />
       </div>

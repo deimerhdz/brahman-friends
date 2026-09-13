@@ -62,8 +62,8 @@ export const env = {
   get defaultZoneTextChars() {
     return optionalInt("DEFAULT_ZONE_TEXT_CHARS", 20);
   },
-  /** Máximo de zonas decoradas por diseño. ⚠ Pendiente de confirmar con la fábrica. */
+  /** Máximo de zonas decoradas por diseño (las 4 zonas disponibles: frontal, lateral izquierdo, lateral derecho y trasera). */
   get maxDecoratedZones() {
-    return optionalInt("MAX_DECORATED_ZONES", 3);
+    return optionalInt("MAX_DECORATED_ZONES", 4);
   },
 };

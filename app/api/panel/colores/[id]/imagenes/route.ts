@@ -19,7 +19,7 @@ export async function POST(
     const { id: colorId } = await params;
     const body = await request.json();
     const { view, url, width, height } = body as {
-      view: "front" | "side" | "back";
+      view: "front" | "left" | "right" | "back";
       url: string;
       width: number;
       height: number;
@@ -99,7 +99,7 @@ export async function DELETE(
       .where(
         and(
           eq(colorImage.colorId, colorId),
-          eq(colorImage.view, view as "front" | "side" | "back"),
+          eq(colorImage.view, view as "front" | "left" | "right" | "back"),
         ),
       )
       .returning({ imageUrl: colorImage.imageUrl });

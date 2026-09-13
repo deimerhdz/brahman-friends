@@ -9,7 +9,7 @@ import {
 } from "@/app/[locale]/panel/_components/CampoTraducible";
 import { ColorImagenes } from "./ColorImagenes";
 
-type View = "front" | "side" | "back";
+type View = "front" | "left" | "right" | "back";
 
 interface ColorRow {
   id: string;
@@ -29,6 +29,8 @@ export function PasoColores({
   activeViews,
   colorImages,
   labels,
+  previewColorId,
+  onPreviewColor,
 }: {
   locale: Locale;
   modelId: string;
@@ -37,6 +39,8 @@ export function PasoColores({
   activeViews: View[];
   colorImages: Record<string, Partial<Record<View, string>>>;
   labels: Record<string, string>;
+  previewColorId: string | null;
+  onPreviewColor: (colorId: string) => void;
 }) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
@@ -47,6 +51,7 @@ export function PasoColores({
   const [savingColor, setSavingColor] = useState(false);
 
   async function setDefaultVariant(colorId: string) {
+    onPreviewColor(colorId);
     setError(null);
     const response = await fetch(`/api/panel/modelos/${modelId}`, {
       method: "PATCH",
@@ -133,6 +138,7 @@ export function PasoColores({
         {colors.map((c) => {
           const name = locale === "es" ? c.nameEs : c.nameEn;
           const isDefault = defaultColorId === c.id;
+          const isPreviewed = previewColorId === c.id;
           return (
             <div
               key={c.id}
@@ -144,25 +150,44 @@ export function PasoColores({
             >
               <div className="flex items-start justify-between gap-2">
                 <div className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    name="defaultVariantRadio"
-                    checked={isDefault}
-                    onChange={() => setDefaultVariant(c.id)}
-                    className="h-4 w-4 accent-primary"
-                  />
+                  <button
+                    type="button"
+                    onClick={() => onPreviewColor(c.id)}
+                    title={labels.preview}
+                    aria-pressed={isPreviewed}
+                    className={
+                      isPreviewed
+                        ? "flex h-7 w-7 items-center justify-center rounded-full border border-primary bg-primary/10 text-primary"
+                        : "flex h-7 w-7 items-center justify-center rounded-full border border-outline-variant text-on-surface-variant transition-colors hover:border-primary hover:text-primary"
+                    }
+                  >
+                    <span className="material-symbols-outlined text-[16px]">
+                      visibility
+                    </span>
+                  </button>
                   <label className="font-body-md text-body-md font-bold text-on-surface">
                     {name}
                   </label>
                 </div>
                 <div className="flex items-center gap-2">
-                  {isDefault && (
+                  {isDefault ? (
                     <span className="flex items-center gap-0.5 rounded-full border border-[#F5E39A] bg-[#FFF8E1] px-2 py-0.5 text-[10px] font-bold text-[#8D6E00]">
                       <span className="material-symbols-outlined text-[11px]">
                         grade
                       </span>
-                      {labels.markDefault}
+                      {labels.defaultVariant}
                     </span>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setDefaultVariant(c.id)}
+                      className="flex items-center gap-1 rounded border border-outline-variant px-2 py-1 font-label-caps text-label-caps text-on-surface-variant transition-colors hover:border-primary hover:text-primary"
+                    >
+                      <span className="material-symbols-outlined text-[16px]">
+                        grade
+                      </span>
+                      {labels.markDefault}
+                    </button>
                   )}
                   <button
                     type="button"

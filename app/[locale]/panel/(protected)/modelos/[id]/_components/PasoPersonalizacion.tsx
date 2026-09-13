@@ -32,8 +32,6 @@ const TECHNIQUE_ICONS = ["print", "sell", "style", "brush", "texture"];
 export function PasoPersonalizacion({
   locale,
   position,
-  showSideToggle,
-  onPositionChange,
   value,
   onChange,
   onCommit,
@@ -45,8 +43,6 @@ export function PasoPersonalizacion({
 }: {
   locale: Locale;
   position: Position;
-  showSideToggle: boolean;
-  onPositionChange: (position: "left" | "right") => void;
   value: ZonaValue;
   onChange: (patch: Partial<ZonaValue>) => void;
   onCommit: () => void;
@@ -70,24 +66,9 @@ export function PasoPersonalizacion({
         <span className="material-symbols-outlined text-lg text-on-surface-variant">tune</span>
       </div>
 
-      {showSideToggle && (
-        <div className="flex gap-1.5">
-          {(["left", "right"] as const).map((p) => (
-            <button
-              key={p}
-              type="button"
-              onClick={() => onPositionChange(p)}
-              className={
-                position === p
-                  ? "rounded-full bg-on-surface px-3 py-1 font-label-caps text-label-caps text-on-primary"
-                  : "rounded-full border border-outline-variant px-3 py-1 font-label-caps text-label-caps text-on-surface-variant hover:bg-surface-container-low"
-              }
-            >
-              {labels[`zone_${p}`]}
-            </button>
-          ))}
-        </div>
-      )}
+      <span className="inline-flex w-fit items-center rounded-full bg-surface-container-low px-3 py-1 font-label-caps text-label-caps text-on-surface-variant">
+        {labels[`zone_${position}`]}
+      </span>
 
       <div className="space-y-4 rounded-xl border border-outline-variant/60 bg-surface-container-low p-3.5">
         <SliderField
