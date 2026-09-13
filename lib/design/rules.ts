@@ -70,16 +70,14 @@ export function canPlaceDecoration(
 
 /**
  * Gating del stepper del configurador (006-configurador-stepper FR-018).
- * Paso 1 exige que cada componente personalizable tenga un color asignado;
- * el paso 2 (logo) nunca bloquea, la decoración es opcional (spec.md
- * Clarifications).
+ * Paso 1 exige haber elegido un color de la gorra; el paso 2 (logo) nunca
+ * bloquea, la decoración es opcional (spec.md Clarifications).
  */
 export function puedeAvanzarPaso(
   paso: number,
-  draft: { colors: Record<string, string> },
-  customizableComponentIds: readonly string[],
+  draft: { colorId: string | null },
 ): boolean {
-  if (paso === 1) return customizableComponentIds.every((id) => Boolean(draft.colors[id]));
+  if (paso === 1) return Boolean(draft.colorId);
   return true;
 }
 

@@ -1,18 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { and, eq } from "drizzle-orm";
 import { db } from "@/lib/db";
-import {
-  capModel,
-  color,
-  modelView,
-  component,
-  componentColor,
-  componentImage,
-} from "@/lib/db/schema";
-import {
-  componentConNombre,
-  colorConNombre,
-} from "@/lib/catalogo/consultas-traducidas";
+import { capModel, color, modelView, colorImage } from "@/lib/db/schema";
+import { colorConNombre } from "@/lib/catalogo/consultas-traducidas";
 import { getSession } from "@/lib/auth/session";
 import { errors, handleApiError, apiError } from "@/lib/http/errors";
 import {
@@ -23,41 +13,24 @@ import {
 } from "@/lib/catalogo/publicacion";
 
 async function loadPublicacionInput(modelId: string) {
-  const [views, components, links, colors, images] = await Promise.all([
+  const [views, colors, images] = await Promise.all([
     db
       .select()
       .from(modelView)
       .where(and(eq(modelView.modelId, modelId), eq(modelView.active, true))),
-    componentConNombre().where(eq(component.modelId, modelId)),
-    db.select().from(componentColor),
     colorConNombre().where(eq(color.modelId, modelId)),
-    db.select().from(componentImage).where(eq(componentImage.modelId, modelId)),
+    db.select().from(colorImage).where(eq(colorImage.modelId, modelId)),
   ]);
-
-  const componentIds = new Set(components.map((c) => c.id));
 
   return {
     activeViews: views.map((v) => v.view),
     viewsWithBaseImage: views.filter((v) => v.baseImageUrl).map((v) => v.view),
-    components: components.map((c) => ({
-      id: c.id,
-      nameEs: c.nameEs,
-      nameEn: c.nameEn,
-      material: c.material,
-      customizable: c.customizable,
-      defaultColorId: c.defaultColorId,
-    })),
-    componentColors: links.filter((l) => componentIds.has(l.componentId)),
     colors: colors.map((c) => ({
       id: c.id,
       nameEs: c.nameEs,
       nameEn: c.nameEn,
     })),
-    images: images.map((i) => ({
-      componentId: i.componentId,
-      colorId: i.colorId,
-      view: i.view,
-    })),
+    colorImages: images.map((i) => ({ colorId: i.colorId, view: i.view })),
   };
 }
 

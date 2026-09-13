@@ -1,12 +1,10 @@
-import { eq, desc, inArray } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import {
   capModel,
   color,
-  component,
-  componentColor,
-  componentImage,
+  colorImage,
   modelView,
   decorationZone,
   modelTechnique,
@@ -14,7 +12,6 @@ import {
 import {
   capModelConNombre,
   colorConNombre,
-  componentConNombre,
   techniqueConNombre,
 } from "@/lib/catalogo/consultas-traducidas";
 import { getT, type Locale } from "@/lib/i18n/t";
@@ -45,30 +42,18 @@ export default async function ModeloConfigPage({
     existingViews.push({ modelId: id, view: "front", baseImageUrl: null, active: true });
   }
 
-  const [colors, components, zones, techniques, techniqueLinks, images] =
-    await Promise.all([
-      colorConNombre().where(eq(color.modelId, id)).orderBy(desc(color.createdAt)),
-      componentConNombre().where(eq(component.modelId, id)),
-      db.select().from(decorationZone).where(eq(decorationZone.modelId, id)),
-      techniqueConNombre(),
-      db.select().from(modelTechnique).where(eq(modelTechnique.modelId, id)),
-      db.select().from(componentImage).where(eq(componentImage.modelId, id)),
-    ]);
+  const [colors, zones, techniques, techniqueLinks, images] = await Promise.all([
+    colorConNombre().where(eq(color.modelId, id)).orderBy(desc(color.createdAt)),
+    db.select().from(decorationZone).where(eq(decorationZone.modelId, id)),
+    techniqueConNombre(),
+    db.select().from(modelTechnique).where(eq(modelTechnique.modelId, id)),
+    db.select().from(colorImage).where(eq(colorImage.modelId, id)),
+  ]);
 
-  const componentIds = components.map((c) => c.id);
-  const links = componentIds.length
-    ? await db
-        .select()
-        .from(componentColor)
-        .where(inArray(componentColor.componentId, componentIds))
-    : [];
-
-  const enabledByComponent: Record<string, { colorId: string; views: View[] }[]> = {};
-  for (const link of links) {
-    const perComponent = (enabledByComponent[link.componentId] ??= []);
-    const entry = perComponent.find((e) => e.colorId === link.colorId);
-    if (entry) entry.views.push(link.view);
-    else perComponent.push({ colorId: link.colorId, views: [link.view] });
+  const colorImagesByColor: Record<string, Partial<Record<View, string>>> = {};
+  for (const img of images) {
+    const entry = (colorImagesByColor[img.colorId] ??= {});
+    entry[img.view] = img.imageUrl;
   }
 
   const views: Partial<Record<View, string>> = {};
@@ -120,7 +105,7 @@ export default async function ModeloConfigPage({
     unpublish: t("panel.modelos.unpublish"),
     incomplete: t("errors.publicacion_incompleta"),
     missingBaseViews: t("panel.modelos.missingBaseViews"),
-    componentsWithoutColors: t("panel.modelos.componentsWithoutColors"),
+    noColors: t("panel.modelos.noColors"),
     missingPrice: t("panel.modelos.missingPrice"),
     missingPhoto: t("panel.modelos.missingPhoto"),
     typeConfigurable: t("panel.modelos.type.configurable"),
@@ -130,8 +115,8 @@ export default async function ModeloConfigPage({
     tabColors: t("panel.modelos.tabColors"),
     tabPersonalization: t("panel.modelos.tabPersonalization"),
     // Paso 1 — Vistas
-    step1: t("panel.modelos.step1"),
-    step1Hint: t("panel.modelos.step1Hint"),
+    stepViews: t("panel.modelos.stepViews"),
+    stepViewsHint: t("panel.modelos.stepViewsHint"),
     coverPhoto: t("panel.modelos.coverPhoto"),
     coverPhotoHint: t("panel.modelos.coverPhotoHint"),
     view_front: t("panel.modelos.view.front"),
@@ -145,12 +130,11 @@ export default async function ModeloConfigPage({
     retry: t("common.retry"),
     error: t("errors.generic"),
     // Paso 2 — Colores
-    step2: t("panel.modelos.step2"),
-    step2Hint: t("panel.modelos.step2Hint"),
+    stepColors: t("panel.modelos.stepColors"),
+    stepColorsHint: t("panel.modelos.stepColorsHint"),
     defaultVariant: t("panel.modelos.defaultVariant"),
     defaultVariantHint: t("panel.modelos.defaultVariantHint"),
     configuredColors: t("panel.modelos.configuredColors"),
-    parts: t("panel.modelos.parts"),
     markDefault: t("panel.modelos.markDefault"),
     addColor: t("panel.modelos.addColor"),
     viewsProgress: t("panel.modelos.viewsProgress"),
@@ -160,21 +144,13 @@ export default async function ModeloConfigPage({
     delete: t("common.delete"),
     save: t("common.save"),
     cancel: t("common.cancel"),
-    add: t("panel.modelos.addComponent"),
-    defaultColor: t("panel.modelos.defaultColor"),
-    notCustomizable: t("panel.modelos.notCustomizable"),
-    confirmRemoveView: t("panel.modelos.confirmRemoveView"),
+    translationRequired: t("panel.modelos.translationRequired"),
     confirmDeleteImage: t("panel.modelos.confirmDeleteImage"),
-    confirmDeleteVariant: t("panel.modelos.confirmDeleteVariant"),
-    deleteVariant: t("panel.modelos.deleteVariant"),
-    manageParts: t("panel.modelos.manageParts"),
-    material: t("panel.colores.material"),
-    layerOrder: t("panel.modelos.layerOrder"),
-    customizable: t("panel.modelos.customizable"),
-    confirmDelete: t("panel.modelos.confirmDeleteComponent"),
-    // Paso 3 — Personalización
-    step3: t("panel.modelos.step3"),
-    step3Hint: t("panel.modelos.step3Hint"),
+    deleteColor: t("panel.modelos.deleteColor"),
+    confirmDeleteColor: t("panel.modelos.confirmDeleteColor"),
+    // Paso 4 — Personalización
+    stepPersonalization: t("panel.modelos.stepPersonalization"),
+    stepPersonalizationHint: t("panel.modelos.stepPersonalizationHint"),
     maxWidthCm: t("panel.modelos.maxWidthCm"),
     maxHeightCm: t("panel.modelos.maxHeightCm"),
     arc: t("panel.modelos.arc"),
@@ -217,15 +193,8 @@ export default async function ModeloConfigPage({
       viewRows={viewRows}
       colors={colors}
       defaultColorId={model.defaultColorId}
-      components={components}
       activeViews={activeViews}
-      enabledByComponent={enabledByComponent}
-      cargadas={images.map((i) => ({
-        componentId: i.componentId,
-        colorId: i.colorId,
-        view: i.view,
-        imageUrl: i.imageUrl,
-      }))}
+      colorImages={colorImagesByColor}
       zonesByPosition={zonesByPosition}
       defaultZoneChars={env.defaultZoneTextChars}
       techniques={techniques}

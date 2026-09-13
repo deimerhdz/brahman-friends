@@ -34,16 +34,15 @@ export const errors = {
     apiError(413, "archivo_demasiado_grande", { maxMb }),
   svgNoValidoTrasSaneo: () => apiError(422, "svg_no_valido_tras_saneo"),
   modeloNoDisponible: () => apiError(409, "modelo_no_disponible"),
-  colorNoDisponible: (componentIds: string[]) =>
-    apiError(409, "color_no_disponible", { componentIds }),
+  colorNoDisponible: () => apiError(409, "color_no_disponible"),
   cantidadInvalida: () => apiError(422, "cantidad_invalida"),
   datosContactoInvalidos: () => apiError(400, "datos_contacto_invalidos"),
   decoracionInvalida: (detail?: unknown) =>
     apiError(422, "decoracion_invalida", detail),
   publicacionIncompleta: (detail: {
-    missing: { component: string; color: string; view: string }[];
+    missing: { color: string; view: string }[];
     missingBaseViews: string[];
-    componentsWithoutColors: string[];
+    noColors: boolean;
   }) => apiError(422, "publicacion_incompleta", detail),
   publicacionIncompletaProductoFijo: (detail: {
     missingPrice: boolean;

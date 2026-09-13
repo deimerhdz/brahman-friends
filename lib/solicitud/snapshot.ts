@@ -14,29 +14,12 @@ export function buildDesignSnapshot(
 ) {
   const technique = manifest.techniques.find((t) => t.id === draft.technique) ?? null;
 
-  const components = manifest.components
-    .filter((c) => c.customizable)
-    .map((comp) => {
-      const colorId = draft.colors[comp.id];
-      const color = comp.colors.find((c) => c.id === colorId) ?? null;
-      return {
-        id: comp.id,
-        nameEs: comp.nameEs,
-        nameEn: comp.nameEn,
-        material: comp.material,
-        customizable: comp.customizable,
-        color: color
-          ? {
-              id: color.id,
-              nameEs: color.nameEs,
-              nameEn: color.nameEn,
-              material: comp.material,
-            }
-          : null,
-      };
-    });
+  const selectedColor = manifest.colors.find((c) => c.id === draft.colorId) ?? null;
+  const color = selectedColor
+    ? { id: selectedColor.id, nameEs: selectedColor.nameEs, nameEn: selectedColor.nameEn }
+    : null;
 
-  const allColors = manifest.components.flatMap((c) => c.colors);
+  const allColors = manifest.colors;
 
   const decorations = draft.decorations.map((d) => {
     const zone = manifest.zones.find((z) => z.position === d.zone);
@@ -61,20 +44,20 @@ export function buildDesignSnapshot(
       };
     }
 
-    const color = allColors.find((c) => c.id === d.colorId);
+    const textColor = allColors.find((c) => c.id === d.colorId);
     return {
       ...base,
       kind: "text" as const,
       content: d.content,
       font: d.font,
-      colorNameEs: color?.nameEs ?? "",
-      colorNameEn: color?.nameEn ?? "",
+      colorNameEs: textColor?.nameEs ?? "",
+      colorNameEn: textColor?.nameEn ?? "",
     };
   });
 
   return {
     kind: "configurable" as const,
-    version: 1 as const,
+    version: 2 as const,
     model: {
       id: manifest.model.id,
       code: manifest.model.code,
@@ -84,7 +67,7 @@ export function buildDesignSnapshot(
     technique: technique
       ? { id: technique.id, nameEs: technique.nameEs, nameEn: technique.nameEn }
       : null,
-    components,
+    color,
     decorations,
     views: manifest.views,
     frozenAt: new Date().toISOString(),

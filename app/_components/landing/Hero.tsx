@@ -1,6 +1,6 @@
 import type { T } from "@/lib/i18n/t";
 
-export function Hero({ t }: { t: T }) {
+export function Hero({ t, bannerUrl }: { t: T; bannerUrl?: string | null }) {
   return (
     <header className="relative flex w-full min-h-screen flex-col items-center justify-center overflow-hidden pb-16">
       <div className="mx-auto grid w-full max-w-[1440px] grid-cols-1 items-center gap-gutter px-margin-mobile md:grid-cols-12 md:px-margin-desktop">
@@ -35,7 +35,8 @@ export function Hero({ t }: { t: T }) {
               <div
                 role="img"
                 aria-label={t("landing.hero.title")}
-                className="h-full w-full bg-surface-container"
+                className="h-full w-full bg-surface-container bg-cover bg-center"
+                style={bannerUrl ? { backgroundImage: `url(${bannerUrl})` } : undefined}
               />
             </div>
             <div className="absolute bottom-8 right-8 flex items-center gap-2 rounded-[0.75rem] border border-outline-variant bg-surface/90 px-4 py-2 shadow-sm backdrop-blur-sm">

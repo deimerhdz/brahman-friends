@@ -29,7 +29,7 @@ interface Body {
   design: {
     kind?: "configurable" | "fixed_product";
     modelId: string;
-    colors: Record<string, string>;
+    colorId: string | null;
     technique: string | null;
     decorations: Decoration[];
   };
@@ -121,18 +121,10 @@ export async function POST(request: NextRequest) {
       return errors.modeloNoDisponible();
     }
 
-    // 3. Todos los colores siguen disponibles
-    const unavailableComponentIds: string[] = [];
-    for (const comp of manifest.components) {
-      if (!comp.customizable) continue;
-      const colorId = body.design.colors[comp.id];
-      const color = comp.colors.find((c) => c.id === colorId);
-      if (!colorId || !color) {
-        unavailableComponentIds.push(comp.id);
-      }
-    }
-    if (unavailableComponentIds.length > 0) {
-      return errors.colorNoDisponible(unavailableComponentIds);
+    // 3. El color elegido sigue disponible
+    const color = manifest.colors.find((c) => c.id === body.design.colorId);
+    if (!body.design.colorId || !color) {
+      return errors.colorNoDisponible();
     }
 
     // 6. Los elementos decorativos caben, uno por zona, máximo tres
@@ -178,10 +170,10 @@ export async function POST(request: NextRequest) {
     const snapshot = buildDesignSnapshot(
       manifest,
       {
-        version: 1,
+        version: 2,
         modelId: body.design.modelId,
         submissionId: body.submissionId,
-        colors: body.design.colors,
+        colorId: body.design.colorId,
         technique: body.design.technique,
         decorations: body.design.decorations,
         updatedAt: new Date().toISOString(),

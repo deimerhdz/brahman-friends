@@ -4,16 +4,13 @@ import {
   capModel,
   color,
   modelView,
-  component,
-  componentColor,
-  componentImage,
+  colorImage,
   decorationZone,
   modelTechnique,
 } from "@/lib/db/schema";
 import {
   capModelConNombre,
   colorConNombre,
-  componentConNombre,
   techniqueConNombre,
 } from "@/lib/catalogo/consultas-traducidas";
 
@@ -32,78 +29,35 @@ export async function loadModelManifest(modelId: string) {
 
   if (!model) return null;
 
-  const [
-    views,
-    components,
-    links,
-    colors,
-    images,
-    zones,
-    techniques,
-    modelTechniques,
-  ] = await Promise.all([
-    db
-      .select()
-      .from(modelView)
-      .where(and(eq(modelView.modelId, modelId), eq(modelView.active, true))),
-    componentConNombre().where(eq(component.modelId, modelId)),
-    db.select().from(componentColor),
-    colorConNombre().where(eq(color.modelId, modelId)),
-    db.select().from(componentImage).where(eq(componentImage.modelId, modelId)),
-    db.select().from(decorationZone).where(eq(decorationZone.modelId, modelId)),
-    techniqueConNombre(),
-    db.select().from(modelTechnique).where(eq(modelTechnique.modelId, modelId)),
-  ]);
+  const [views, colors, images, zones, techniques, modelTechniques] =
+    await Promise.all([
+      db
+        .select()
+        .from(modelView)
+        .where(and(eq(modelView.modelId, modelId), eq(modelView.active, true))),
+      colorConNombre().where(eq(color.modelId, modelId)),
+      db.select().from(colorImage).where(eq(colorImage.modelId, modelId)),
+      db.select().from(decorationZone).where(eq(decorationZone.modelId, modelId)),
+      techniqueConNombre(),
+      db.select().from(modelTechnique).where(eq(modelTechnique.modelId, modelId)),
+    ]);
 
-  const colorsById = new Map(colors.map((c) => [c.id, c]));
   const sortedViews = [...views].sort(
     (a, b) => VIEW_ORDER.indexOf(a.view) - VIEW_ORDER.indexOf(b.view),
   );
 
-  const componentsPayload = components
-    .slice()
-    .sort((a, b) => a.layerOrder - b.layerOrder)
-    .map((comp) => {
-      const enabledColorIds = [
-        ...new Set(
-          links.filter((l) => l.componentId === comp.id).map((l) => l.colorId),
-        ),
-      ];
-
-      const compColors = enabledColorIds
-        .map((id) => colorsById.get(id))
-        .filter((c): c is NonNullable<typeof c> => !!c)
-        .sort((a, b) =>
-          a.id === comp.defaultColorId
-            ? -1
-            : b.id === comp.defaultColorId
-              ? 1
-              : 0,
-        )
-        .map((c) => ({
-          id: c.id,
-          nameEs: c.nameEs,
-          nameEn: c.nameEn,
-          images: Object.fromEntries(
-            images
-              .filter(
-                (img) => img.componentId === comp.id && img.colorId === c.id,
-              )
-              .map((img) => [img.view, img.imageUrl]),
-          ) as Partial<Record<"front" | "side" | "back", string>>,
-        }));
-
-      return {
-        id: comp.id,
-        nameEs: comp.nameEs,
-        nameEn: comp.nameEn,
-        material: comp.material,
-        customizable: comp.customizable,
-        layerOrder: comp.layerOrder,
-        defaultColorId: comp.defaultColorId,
-        colors: compColors,
-      };
-    });
+  const colorsPayload = colors
+    .sort((a, b) =>
+      a.id === model.defaultColorId ? -1 : b.id === model.defaultColorId ? 1 : 0,
+    )
+    .map((c) => ({
+      id: c.id,
+      nameEs: c.nameEs,
+      nameEn: c.nameEn,
+      images: Object.fromEntries(
+        images.filter((img) => img.colorId === c.id).map((img) => [img.view, img.imageUrl]),
+      ) as Partial<Record<"front" | "side" | "back", string>>,
+    }));
 
   return {
     model: {
@@ -118,7 +72,8 @@ export async function loadModelManifest(modelId: string) {
     baseImages: Object.fromEntries(
       sortedViews.map((v) => [v.view, v.baseImageUrl]),
     ) as Partial<Record<"front" | "side" | "back", string | null>>,
-    components: componentsPayload,
+    colors: colorsPayload,
+    defaultColorId: model.defaultColorId,
     zones: zones.map((z) => ({
       id: z.id,
       position: z.position,

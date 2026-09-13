@@ -13,7 +13,7 @@ export async function subirDirecto(
   const presignResponse = await fetch(presignEndpoint, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ pathname, contentType }),
+    body: JSON.stringify({ pathname, contentType, contentLength: file.size }),
   });
   if (!presignResponse.ok) throw new Error("presign_failed");
   const { uploadUrl, publicUrl } = (await presignResponse.json()) as {

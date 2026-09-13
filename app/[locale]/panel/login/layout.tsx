@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { isLocale, type Locale } from "@/lib/i18n/t";
 import { NavBar } from "@/app/_components/landing/NavBar";
+import { obtenerAjustesSitio } from "@/lib/ajustes/consultas";
 
 // La barra pública (NavBar) ya no se renderiza para el resto del panel
 // (ver app/[locale]/panel/(protected)/layout.tsx), pero /panel/login sigue
@@ -16,10 +17,12 @@ export default async function PanelLoginLayout({
   const { locale: rawLocale } = await params;
   if (!isLocale(rawLocale)) notFound();
   const locale: Locale = rawLocale;
+  const ajustes = await obtenerAjustesSitio();
+  const siteName = locale === "es" ? ajustes.siteNameEs : ajustes.siteNameEn;
 
   return (
     <>
-      <NavBar locale={locale} />
+      <NavBar locale={locale} siteName={siteName} logoUrl={ajustes.logoUrl} />
       <main className="pt-20">{children}</main>
     </>
   );

@@ -4,16 +4,15 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Locale } from "@/lib/i18n/t";
 import { formatUsd } from "@/lib/catalogo/precio";
-import {
-  FormularioContacto,
-  type ContactValue,
-} from "../../../solicitud/_components/FormularioContacto";
-import { BotonEnviar } from "../../../solicitud/_components/BotonEnviar";
+import { type ContactValue } from "../../../solicitud/_components/FormularioContacto";
+import { GaleriaProducto } from "./GaleriaProducto";
+import { ModalPedido } from "./ModalPedido";
 
 /**
- * Pantalla de un producto fijo (009-modelos-producto-fijo, US2): fotos +
- * descripción + precio, y un pedido directo (cantidad + contacto), sin
- * configurador ni cotización — el precio ya es el que se ve acá.
+ * Pantalla de un producto fijo (009-modelos-producto-fijo, US2): galería a
+ * la izquierda con desplazamiento entre fotos, y a la derecha detalles,
+ * precio y cantidad. "Comprar ahora" abre el modal con los datos de
+ * contacto — sin configurador ni cotización, el precio ya es el que se ve.
  */
 export function ProductoApp({
   locale,
@@ -33,7 +32,8 @@ export function ProductoApp({
   labels: Record<string, string>;
 }) {
   const router = useRouter();
-  const [quantity, setQuantity] = useState(0);
+  const [quantity, setQuantity] = useState(1);
+  const [modalOpen, setModalOpen] = useState(false);
   const [contact, setContact] = useState<ContactValue>({
     name: "",
     email: "",
@@ -82,71 +82,80 @@ export function ProductoApp({
     contact.name && contact.email && contact.phone && contact.privacyAccepted;
 
   return (
-    <div className="mx-auto flex max-w-lg flex-col gap-6 px-4 py-8">
-      {photos.length > 0 && (
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-          {photos.map((p) => (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              key={p.view}
-              src={p.url}
-              alt={name}
-              className="aspect-square rounded-lg border border-gray-200 object-cover"
-            />
-          ))}
-        </div>
-      )}
-
+    <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 px-4 py-8 md:grid-cols-2">
       <div>
-        <h1 className="text-xl font-semibold">{name}</h1>
+        <GaleriaProducto photos={photos} alt={name} />
+      </div>
+
+      <div className="flex flex-col gap-4">
+        <h1 className="text-2xl font-semibold">{name}</h1>
+
+        {price && (
+          <p className="text-2xl font-semibold">
+            {labels.priceLabel}: {formatUsd(price)}
+          </p>
+        )}
+
+        <label className="flex flex-col gap-1">
+          <span>{labels.quantity}</span>
+          <div className="flex w-fit items-center rounded border border-gray-300">
+            <button
+              type="button"
+              onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+              aria-label="-"
+              className="px-3 py-2 text-lg leading-none hover:bg-gray-50"
+            >
+              −
+            </button>
+            <input
+              type="number"
+              min={1}
+              value={quantity}
+              onChange={(e) => setQuantity(Number(e.target.value))}
+              className="w-16 border-x border-gray-300 px-2 py-2 text-center"
+            />
+            <button
+              type="button"
+              onClick={() => setQuantity((q) => q + 1)}
+              aria-label="+"
+              className="px-3 py-2 text-lg leading-none hover:bg-gray-50"
+            >
+              +
+            </button>
+          </div>
+        </label>
+
+        <button
+          type="button"
+          onClick={() => setModalOpen(true)}
+          disabled={!quantityOk}
+          className="w-full rounded bg-brand px-4 py-3 font-semibold text-white disabled:opacity-50"
+        >
+          {labels.buyNow}
+        </button>
+
         {description && (
           // Descripción con formato del editor de texto enriquecido del
           // panel (009-modelos-producto-fijo); ya se saneó al guardarla.
           <div
-            className="mt-1 text-gray-600 [&_h3]:mt-3 [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:text-gray-900 [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:my-2 [&_ul]:list-disc [&_ul]:pl-5"
+            className="text-gray-600 [&_h3]:mt-3 [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:text-gray-900 [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:my-2 [&_ul]:list-disc [&_ul]:pl-5"
             dangerouslySetInnerHTML={{ __html: description }}
           />
         )}
-        {price && (
-          <p className="mt-2 text-lg font-semibold">
-            {labels.priceLabel}: {formatUsd(price)}
-          </p>
-        )}
       </div>
 
-      <h2 className="text-lg font-semibold">{labels.orderTitle}</h2>
-
-      <label className="flex flex-col gap-1">
-        <span>{labels.quantity}</span>
-        <input
-          type="number"
-          min={1}
-          value={quantity}
-          onChange={(e) => setQuantity(Number(e.target.value))}
-          className="rounded border border-gray-300 px-3 py-2"
-        />
-      </label>
-
-      {quantityOk && (
-        <FormularioContacto
+      {modalOpen && (
+        <ModalPedido
           locale={locale}
-          value={contact}
-          onChange={(p) => setContact((c) => ({ ...c, ...p }))}
-          labels={labels}
-        />
-      )}
-
-      {quantityOk && (
-        <BotonEnviar
+          quantity={quantity}
+          contact={contact}
+          onChangeContact={(p) => setContact((c) => ({ ...c, ...p }))}
+          onClose={() => setModalOpen(false)}
           onSubmit={submit}
-          disabled={!contactOk}
           submitting={submitting}
-          error={submitError}
-          labels={{
-            submit: labels.submit,
-            submitting: labels.submitting,
-            retry: labels.retry,
-          }}
+          submitError={submitError}
+          disabled={!contactOk}
+          labels={labels}
         />
       )}
     </div>

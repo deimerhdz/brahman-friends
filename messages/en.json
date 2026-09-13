@@ -1,6 +1,5 @@
 {
   "common": {
-    "siteName": "Brahman Friends",
     "save": "Save",
     "cancel": "Cancel",
     "delete": "Delete",
@@ -27,6 +26,7 @@
     "models": "Models",
     "requests": "Requests",
     "techniques": "Techniques",
+    "settings": "Settings",
     "logout": "Log out",
     "languageSelector": "Language",
     "spanish": "Spanish",
@@ -49,7 +49,6 @@
     "logo_eliminado": "This request's logo was deleted.",
     "credenciales_invalidas": "Incorrect email or password.",
     "no_autorizado": "You need to sign in to continue.",
-    "color_en_uso": "This color is already used in images or requests. Discontinue it instead of deleting it.",
     "generic": "Something went wrong. Please try again."
   },
   "auth": {
@@ -177,7 +176,7 @@
   "solicitud": {
     "title": "Quantity and request",
     "quantity": "Total quantity",
-    "colors": "Colors",
+    "color": "Color",
     "decorations": "Decoration elements",
     "logo": "Logo",
     "text": "Text",
@@ -198,7 +197,10 @@
     "followUpNotice": "Our sales team will follow up with a quote outside this system."
   },
   "producto": {
-    "orderTitle": "Order this product"
+    "orderTitle": "Order this product",
+    "buyNow": "Buy now",
+    "close": "Close",
+    "priceLabel": "Base price"
   },
   "privacidad": {
     "title": "Personal data processing",
@@ -220,8 +222,7 @@
     "colores": {
       "new": "New color",
       "empty": "No colors yet. Create the first one.",
-      "editTitle": "Edit color",
-      "material": "Material"
+      "editTitle": "Edit color"
     },
     "modelos": {
       "new": "New model",
@@ -250,7 +251,7 @@
       "publish": "Publish",
       "unpublish": "Unpublish",
       "missingBaseViews": "Views without a base image",
-      "componentsWithoutColors": "Components without an available color",
+      "noColors": "This model doesn't have any colors configured yet",
       "missingPrice": "Price is missing",
       "missingPhoto": "At least one photo is missing",
       "view": {
@@ -259,17 +260,10 @@
         "back": "Back"
       },
       "frontRequired": "The front view can't be deactivated",
-      "layerOrder": "Layer order",
-      "customizable": "Customizable",
-      "addComponent": "Add component",
-      "confirmDeleteComponent": "Delete this component? Its images and enabled colors will also be removed.",
-      "confirmDeleteImage": "Delete this image? The combination will show as \"Missing\" until you upload a new one.",
-      "deleteVariant": "Delete variant",
-      "confirmDeleteVariant": "Delete this color from this component? This disables that combination and deletes all its already-uploaded images (across every view) along with their files.",
-      "confirmRemoveView": "Remove this view for this color? The already-uploaded image will be deleted along with its file.",
-      "materialMismatch": "The color's material doesn't match the component's",
-      "notCustomizable": "This component isn't customizable: it belongs in the base image",
-      "defaultColor": "Default",
+      "translationRequired": "Fill in the name in both Spanish and English (use the ES/EN switch).",
+      "confirmDeleteImage": "Delete this photo? The view will show as \"Missing\" until you upload a new one.",
+      "deleteColor": "Delete",
+      "confirmDeleteColor": "Delete this color from the model? All its already-uploaded photos will be deleted. This can't be undone.",
       "loaded": "Loaded",
       "missing": "Missing",
       "zone": {
@@ -293,12 +287,12 @@
       "previewColorWhite": "White",
       "maxTextChars": "Maximum text characters",
       "price": "Base Price (USD)",
-      "step1": "Step 1: Views and Catalog Photos",
-      "step1Hint": "Set up the main cover photo and the side/back views of the model.",
-      "step2": "Step 2: Colors and Variants",
-      "step2Hint": "Manage color variants and set the store's default variant.",
-      "step3": "Step 3: Personalization Area",
-      "step3Hint": "Dimensional parameters and allowed marking techniques.",
+      "stepViews": "Step 1: Views and Catalog Photos",
+      "stepViewsHint": "Set up the main cover photo and the side/back views of the model.",
+      "stepColors": "Step 2: Colors and Variants",
+      "stepColorsHint": "Manage color variants and set the store's default variant.",
+      "stepPersonalization": "Step 3: Personalization Area",
+      "stepPersonalizationHint": "Dimensional parameters and allowed marking techniques.",
       "tabViews": "Views",
       "tabColors": "Colors",
       "tabPersonalization": "Personalization",
@@ -310,8 +304,6 @@
       "preview": "Preview",
       "advanced": "Advanced",
       "addColor": "Add Color",
-      "parts": "Parts",
-      "manageParts": "Manage parts",
       "defaultVariant": "Default variant",
       "defaultVariantHint": "This variant loads automatically when a customer opens the product detail page or the configurator.",
       "markDefault": "Mark as default",
@@ -346,6 +338,89 @@
       "anonymize": "Anonymize",
       "anonymizeConfirm": "This deletes the name, email, phone, and the logo. It can't be undone. Confirm?",
       "anonymized": "This request was anonymized. The code, design, and technical sheet are kept."
+    },
+    "ajustes": {
+      "title": "Settings",
+      "topBarEyebrow": "Settings area",
+      "discard": "Discard",
+      "stickyTitle": "Ready to publish changes",
+      "stickySubtitle": "All changes are saved to the production server immediately.",
+      "basics": {
+        "sectionTitle": "Basic information",
+        "sectionSubtitle": "Customize your site's general information and presentation.",
+        "siteNameEs": "Site name (Spanish)",
+        "siteNameEsHint": "Shown in the header and footer in Spanish.",
+        "siteNameEn": "Site name (English)",
+        "siteNameEnHint": "Shown in the header and footer in English.",
+        "contactEmail": "Contact email",
+        "contactEmailHint": "Shown on the site so people can write to you.",
+        "contactPhone": "Contact phone",
+        "contactPhoneHint": "Shown on the site so people can call you.",
+        "multilingualTitle": "Multilingual support",
+        "multilingualHint": "The business is shown in Spanish and English, based on the visitor's preferred language.",
+        "save": "Save",
+        "success": "Saved successfully.",
+        "error": "Couldn't save. Check the fields and try again.",
+        "nameRequired": "The site name is required in both Spanish and English."
+      },
+      "media": {
+        "sectionTitle": "Brand identity and media",
+        "sectionSubtitle": "Manage your site's logo and main banner."
+      },
+      "logo": {
+        "sectionTitle": "Logo",
+        "recommendation": "Recommended: 200x200px, max {{maxMb}}MB",
+        "empty": "No logo uploaded",
+        "formats": "PNG, JPG, or SVG up to {{maxMb}}MB",
+        "remove": "Remove logo"
+      },
+      "banner": {
+        "sectionTitle": "Header banner",
+        "recommendation": "Recommended: 1920x600px, max {{maxMb}}MB",
+        "empty": "Select an image for the header",
+        "formats": "Supports PNG or JPG up to {{maxMb}}MB",
+        "remove": "Remove banner"
+      },
+      "upload": {
+        "select": "Choose file",
+        "uploadButton": "Upload file",
+        "error": "Couldn't upload the file. Try another one or try again."
+      },
+      "seo": {
+        "sectionTitle": "SEO and metadata optimization",
+        "sectionSubtitle": "Control how your site appears in search engines like Google and on social media.",
+        "titleEs": "Title (Spanish)",
+        "titleEn": "Title (English)",
+        "titleCounter": "{{count}}/60 characters",
+        "descriptionEs": "Description (Spanish)",
+        "descriptionEn": "Description (English)",
+        "descriptionCounter": "{{count}}/160 characters",
+        "imageSectionTitle": "Preview image (Open Graph / social card)",
+        "imageRecommendation": "Recommended size: 1200x630px (1.91:1 ratio). Max {{maxMb}}MB",
+        "imageRemove": "Remove image",
+        "previewDomain": "yoursite.com",
+        "previewPlaceholder": "This is how your site will look when shared"
+      },
+      "redes": {
+        "sectionTitle": "Social media",
+        "sectionSubtitle": "Set up links to your social media profiles.",
+        "addNewTitle": "Add a new profile or channel",
+        "linkedTitle": "Linked accounts",
+        "active": "Active",
+        "empty": "You haven't added any social media yet.",
+        "add": "Add",
+        "edit": "Edit",
+        "remove": "Remove",
+        "urlPlaceholder": "https://instagram.com/yourbusiness",
+        "invalidUrl": "That link isn't a valid web address.",
+        "platform_instagram": "Instagram",
+        "platform_facebook": "Facebook",
+        "platform_tiktok": "TikTok",
+        "platform_whatsapp": "WhatsApp",
+        "platform_x": "X (Twitter)",
+        "platform_youtube": "YouTube",
+        "platform_linkedin": "LinkedIn"
+      }
     }
   }
 }

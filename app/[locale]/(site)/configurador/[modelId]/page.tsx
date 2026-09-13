@@ -71,6 +71,7 @@ export default async function ConfiguradorPage({
         noDecoration: t("configurador.summary.noDecoration"),
         logo: t("configurador.summary.logo"),
         quantity: t("solicitud.quantity"),
+        colorLabel: t("solicitud.color"),
         modelUnavailable: t("errors.modelo_no_disponible"),
       }}
     />

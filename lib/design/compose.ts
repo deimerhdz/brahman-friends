@@ -21,7 +21,7 @@ export const VIEW_FOR_ZONE: Record<Decoration["zone"], ComposableView> = {
  */
 export async function composeView(
   manifest: ModelManifest,
-  colors: Record<string, string>,
+  colorId: string | null,
   decorations: Decoration[],
   view: ComposableView,
 ): Promise<Blob> {
@@ -48,13 +48,10 @@ export async function composeView(
     ctx.drawImage(base, 0, 0, width, height);
   }
 
-  for (const comp of manifest.components) {
-    if (!comp.customizable) continue;
-    const colorId = colors[comp.id];
-    const compColor = comp.colors.find((c) => c.id === colorId);
-    const imageUrl = compColor?.images[sourceView];
-    if (!imageUrl) continue;
-    const img = await loadImage(imageUrl);
+  const selectedColor = manifest.colors.find((c) => c.id === colorId);
+  const colorImageUrl = selectedColor?.images[sourceView];
+  if (colorImageUrl) {
+    const img = await loadImage(colorImageUrl);
     ctx.drawImage(img, 0, 0, width, height);
   }
   ctx.restore();

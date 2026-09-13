@@ -13,30 +13,25 @@ import { SelectorColor } from "./SelectorColor";
 export function PasoColores({
   locale,
   manifest,
-  colors,
+  colorId,
   onSelect,
   labels,
 }: {
   locale: Locale;
   manifest: ModelManifest;
-  colors: Record<string, string>;
-  onSelect: (componentId: string, colorId: string) => void;
+  colorId: string | null;
+  onSelect: (colorId: string) => void;
   labels: { approximate: string };
 }) {
   return (
     <div className="flex flex-col gap-6">
-      {manifest.components
-        .filter((c) => c.customizable)
-        .map((comp) => (
-          <SelectorColor
-            key={comp.id}
-            locale={locale}
-            component={comp}
-            selectedColorId={colors[comp.id]}
-            onSelect={(colorId) => onSelect(comp.id, colorId)}
-            labels={labels}
-          />
-        ))}
+      <SelectorColor
+        locale={locale}
+        colors={manifest.colors}
+        selectedColorId={colorId ?? undefined}
+        onSelect={onSelect}
+        labels={labels}
+      />
     </div>
   );
 }

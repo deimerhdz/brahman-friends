@@ -43,9 +43,11 @@ export default async function ProductoPage({
       price={model.price}
       photos={photos}
       labels={{
-        priceLabel: t("panel.modelos.price"),
+        priceLabel: t("producto.priceLabel"),
         quantity: t("solicitud.quantity"),
         orderTitle: t("producto.orderTitle"),
+        buyNow: t("producto.buyNow"),
+        close: t("producto.close"),
         name: t("solicitud.name"),
         email: t("auth.email"),
         phone: t("solicitud.phone"),

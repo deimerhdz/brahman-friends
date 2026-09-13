@@ -1,6 +1,5 @@
 {
   "common": {
-    "siteName": "Brahman Friends",
     "save": "Guardar",
     "cancel": "Cancelar",
     "delete": "Eliminar",
@@ -27,6 +26,7 @@
     "models": "Modelos",
     "requests": "Solicitudes",
     "techniques": "Técnicas",
+    "settings": "Ajustes",
     "logout": "Cerrar sesión",
     "languageSelector": "Idioma",
     "spanish": "Español",
@@ -49,7 +49,6 @@
     "logo_eliminado": "El logotipo de esta solicitud fue eliminado.",
     "credenciales_invalidas": "Correo o contraseña incorrectos.",
     "no_autorizado": "Tenés que iniciar sesión para continuar.",
-    "color_en_uso": "Este color ya se usó en imágenes o solicitudes. Descontinualo en vez de borrarlo.",
     "generic": "Ocurrió un error. Intentá de nuevo."
   },
   "auth": {
@@ -177,7 +176,7 @@
   "solicitud": {
     "title": "Cantidad y solicitud",
     "quantity": "Cantidad total",
-    "colors": "Colores",
+    "color": "Color",
     "decorations": "Elementos decorativos",
     "logo": "Logotipo",
     "text": "Texto",
@@ -198,7 +197,10 @@
     "followUpNotice": "El equipo comercial va a responder con la cotización por fuera de este sistema."
   },
   "producto": {
-    "orderTitle": "Pedir este producto"
+    "orderTitle": "Pedir este producto",
+    "buyNow": "Comprar ahora",
+    "close": "Cerrar",
+    "priceLabel": "Precio Base"
   },
   "privacidad": {
     "title": "Tratamiento de datos personales",
@@ -220,8 +222,7 @@
     "colores": {
       "new": "Nuevo color",
       "empty": "Todavía no hay colores. Creá el primero.",
-      "editTitle": "Editar color",
-      "material": "Material"
+      "editTitle": "Editar color"
     },
     "modelos": {
       "new": "Nuevo modelo",
@@ -250,7 +251,7 @@
       "publish": "Publicar",
       "unpublish": "Despublicar",
       "missingBaseViews": "Vistas sin imagen base",
-      "componentsWithoutColors": "Componentes sin color disponible",
+      "noColors": "El modelo todavía no tiene ningún color configurado",
       "missingPrice": "Falta definir el precio",
       "missingPhoto": "Falta subir al menos una foto",
       "view": {
@@ -259,17 +260,10 @@
         "back": "Trasera"
       },
       "frontRequired": "La vista frontal no se puede desactivar",
-      "layerOrder": "Orden de capa",
-      "customizable": "Personalizable",
-      "addComponent": "Agregar componente",
-      "confirmDeleteComponent": "¿Eliminar este componente? También se borrarán sus imágenes y colores habilitados.",
-      "confirmDeleteImage": "¿Eliminar esta imagen? La combinación quedará marcada como \"Falta\" hasta que subas una nueva.",
-      "deleteVariant": "Eliminar variante",
-      "confirmDeleteVariant": "¿Eliminar este color de este componente? Se deshabilita esa combinación y se borran todas sus imágenes ya cargadas (en todas las vistas) junto con sus archivos.",
-      "confirmRemoveView": "¿Sacar esta vista para este color? Se borra la imagen ya cargada junto con su archivo.",
-      "materialMismatch": "El material del color no coincide con el del componente",
-      "notCustomizable": "Este componente no es personalizable: va en la imagen base",
-      "defaultColor": "Por defecto",
+      "translationRequired": "Completá el nombre en español y en inglés (usá el switch ES/EN).",
+      "confirmDeleteImage": "¿Eliminar esta foto? La vista quedará marcada como \"Falta\" hasta que subas una nueva.",
+      "deleteColor": "Eliminar",
+      "confirmDeleteColor": "¿Eliminar este color del modelo? Se borran todas sus fotos ya cargadas. Esta acción no se puede deshacer.",
       "loaded": "Cargada",
       "missing": "Falta",
       "zone": {
@@ -293,12 +287,12 @@
       "previewColorWhite": "Blanco",
       "maxTextChars": "Máximo de caracteres de texto",
       "price": "Precio Base (USD)",
-      "step1": "Paso 1: Vistas y Fotos de Catálogo",
-      "step1Hint": "Configura la foto de portada principal, las vistas laterales y traseras del modelo.",
-      "step2": "Paso 2: Colores y Variantes",
-      "step2Hint": "Gestiona las variantes de color y define la variante por defecto de la tienda.",
-      "step3": "Paso 3: Área de Personalización",
-      "step3Hint": "Parámetros dimensionales y técnicas de marcaje admitidas.",
+      "stepViews": "Paso 1: Vistas y Fotos de Catálogo",
+      "stepViewsHint": "Configura la foto de portada principal, las vistas laterales y traseras del modelo.",
+      "stepColors": "Paso 2: Colores y Variantes",
+      "stepColorsHint": "Gestiona las variantes de color y define la variante por defecto de la tienda.",
+      "stepPersonalization": "Paso 3: Área de Personalización",
+      "stepPersonalizationHint": "Parámetros dimensionales y técnicas de marcaje admitidas.",
       "tabViews": "Vistas",
       "tabColors": "Colores",
       "tabPersonalization": "Personalización",
@@ -310,8 +304,6 @@
       "preview": "Vista Previa",
       "advanced": "Avanzado",
       "addColor": "Agregar Color",
-      "parts": "Partes",
-      "manageParts": "Gestionar partes",
       "defaultVariant": "Variante predeterminada",
       "defaultVariantHint": "Esta variante se cargará automáticamente cuando el cliente acceda al detalle del producto o al configurador.",
       "markDefault": "Marcar como predeterminada",
@@ -346,6 +338,89 @@
       "anonymize": "Anonimizar",
       "anonymizeConfirm": "Esta acción borra el nombre, correo y teléfono, y el logotipo. No se puede deshacer. ¿Confirmás?",
       "anonymized": "Esta solicitud fue anonimizada. Se conservan el código, el diseño y la ficha técnica."
+    },
+    "ajustes": {
+      "title": "Ajustes",
+      "topBarEyebrow": "Área de ajustes",
+      "discard": "Descartar",
+      "stickyTitle": "Listo para publicar cambios",
+      "stickySubtitle": "Todos los cambios se guardan en el servidor de producción inmediatamente.",
+      "basics": {
+        "sectionTitle": "Información básica",
+        "sectionSubtitle": "Personalizá la información general y la presentación de tu sitio web.",
+        "siteNameEs": "Nombre del sitio (español)",
+        "siteNameEsHint": "Aparece en el encabezado y el pie de página en español.",
+        "siteNameEn": "Nombre del sitio (inglés)",
+        "siteNameEnHint": "Aparece en el encabezado y el pie de página en inglés.",
+        "contactEmail": "Correo de contacto",
+        "contactEmailHint": "Se muestra en el sitio para que puedan escribirte.",
+        "contactPhone": "Teléfono de contacto",
+        "contactPhoneHint": "Se muestra en el sitio para que puedan llamarte.",
+        "multilingualTitle": "Soporte multilingüe",
+        "multilingualHint": "La empresa se muestra en español e inglés, según el idioma preferido de quien visita el sitio.",
+        "save": "Guardar",
+        "success": "Se guardó correctamente.",
+        "error": "No se pudo guardar. Revisá los campos e intentá de nuevo.",
+        "nameRequired": "El nombre del sitio es obligatorio en español e inglés."
+      },
+      "media": {
+        "sectionTitle": "Identidad de marca y archivos multimedia",
+        "sectionSubtitle": "Administrá el logotipo y el banner principal de tu sitio web."
+      },
+      "logo": {
+        "sectionTitle": "Logotipo",
+        "recommendation": "Recomendado: 200x200px, máx. {{maxMb}}MB",
+        "empty": "No hay logo cargado",
+        "formats": "PNG, JPG o SVG hasta {{maxMb}}MB",
+        "remove": "Quitar logotipo"
+      },
+      "banner": {
+        "sectionTitle": "Banner del header",
+        "recommendation": "Recomendado: 1920x600px, máx. {{maxMb}}MB",
+        "empty": "Seleccioná una imagen para el header",
+        "formats": "Soporta PNG o JPG hasta {{maxMb}}MB",
+        "remove": "Quitar banner"
+      },
+      "upload": {
+        "select": "Elegir archivo",
+        "uploadButton": "Cargar archivo",
+        "error": "No se pudo subir el archivo. Probá con otro o intentá de nuevo."
+      },
+      "seo": {
+        "sectionTitle": "Optimización SEO y metadatos",
+        "sectionSubtitle": "Controlá cómo se muestra tu sitio en buscadores como Google y en redes sociales.",
+        "titleEs": "Título (español)",
+        "titleEn": "Título (inglés)",
+        "titleCounter": "{{count}}/60 caracteres",
+        "descriptionEs": "Descripción (español)",
+        "descriptionEn": "Descripción (inglés)",
+        "descriptionCounter": "{{count}}/160 caracteres",
+        "imageSectionTitle": "Imagen de vista previa (Open Graph / social card)",
+        "imageRecommendation": "Tamaño recomendado: 1200x630px (relación 1.91:1). Máx. {{maxMb}}MB",
+        "imageRemove": "Quitar imagen",
+        "previewDomain": "tusitio.com",
+        "previewPlaceholder": "Así se verá tu sitio al compartirlo"
+      },
+      "redes": {
+        "sectionTitle": "Redes sociales",
+        "sectionSubtitle": "Configurá los enlaces a tus perfiles en redes sociales.",
+        "addNewTitle": "Agregar nuevo perfil o canal",
+        "linkedTitle": "Redes vinculadas",
+        "active": "Activo",
+        "empty": "Todavía no agregaste ninguna red social.",
+        "add": "Agregar",
+        "edit": "Editar",
+        "remove": "Quitar",
+        "urlPlaceholder": "https://instagram.com/tuempresa",
+        "invalidUrl": "Ese enlace no es una dirección web válida.",
+        "platform_instagram": "Instagram",
+        "platform_facebook": "Facebook",
+        "platform_tiktok": "TikTok",
+        "platform_whatsapp": "WhatsApp",
+        "platform_x": "X (Twitter)",
+        "platform_youtube": "YouTube",
+        "platform_linkedin": "LinkedIn"
+      }
     }
   }
 }

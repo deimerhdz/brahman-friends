@@ -1,20 +1,9 @@
-import type { Material } from "@/lib/catalogo/materiales";
-
 /**
- * Qué falta para publicar un modelo (FR-012, RN2, RN9). Función pura: la
- * ruta que la usa arma estas estructuras a partir de la base de datos.
+ * Qué falta para publicar un modelo (FR-012, RN2). Función pura: la ruta
+ * que la usa arma estas estructuras a partir de la base de datos.
  */
 
 export type View = "front" | "side" | "back";
-
-export interface PublicacionComponente {
-  id: string;
-  nameEs: string;
-  nameEn: string;
-  material: Material | string;
-  customizable: boolean;
-  defaultColorId: string | null;
-}
 
 export interface PublicacionColor {
   id: string;
@@ -25,16 +14,12 @@ export interface PublicacionColor {
 export interface PublicacionInput {
   activeViews: View[];
   viewsWithBaseImage: View[];
-  components: PublicacionComponente[];
-  /** Colores habilitados por componente, vista por vista (FR-019). */
-  componentColors: { componentId: string; colorId: string; view: View }[];
   colors: PublicacionColor[];
-  /** Imágenes ya cargadas por componente/color/vista. */
-  images: { componentId: string; colorId: string; view: View }[];
+  /** Vistas con imagen ya cargada, por color (FR-009). */
+  colorImages: { colorId: string; view: View }[];
 }
 
 export interface MissingCombination {
-  component: string;
   color: string;
   view: View;
 }
@@ -42,14 +27,15 @@ export interface MissingCombination {
 export interface PublicacionResultado {
   missing: MissingCombination[];
   missingBaseViews: View[];
-  componentsWithoutColors: string[];
+  /** El modelo no tiene ningún color configurado todavía. */
+  noColors: boolean;
 }
 
 export function canPublish(result: PublicacionResultado): boolean {
   return (
     result.missing.length === 0 &&
     result.missingBaseViews.length === 0 &&
-    result.componentsWithoutColors.length === 0
+    !result.noColors
   );
 }
 
@@ -66,8 +52,8 @@ export function canPublishProductoFijo(
 
 /**
  * Regla de publicación de un modelo "Producto fijo" (009-modelos-producto-fijo,
- * FR-002, FR-006): no depende de colores ni componentes, solo de tener precio
- * y al menos una foto (vista activa con imagen base).
+ * FR-002, FR-006): no depende de colores, solo de tener precio y al menos
+ * una foto (vista activa con imagen base).
  */
 export function checkPublicacionProductoFijo(input: {
   price: string | null;
@@ -79,63 +65,30 @@ export function checkPublicacionProductoFijo(input: {
   };
 }
 
+/**
+ * Regla de publicación de un modelo configurable: cada color debe tener su
+ * foto para cada vista activa del modelo, para que el cliente nunca elija
+ * un color sin imagen en el configurador.
+ */
 export function checkPublicacion(
   input: PublicacionInput,
 ): PublicacionResultado {
-  const colorsById = new Map(input.colors.map((c) => [c.id, c]));
-  const imageKeys = new Set(
-    input.images.map((img) => `${img.componentId}:${img.colorId}:${img.view}`),
-  );
-
   const missingBaseViews = input.activeViews.filter(
     (view) => !input.viewsWithBaseImage.includes(view),
   );
 
+  const imageKeys = new Set(
+    input.colorImages.map((img) => `${img.colorId}:${img.view}`),
+  );
+
   const missing: MissingCombination[] = [];
-  const componentsWithoutColors: string[] = [];
-
-  for (const component of input.components) {
-    if (!component.customizable) continue;
-
-    const enabledColorIds = [
-      ...new Set(
-        input.componentColors
-          .filter((cc) => cc.componentId === component.id)
-          .map((cc) => cc.colorId),
-      ),
-    ];
-
-    const enabledColors = enabledColorIds
-      .map((id) => colorsById.get(id))
-      .filter((c): c is PublicacionColor => !!c);
-
-    const defaultIsUsable =
-      !!component.defaultColorId &&
-      enabledColorIds.includes(component.defaultColorId) &&
-      colorsById.has(component.defaultColorId);
-
-    if (enabledColors.length === 0 || !defaultIsUsable) {
-      componentsWithoutColors.push(component.nameEs);
-      continue;
-    }
-
-    for (const colorId of enabledColorIds) {
-      const c = colorsById.get(colorId);
-      if (!c) continue;
-      const requiredViews = input.componentColors
-        .filter(
-          (cc) => cc.componentId === component.id && cc.colorId === colorId,
-        )
-        .map((cc) => cc.view)
-        // defensivo: ignora vistas que ya no están activas en el modelo
-        .filter((view) => input.activeViews.includes(view));
-      for (const view of requiredViews) {
-        if (!imageKeys.has(`${component.id}:${colorId}:${view}`)) {
-          missing.push({ component: component.nameEs, color: c.nameEs, view });
-        }
+  for (const color of input.colors) {
+    for (const view of input.activeViews) {
+      if (!imageKeys.has(`${color.id}:${view}`)) {
+        missing.push({ color: color.nameEs, view });
       }
     }
   }
 
-  return { missing, missingBaseViews, componentsWithoutColors };
+  return { missing, missingBaseViews, noColors: input.colors.length === 0 };
 }

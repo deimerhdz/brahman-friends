@@ -10,7 +10,7 @@ import { composeView, type ComposableView } from "@/lib/design/compose";
  */
 export async function subirVistas(
   manifest: ModelManifest,
-  colors: Record<string, string>,
+  colorId: string | null,
   decorations: Decoration[],
 ): Promise<{ view: ComposableView; url: string }[]> {
   const views: ComposableView[] = manifest.views.flatMap((v) =>
@@ -19,7 +19,7 @@ export async function subirVistas(
 
   const results: { view: ComposableView; url: string }[] = [];
   for (const view of views) {
-    const blob = await composeView(manifest, colors, decorations, view);
+    const blob = await composeView(manifest, colorId, decorations, view);
     const url = await subirDirecto(
       "/api/subidas/presignar",
       `solicitudes/${Date.now()}-${view}.png`,

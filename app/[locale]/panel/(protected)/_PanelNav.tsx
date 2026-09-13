@@ -12,15 +12,20 @@ export const PANEL_NAV_LINKS = (locale: Locale) => {
     { href: `${base}/modelos`, label: t("nav.models"), icon: "category" },
     { href: `${base}/tecnicas`, label: t("nav.techniques"), icon: "brush" },
     { href: `${base}/solicitudes`, label: t("nav.requests"), icon: "package_2" },
+    { href: `${base}/ajustes`, label: t("nav.settings"), icon: "settings" },
   ];
 };
 
 export function PanelNav({
   locale,
   userName,
+  siteName,
+  logoUrl,
 }: {
   locale: Locale;
   userName: string;
+  siteName: string;
+  logoUrl?: string | null;
 }) {
   const t = getT(locale);
   const pathname = usePathname();
@@ -29,9 +34,14 @@ export function PanelNav({
   return (
     <nav className="flex h-full w-64 flex-col border-r border-outline-variant bg-surface pb-8 pt-10">
       <div className="mb-10 px-6">
-        <h2 className="text-label-caps font-label-caps text-on-surface">
-          {t("common.siteName")}
-        </h2>
+        {logoUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={logoUrl} alt={siteName} className="h-8 w-auto object-contain" />
+        ) : (
+          <h2 className="text-label-caps font-label-caps text-on-surface">
+            {siteName}
+          </h2>
+        )}
       </div>
       <ul className="flex flex-1 flex-col gap-1 px-4">
         {links.map((link) => {

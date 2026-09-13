@@ -11,61 +11,35 @@ function baseInput(): PublicacionInput {
   return {
     activeViews: ["front", "side"],
     viewsWithBaseImage: ["front", "side"],
-    components: [
-      {
-        id: "corona",
-        nameEs: "Corona",
-        nameEn: "Crown",
-        material: "fabric",
-        customizable: true,
-        defaultColorId: "azul",
-      },
-      {
-        id: "boton",
-        nameEs: "Botón",
-        nameEn: "Button",
-        material: "plastic",
-        customizable: false,
-        defaultColorId: null,
-      },
-    ],
-    componentColors: [
-      { componentId: "corona", colorId: "azul", view: "front" },
-      { componentId: "corona", colorId: "azul", view: "side" },
-      { componentId: "corona", colorId: "rojo", view: "front" },
-      { componentId: "corona", colorId: "rojo", view: "side" },
-    ],
     colors: [
       { id: "azul", nameEs: "Azul Rey", nameEn: "Royal Blue" },
       { id: "rojo", nameEs: "Rojo", nameEn: "Red" },
     ],
-    images: [
-      { componentId: "corona", colorId: "azul", view: "front" },
-      { componentId: "corona", colorId: "azul", view: "side" },
-      { componentId: "corona", colorId: "rojo", view: "front" },
-      { componentId: "corona", colorId: "rojo", view: "side" },
+    colorImages: [
+      { colorId: "azul", view: "front" },
+      { colorId: "azul", view: "side" },
+      { colorId: "rojo", view: "front" },
+      { colorId: "rojo", view: "side" },
     ],
   };
 }
 
-describe("lib/catalogo/publicacion — qué falta para publicar (FR-012, RN2, RN9)", () => {
+describe("lib/catalogo/publicacion — qué falta para publicar (FR-012, RN2)", () => {
   it("un modelo completo puede publicarse", () => {
     const result = checkPublicacion(baseInput());
     expect(result.missing).toEqual([]);
     expect(result.missingBaseViews).toEqual([]);
-    expect(result.componentsWithoutColors).toEqual([]);
+    expect(result.noColors).toBe(false);
     expect(canPublish(result)).toBe(true);
   });
 
   it("señala exactamente la combinación de imagen faltante", () => {
     const input = baseInput();
-    input.images = input.images.filter(
+    input.colorImages = input.colorImages.filter(
       (img) => !(img.colorId === "rojo" && img.view === "side"),
     );
     const result = checkPublicacion(input);
-    expect(result.missing).toEqual([
-      { component: "Corona", color: "Rojo", view: "side" },
-    ]);
+    expect(result.missing).toEqual([{ color: "Rojo", view: "side" }]);
     expect(canPublish(result)).toBe(false);
   });
 
@@ -77,38 +51,19 @@ describe("lib/catalogo/publicacion — qué falta para publicar (FR-012, RN2, RN
     expect(canPublish(result)).toBe(false);
   });
 
-  it("señala un componente personalizable sin ningún color habilitado", () => {
+  it("señala que el modelo no tiene ningún color configurado", () => {
     const input = baseInput();
-    input.componentColors = [];
+    input.colors = [];
+    input.colorImages = [];
     const result = checkPublicacion(input);
-    expect(result.componentsWithoutColors).toEqual(["Corona"]);
+    expect(result.noColors).toBe(true);
     expect(canPublish(result)).toBe(false);
   });
 
-  it("un componente no personalizable nunca exige imágenes por color", () => {
+  it("solo exige fotos para las vistas activas del modelo", () => {
     const input = baseInput();
-    const result = checkPublicacion(input);
-    expect(result.missing.some((m) => m.component === "Botón")).toBe(false);
-  });
-
-  it("el color por defecto debe estar entre los habilitados del componente (RN9)", () => {
-    const input = baseInput();
-    input.componentColors = input.componentColors.filter(
-      (cc) => cc.colorId !== "azul",
-    );
-    input.images = input.images.filter((img) => img.colorId !== "azul");
-    const result = checkPublicacion(input);
-    expect(result.componentsWithoutColors).toEqual(["Corona"]);
-  });
-
-  it("un color puede requerir menos vistas que las activas del modelo, sin generar faltantes para las que no eligió", () => {
-    const input = baseInput();
-    input.componentColors = input.componentColors.filter(
-      (cc) => !(cc.colorId === "rojo" && cc.view === "side"),
-    );
-    input.images = input.images.filter(
-      (img) => !(img.colorId === "rojo" && img.view === "side"),
-    );
+    input.activeViews = ["front"];
+    input.colorImages = input.colorImages.filter((img) => img.view === "front");
     const result = checkPublicacion(input);
     expect(result.missing).toEqual([]);
     expect(canPublish(result)).toBe(true);

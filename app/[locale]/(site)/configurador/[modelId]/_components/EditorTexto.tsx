@@ -20,7 +20,7 @@ export function EditorTexto({
   font: string;
   colorId: string;
   maxChars: number;
-  colors: ModelManifest["components"][number]["colors"];
+  colors: ModelManifest["colors"];
   onChange: (patch: { content?: string; font?: string; colorId?: string }) => void;
   labels: Record<string, string>;
 }) {

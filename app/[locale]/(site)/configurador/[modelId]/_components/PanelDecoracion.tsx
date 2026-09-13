@@ -21,6 +21,7 @@ export function PanelDecoracion({
   maxZones,
   onAdd,
   onUpdate,
+  onRemove,
   labels,
 }: {
   locale: Locale;
@@ -30,6 +31,7 @@ export function PanelDecoracion({
   maxZones: number;
   onAdd: (decoration: Decoration) => boolean;
   onUpdate: (index: number, patch: Partial<Decoration>) => void;
+  onRemove: (index: number) => void;
   labels: Record<string, string>;
 }) {
   const zonesInView = manifest.zones.filter(
@@ -49,7 +51,16 @@ export function PanelDecoracion({
         if (decoration) {
           return (
             <div key={zone.id} className="rounded border border-gray-200 p-3">
-              <p className="mb-2 text-sm font-medium">{labels[`zone_${zone.position}`]}</p>
+              <div className="mb-2 flex items-center justify-between gap-2">
+                <p className="text-sm font-medium">{labels[`zone_${zone.position}`]}</p>
+                <button
+                  type="button"
+                  onClick={() => onRemove(index)}
+                  className="text-xs font-medium text-red-600 hover:underline"
+                >
+                  {labels.removeElement}
+                </button>
+              </div>
               {decoration.kind === "text" ? (
                 <EditorTexto
                   locale={locale}
@@ -57,7 +68,7 @@ export function PanelDecoracion({
                   font={decoration.font}
                   colorId={decoration.colorId}
                   maxChars={zone.maxTextChars}
-                  colors={manifest.components.flatMap((c) => c.colors)}
+                  colors={manifest.colors}
                   onChange={(patch) => onUpdate(index, patch)}
                   labels={{ content: labels.textContent, font: labels.textFont, color: labels.textColor }}
                 />
@@ -104,7 +115,7 @@ export function PanelDecoracion({
                 <button
                   type="button"
                   onClick={() => {
-                    const firstColor = manifest.components.flatMap((c) => c.colors)[0];
+                    const firstColor = manifest.colors[0];
                     onAdd({
                       zone: zone.position,
                       kind: "text",

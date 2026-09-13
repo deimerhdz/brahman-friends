@@ -10,9 +10,13 @@ import { LogoutButton } from "./_LogoutButton";
 export function MobilePanelNav({
   locale,
   userName,
+  siteName,
+  logoUrl,
 }: {
   locale: Locale;
   userName: string;
+  siteName: string;
+  logoUrl?: string | null;
 }) {
   const t = getT(locale);
   const pathname = usePathname();
@@ -22,9 +26,14 @@ export function MobilePanelNav({
   return (
     <div className="sticky top-0 z-40 border-b border-outline-variant bg-surface lg:hidden">
       <div className="flex items-center justify-between px-margin-mobile py-4">
-        <span className="text-label-caps font-label-caps text-on-surface">
-          {t("common.siteName")}
-        </span>
+        {logoUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={logoUrl} alt={siteName} className="h-7 w-auto object-contain" />
+        ) : (
+          <span className="text-label-caps font-label-caps text-on-surface">
+            {siteName}
+          </span>
+        )}
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}

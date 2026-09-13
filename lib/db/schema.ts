@@ -60,6 +60,18 @@ export const notificationStatusEnum = pgEnum("notification_status", [
 // las tablas de traducción independientes de cada entidad (FR-011).
 export const localeEnum = pgEnum("locale", ["es", "en"]);
 
+// Lista fija de plataformas de redes sociales (010-panel-ajustes-generales,
+// Clarificación 2026-09-13, FR-012): no se acepta un nombre libre.
+export const socialPlatformEnum = pgEnum("social_platform", [
+  "instagram",
+  "facebook",
+  "tiktok",
+  "whatsapp",
+  "x",
+  "youtube",
+  "linkedin",
+]);
+
 // admin_user — FR-057, FR-062
 export const adminUser = pgTable("admin_user", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -178,73 +190,25 @@ export const modelView = pgTable(
   (t) => [primaryKey({ columns: [t.modelId, t.view] })],
 );
 
-// component — FR-007
-export const component = pgTable("component", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  modelId: uuid("model_id")
-    .notNull()
-    .references(() => capModel.id, { onDelete: "cascade" }),
-  material: text("material").notNull(),
-  customizable: boolean("customizable").notNull().default(true),
-  layerOrder: integer("layer_order").notNull().default(0),
-  defaultColorId: uuid("default_color_id").references(() => color.id),
-});
-
-// component_translation — nombre del componente por idioma (FR-011)
-export const componentTranslation = pgTable(
-  "component_translation",
-  {
-    componentId: uuid("component_id")
-      .notNull()
-      .references(() => component.id, { onDelete: "cascade" }),
-    locale: localeEnum("locale").notNull(),
-    name: text("name").notNull(),
-  },
-  (t) => [primaryKey({ columns: [t.componentId, t.locale] })],
-);
-
-// component_color — FR-019, FR-020. La vista es parte de la clave: un color
-// se habilita vista por vista para un componente, no las tres a la vez.
-export const componentColor = pgTable(
-  "component_color",
-  {
-    componentId: uuid("component_id")
-      .notNull()
-      .references(() => component.id, { onDelete: "cascade" }),
-    colorId: uuid("color_id")
-      .notNull()
-      .references(() => color.id, { onDelete: "restrict" }),
-    view: viewEnum("view").notNull(),
-  },
-  (t) => [primaryKey({ columns: [t.componentId, t.colorId, t.view] })],
-);
-
-// component_image — FR-009, FR-011
-export const componentImage = pgTable(
-  "component_image",
+// color_image — foto de la gorra completa en un color, por vista (reemplaza
+// al viejo esquema por "partes"/componentes: el negocio no personaliza por
+// pieza, solo por color de la gorra entera).
+export const colorImage = pgTable(
+  "color_image",
   {
     id: uuid("id").primaryKey().defaultRandom(),
     modelId: uuid("model_id")
       .notNull()
       .references(() => capModel.id, { onDelete: "cascade" }),
-    componentId: uuid("component_id")
-      .notNull()
-      .references(() => component.id, { onDelete: "cascade" }),
     colorId: uuid("color_id")
       .notNull()
-      .references(() => color.id, { onDelete: "restrict" }),
+      .references(() => color.id, { onDelete: "cascade" }),
     view: viewEnum("view").notNull(),
     imageUrl: text("image_url").notNull(),
     width: integer("width").notNull(),
     height: integer("height").notNull(),
   },
-  (t) => [
-    uniqueIndex("component_image_unique").on(
-      t.componentId,
-      t.colorId,
-      t.view,
-    ),
-  ],
+  (t) => [uniqueIndex("color_image_unique").on(t.colorId, t.view)],
 );
 
 // decoration_zone — FR-034, FR-035
@@ -395,6 +359,42 @@ export const requestStatusHistory = pgTable("request_status_history", {
   adminUserId: uuid("admin_user_id")
     .notNull()
     .references(() => adminUser.id),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
+// site_settings — 010-panel-ajustes-generales, FR-002 a FR-011. Fila única:
+// el código siempre lee/escribe por SITE_SETTINGS_ID, nunca inserta una
+// segunda fila (research.md #1). La migración siembra esa fila.
+export const SITE_SETTINGS_ID = "00000000-0000-0000-0000-000000000001";
+
+export const siteSettings = pgTable("site_settings", {
+  id: uuid("id").primaryKey(),
+  siteNameEs: text("site_name_es").notNull(),
+  siteNameEn: text("site_name_en").notNull(),
+  contactEmail: text("contact_email"),
+  contactPhone: text("contact_phone"),
+  logoUrl: text("logo_url"),
+  bannerUrl: text("banner_url"),
+  seoTitleEs: text("seo_title_es"),
+  seoTitleEn: text("seo_title_en"),
+  seoDescriptionEs: text("seo_description_es"),
+  seoDescriptionEn: text("seo_description_en"),
+  seoImageUrl: text("seo_image_url"),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
+// site_social_link — 010-panel-ajustes-generales, FR-012 a FR-014. Sin
+// relación explícita a site_settings: al haber una sola fila de
+// configuración, cualquier fila de esta tabla le pertenece implícitamente
+// (data-model.md).
+export const siteSocialLink = pgTable("site_social_link", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  platform: socialPlatformEnum("platform").notNull(),
+  url: text("url").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),

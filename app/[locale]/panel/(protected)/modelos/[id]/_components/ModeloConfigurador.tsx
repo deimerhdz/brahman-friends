@@ -7,7 +7,11 @@ import type { ValorTraducido } from "@/app/[locale]/panel/_components/CampoTradu
 import { EncabezadoModelo, type EncabezadoValue } from "./EncabezadoModelo";
 import { PasoVistas } from "./PasoVistas";
 import { PasoColores } from "./PasoColores";
-import { PasoPersonalizacion, type Position, type ZonaValue } from "./PasoPersonalizacion";
+import {
+  PasoPersonalizacion,
+  type Position,
+  type ZonaValue,
+} from "./PasoPersonalizacion";
 import { ZonaOverlay, type BoxPx } from "./ZonaOverlay";
 import { ZonaWarpPreview } from "./ZonaWarpPreview";
 
@@ -17,23 +21,6 @@ interface ColorRow {
   id: string;
   nameEs: string;
   nameEn: string;
-}
-
-interface ComponentRow {
-  id: string;
-  nameEs: string;
-  nameEn: string;
-  material: string;
-  customizable: boolean;
-  layerOrder: number;
-  defaultColorId: string | null;
-}
-
-interface Cargada {
-  componentId: string;
-  colorId: string;
-  view: View;
-  imageUrl: string;
 }
 
 interface ViewRow {
@@ -74,10 +61,8 @@ export function ModeloConfigurador({
   viewRows,
   colors,
   defaultColorId,
-  components,
   activeViews,
-  enabledByComponent,
-  cargadas,
+  colorImages,
   zonesByPosition,
   defaultZoneChars,
   techniques,
@@ -100,10 +85,8 @@ export function ModeloConfigurador({
   viewRows: Record<View, ViewRow>;
   colors: ColorRow[];
   defaultColorId: string | null;
-  components: ComponentRow[];
   activeViews: View[];
-  enabledByComponent: Record<string, { colorId: string; views: View[] }[]>;
-  cargadas: Cargada[];
+  colorImages: Record<string, Partial<Record<View, string>>>;
   zonesByPosition: Partial<Record<Position, ZonaValue>>;
   defaultZoneChars: number;
   techniques: { id: string; nameEs: string; nameEn: string }[];
@@ -118,8 +101,11 @@ export function ModeloConfigurador({
   const [sidePosition, setSidePosition] = useState<"left" | "right">("left");
   const [zones, setZones] = useState(zonesByPosition);
   const [savingZone, setSavingZone] = useState(false);
-  const [previewColor, setPreviewColor] = useState<"#ffffff" | "#111827">("#111827");
-  const [enabledTechniques, setEnabledTechniques] = useState(enabledTechniqueIds);
+  const [previewColor, setPreviewColor] = useState<"#ffffff" | "#111827">(
+    "#111827",
+  );
+  const [enabledTechniques, setEnabledTechniques] =
+    useState(enabledTechniqueIds);
 
   const [header, setHeader] = useState<EncabezadoValue>({
     name: { es: nameEs, en: nameEn } as ValorTraducido,
@@ -129,7 +115,12 @@ export function ModeloConfigurador({
   const [savingHeader, setSavingHeader] = useState(false);
   const [toast, setToast] = useState(false);
 
-  const position: Position = activeView === "side" ? sidePosition : activeView === "front" ? "front" : "back";
+  const position: Position =
+    activeView === "side"
+      ? sidePosition
+      : activeView === "front"
+        ? "front"
+        : "back";
   const zoneValue = zones[position] ?? defaultZona(position, defaultZoneChars);
   const effectiveImageWidth = imageWidth ?? 1000;
   const effectiveImageHeight = imageHeight ?? 1000;
@@ -147,17 +138,29 @@ export function ModeloConfigurador({
       // su centro fijo, para dar retroalimentación visual inmediata.
       if (patch.maxWidthCm !== undefined && current.maxWidthCm > 0) {
         const scale = patch.maxWidthCm / current.maxWidthCm;
-        const boxW = Math.min(effectiveImageWidth, Math.max(20, Math.round(current.boxW * scale)));
+        const boxW = Math.min(
+          effectiveImageWidth,
+          Math.max(20, Math.round(current.boxW * scale)),
+        );
         const centerX = current.boxX + current.boxW / 2;
         next.boxW = boxW;
-        next.boxX = Math.min(Math.max(0, Math.round(centerX - boxW / 2)), effectiveImageWidth - boxW);
+        next.boxX = Math.min(
+          Math.max(0, Math.round(centerX - boxW / 2)),
+          effectiveImageWidth - boxW,
+        );
       }
       if (patch.maxHeightCm !== undefined && current.maxHeightCm > 0) {
         const scale = patch.maxHeightCm / current.maxHeightCm;
-        const boxH = Math.min(effectiveImageHeight, Math.max(20, Math.round(current.boxH * scale)));
+        const boxH = Math.min(
+          effectiveImageHeight,
+          Math.max(20, Math.round(current.boxH * scale)),
+        );
         const centerY = current.boxY + current.boxH / 2;
         next.boxH = boxH;
-        next.boxY = Math.min(Math.max(0, Math.round(centerY - boxH / 2)), effectiveImageHeight - boxH);
+        next.boxY = Math.min(
+          Math.max(0, Math.round(centerY - boxH / 2)),
+          effectiveImageHeight - boxH,
+        );
       }
 
       return { ...z, [position]: next };
@@ -230,35 +233,45 @@ export function ModeloConfigurador({
       {/* Canvas / preview — se queda fijo (sticky) mientras el wizard de la derecha
           scrollea, así no depende de un cálculo de alto de viewport ni se estira
           para igualar la altura del wizard cuando este tiene mucho contenido. */}
-      <section className="relative flex h-[360px] flex-col overflow-hidden rounded-t-xl border-b border-outline-variant/60 bg-surface-container-low sm:h-[440px] lg:sticky lg:top-4 lg:h-[min(calc(100vh-2rem),640px)] lg:w-[60%] lg:rounded-l-xl lg:rounded-tr-none lg:border-b-0 lg:border-r">
-        <div className="flex h-12 shrink-0 items-center justify-end gap-3 border-b border-outline-variant/40 bg-surface-container-lowest/60 px-4">
-          <div className="flex items-center gap-1.5 rounded-lg border border-outline-variant/60 bg-surface-container-lowest px-2 py-1 shadow-xs">
-            <span className="text-[10px] text-on-surface-variant">{labels.previewColorLabel}</span>
-            <button
-              type="button"
-              onClick={() => setPreviewColor("#111827")}
-              title={labels.previewColorBlack}
-              aria-label={labels.previewColorBlack}
-              aria-pressed={previewColor === "#111827"}
-              className={`h-4 w-4 rounded-full border border-outline-variant/60 bg-[#111827] transition-shadow ${
-                previewColor === "#111827" ? "ring-2 ring-primary ring-offset-1 ring-offset-surface-container-lowest" : ""
-              }`}
-            />
-            <button
-              type="button"
-              onClick={() => setPreviewColor("#ffffff")}
-              title={labels.previewColorWhite}
-              aria-label={labels.previewColorWhite}
-              aria-pressed={previewColor === "#ffffff"}
-              className={`h-4 w-4 rounded-full border border-outline-variant/60 bg-white transition-shadow ${
-                previewColor === "#ffffff" ? "ring-2 ring-primary ring-offset-1 ring-offset-surface-container-lowest" : ""
-              }`}
-            />
+      <section className="relative flex h-[360px] flex-col overflow-hidden rounded-t-xl border-b border-outline-variant/60 bg-surface-container-low sm:h-[440px] lg:sticky lg:top-4 lg:h-[min(calc(100vh-2rem),640px)] lg:w-[40%] lg:rounded-l-xl lg:rounded-tr-none lg:border-b-0 lg:border-r">
+        {type === "configurable" && (
+          <div className="flex h-12 shrink-0 items-center justify-end gap-3 border-b border-outline-variant/40 bg-surface-container-lowest/60 px-4">
+            <div className="flex items-center gap-1.5 rounded-lg border border-outline-variant/60 bg-surface-container-lowest px-2 py-1 shadow-xs">
+              <span className="text-[10px] text-on-surface-variant">
+                {labels.previewColorLabel}
+              </span>
+              <button
+                type="button"
+                onClick={() => setPreviewColor("#111827")}
+                title={labels.previewColorBlack}
+                aria-label={labels.previewColorBlack}
+                aria-pressed={previewColor === "#111827"}
+                className={`h-4 w-4 rounded-full border border-outline-variant/60 bg-[#111827] transition-shadow ${
+                  previewColor === "#111827"
+                    ? "ring-2 ring-primary ring-offset-1 ring-offset-surface-container-lowest"
+                    : ""
+                }`}
+              />
+              <button
+                type="button"
+                onClick={() => setPreviewColor("#ffffff")}
+                title={labels.previewColorWhite}
+                aria-label={labels.previewColorWhite}
+                aria-pressed={previewColor === "#ffffff"}
+                className={`h-4 w-4 rounded-full border border-outline-variant/60 bg-white transition-shadow ${
+                  previewColor === "#ffffff"
+                    ? "ring-2 ring-primary ring-offset-1 ring-offset-surface-container-lowest"
+                    : ""
+                }`}
+              />
+            </div>
+            <div className="flex items-center gap-1 rounded-lg border border-outline-variant/60 bg-surface-container-lowest px-2.5 py-1 text-xs text-on-surface-variant shadow-xs">
+              <span className="material-symbols-outlined text-base text-primary">
+                drag_pan
+              </span>
+            </div>
           </div>
-          <div className="flex items-center gap-1 rounded-lg border border-outline-variant/60 bg-surface-container-lowest px-2.5 py-1 text-xs text-on-surface-variant shadow-xs">
-            <span className="material-symbols-outlined text-base text-primary">drag_pan</span>
-          </div>
-        </div>
+        )}
 
         <div className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden p-6 [background-image:radial-gradient(var(--color-outline-variant)_1px,transparent_1px)] [background-size:20px_20px] sm:p-8">
           <div className="relative flex aspect-square h-full max-h-full max-w-full items-center justify-center">
@@ -271,29 +284,51 @@ export function ModeloConfigurador({
               />
             ) : (
               <div className="flex h-full w-full flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-outline-variant text-on-surface-variant">
-                <span className="material-symbols-outlined text-3xl">image</span>
-                <span className="font-label-caps text-label-caps">{labels.noImage}</span>
+                <span className="material-symbols-outlined text-3xl">
+                  image
+                </span>
+                <span className="font-label-caps text-label-caps">
+                  {labels.noImage}
+                </span>
               </div>
             )}
 
-            <ZonaWarpPreview
-              box={{ x: zoneValue.boxX, y: zoneValue.boxY, w: zoneValue.boxW, h: zoneValue.boxH }}
-              imageWidth={effectiveImageWidth}
-              imageHeight={effectiveImageHeight}
-              params={{ arc: zoneValue.arc, tilt: zoneValue.tilt, taper: zoneValue.taper }}
-              placeholderText={labels.previewLogo}
-              color={previewColor}
-            />
+            {type === "configurable" && (
+              <>
+                <ZonaWarpPreview
+                  box={{
+                    x: zoneValue.boxX,
+                    y: zoneValue.boxY,
+                    w: zoneValue.boxW,
+                    h: zoneValue.boxH,
+                  }}
+                  imageWidth={effectiveImageWidth}
+                  imageHeight={effectiveImageHeight}
+                  params={{
+                    arc: zoneValue.arc,
+                    tilt: zoneValue.tilt,
+                    taper: zoneValue.taper,
+                  }}
+                  placeholderText={labels.previewLogo}
+                  color={previewColor}
+                />
 
-            <ZonaOverlay
-              box={{ x: zoneValue.boxX, y: zoneValue.boxY, w: zoneValue.boxW, h: zoneValue.boxH }}
-              imageWidth={effectiveImageWidth}
-              imageHeight={effectiveImageHeight}
-              editable={step === 3}
-              label={zoneLabel}
-              onChange={updateBox}
-              onCommit={() => commitZone()}
-            />
+                <ZonaOverlay
+                  box={{
+                    x: zoneValue.boxX,
+                    y: zoneValue.boxY,
+                    w: zoneValue.boxW,
+                    h: zoneValue.boxH,
+                  }}
+                  imageWidth={effectiveImageWidth}
+                  imageHeight={effectiveImageHeight}
+                  editable={step === 3}
+                  label={zoneLabel}
+                  onChange={updateBox}
+                  onCommit={() => commitZone()}
+                />
+              </>
+            )}
           </div>
         </div>
 
@@ -302,8 +337,16 @@ export function ModeloConfigurador({
             {(
               [
                 { view: "front", icon: "view_in_ar", label: labels.view_front },
-                { view: "side", icon: "rotate_90_degrees_ccw", label: labels.view_side },
-                { view: "back", icon: "flip_camera_android", label: labels.view_back },
+                {
+                  view: "side",
+                  icon: "rotate_90_degrees_ccw",
+                  label: labels.view_side,
+                },
+                {
+                  view: "back",
+                  icon: "flip_camera_android",
+                  label: labels.view_back,
+                },
               ] as const
             ).map((p) => (
               <button
@@ -316,7 +359,9 @@ export function ModeloConfigurador({
                     : "flex items-center gap-2 rounded-full px-5 py-2 text-xs font-semibold text-on-surface-variant transition-all hover:bg-surface-container-low hover:text-on-surface"
                 }
               >
-                <span className="material-symbols-outlined text-sm">{p.icon}</span>
+                <span className="material-symbols-outlined text-sm">
+                  {p.icon}
+                </span>
                 {p.label}
               </button>
             ))}
@@ -328,7 +373,7 @@ export function ModeloConfigurador({
           mismo alto máximo, así ninguno se estira de más: el contenido del
           paso activo scrollea adentro y la pantalla en sí no necesita
           scroll. En mobile fluye normal (sin sticky ni recorte de alto). */}
-      <aside className="flex flex-col overflow-hidden rounded-b-xl lg:sticky lg:top-4 lg:max-h-[calc(100vh-2rem)] lg:w-[40%] lg:rounded-bl-none lg:rounded-r-xl">
+      <aside className="flex flex-col overflow-hidden rounded-b-xl lg:sticky lg:top-4  lg:w-[60%] lg:rounded-bl-none lg:rounded-r-xl">
         <div className="shrink-0 border-b border-outline-variant/60 p-5">
           <EncabezadoModelo
             locale={locale}
@@ -343,7 +388,9 @@ export function ModeloConfigurador({
 
           <div
             className="mt-4 grid gap-1 rounded-xl bg-surface-container-low p-1"
-            style={{ gridTemplateColumns: `repeat(${stepTabs.length}, minmax(0, 1fr))` }}
+            style={{
+              gridTemplateColumns: `repeat(${stepTabs.length}, minmax(0, 1fr))`,
+            }}
           >
             {stepTabs.map((tab) => (
               <button
@@ -383,10 +430,8 @@ export function ModeloConfigurador({
               modelId={modelId}
               colors={colors}
               defaultColorId={defaultColorId}
-              components={components}
               activeViews={activeViews}
-              enabledByComponent={enabledByComponent}
-              cargadas={cargadas}
+              colorImages={colorImages}
               labels={labels}
             />
           )}
@@ -410,19 +455,25 @@ export function ModeloConfigurador({
 
         <div className="shrink-0 space-y-2.5 border-t border-outline-variant/60 p-4">
           <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={openPreview}
-              className="flex w-1/2 items-center justify-center gap-1.5 rounded-lg border border-outline-variant px-3 py-2.5 text-xs font-semibold text-on-surface transition-colors hover:bg-surface-container-low"
-            >
-              <span className="material-symbols-outlined text-base">visibility</span>
-              {labels.preview}
-            </button>
+            {type === "configurable" && (
+              <button
+                type="button"
+                onClick={openPreview}
+                className="flex w-1/2 items-center justify-center gap-1.5 rounded-lg border border-outline-variant px-3 py-2.5 text-xs font-semibold text-on-surface transition-colors hover:bg-surface-container-low"
+              >
+                <span className="material-symbols-outlined text-base">
+                  visibility
+                </span>
+                {labels.preview}
+              </button>
+            )}
             <button
               type="button"
               onClick={saveHeader}
               disabled={savingHeader}
-              className="flex w-1/2 items-center justify-center gap-1.5 rounded-lg bg-on-surface px-3 py-2.5 text-xs font-semibold text-on-primary shadow-md transition-colors duration-200 hover:bg-primary disabled:opacity-50"
+              className={`flex items-center justify-center gap-1.5 rounded-lg bg-on-surface px-3 py-2.5 text-xs font-semibold text-on-primary shadow-md transition-colors duration-200 hover:bg-primary disabled:opacity-50 ${
+                type === "configurable" ? "w-1/2" : "w-full"
+              }`}
             >
               <span className="material-symbols-outlined text-base">check</span>
               {labels.saveChanges}
@@ -439,7 +490,9 @@ export function ModeloConfigurador({
           toast ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       >
-        <span className="material-symbols-outlined text-base text-[#7CE0A0]">check_circle</span>
+        <span className="material-symbols-outlined text-base text-[#7CE0A0]">
+          check_circle
+        </span>
         {labels.changesSaved}
       </div>
     </div>

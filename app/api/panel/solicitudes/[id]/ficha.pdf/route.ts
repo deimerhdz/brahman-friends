@@ -58,10 +58,7 @@ export async function GET(
       }
 
       y -= 10;
-      draw("Componentes", { useBold: true, size: 13 });
-      for (const comp of snapshot.components) {
-        draw(`${comp.nameEs}: ${comp.color ? comp.color.nameEs : "—"}`);
-      }
+      draw(`Color: ${snapshot.color ? snapshot.color.nameEs : "—"}`);
 
       if (snapshot.decorations.length > 0) {
         y -= 10;

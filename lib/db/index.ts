@@ -1,5 +1,5 @@
 import { drizzle, type NeonHttpDatabase } from "drizzle-orm/neon-http";
-import { neon } from "@neondatabase/serverless";
+import { neon, neonConfig } from "@neondatabase/serverless";
 import { env } from "@/lib/config/env";
 import * as schema from "./schema";
 
@@ -11,6 +11,22 @@ import * as schema from "./schema";
  * necesitan atomicidad usan `db.batch(...)` en su lugar (ver
  * app/api/solicitudes/route.ts y app/api/panel/solicitudes/[id]/estado/route.ts).
  */
+
+// El cómputo de Neon se suspende tras un rato sin uso (scale-to-zero): la
+// primera consulta después de esa inactividad puede fallar con un
+// "fetch failed" a nivel de red mientras el cómputo despierta, y la
+// siguiente ya funciona sola (visto en el panel: la primera vez que se crea
+// algo tira error, la segunda se guarda). Un solo reintento absorbe ese
+// cold start sin ocultar errores reales (los que sí llegan a responder,
+// aunque sea con un error HTTP, no se reintentan).
+neonConfig.fetchFunction = async (input: RequestInfo | URL, init?: RequestInit) => {
+  try {
+    return await fetch(input, init);
+  } catch {
+    return await fetch(input, init);
+  }
+};
+
 let instance: NeonHttpDatabase<typeof schema> | undefined;
 
 function getDb(): NeonHttpDatabase<typeof schema> {

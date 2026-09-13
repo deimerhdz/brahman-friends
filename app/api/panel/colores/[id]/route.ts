@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { eq, and } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { color, colorTranslation } from "@/lib/db/schema";
+import { color, colorTranslation, colorImage } from "@/lib/db/schema";
 import { getSession } from "@/lib/auth/session";
-import { errors, apiError, handleApiError } from "@/lib/http/errors";
+import { errors, handleApiError } from "@/lib/http/errors";
 import { validarNombreTraducido } from "@/lib/catalogo/traduccion";
+import { deletePublicFile } from "@/lib/media/storage";
 
 export async function PATCH(
   request: NextRequest,
@@ -60,9 +61,10 @@ export async function PATCH(
   }
 }
 
-// Un color habilitado en algún componente no se puede borrar (RN8): la base
-// de datos lo impide con claves foráneas; aquí se traduce ese fallo a un
-// error claro. Hay que quitarlo de todas las vistas/componentes primero.
+// Borra un color; sus fotos por vista se borran en cascada en la base de
+// datos (color_image.colorId → color.id ON DELETE CASCADE), pero los
+// archivos en R2 hay que borrarlos aparte. El admin confirma antes de
+// borrar porque no hay vuelta atrás.
 export async function DELETE(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -72,6 +74,12 @@ export async function DELETE(
 
   try {
     const { id } = await params;
+
+    const images = await db
+      .select({ imageUrl: colorImage.imageUrl })
+      .from(colorImage)
+      .where(eq(colorImage.colorId, id));
+
     const [deleted] = await db
       .delete(color)
       .where(eq(color.id, id))
@@ -81,12 +89,12 @@ export async function DELETE(
       return NextResponse.json({ error: "no_encontrado" }, { status: 404 });
     }
 
+    await Promise.all(
+      images.map((img) => deletePublicFile(img.imageUrl).catch(() => {})),
+    );
+
     return new NextResponse(null, { status: 204 });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "";
-    if (message.includes("foreign key") || message.includes("violates")) {
-      return apiError(409, "color_en_uso");
-    }
     return handleApiError(error);
   }
 }

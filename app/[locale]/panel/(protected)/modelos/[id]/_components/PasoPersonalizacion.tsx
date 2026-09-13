@@ -61,10 +61,10 @@ export function PasoPersonalizacion({
       <div className="flex items-center justify-between">
         <div>
           <h2 className="font-headline-md text-[13px] font-bold uppercase tracking-wider text-on-surface">
-            {labels.step3}
+            {labels.stepPersonalization}
           </h2>
           <p className="mt-0.5 font-body-md text-[11px] text-on-surface-variant">
-            {labels.step3Hint}
+            {labels.stepPersonalizationHint}
           </p>
         </div>
         <span className="material-symbols-outlined text-lg text-on-surface-variant">tune</span>

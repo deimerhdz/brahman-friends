@@ -75,7 +75,7 @@ export function SolicitudApp({
     setSubmitting(true);
     setSubmitError(null);
     try {
-      const viewImages = await subirVistas(manifest, draft.colors, draft.decorations);
+      const viewImages = await subirVistas(manifest, draft.colorId, draft.decorations);
       const response = await fetch("/api/solicitudes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -83,7 +83,7 @@ export function SolicitudApp({
           submissionId: draft.submissionId,
           design: {
             modelId: manifest.model.id,
-            colors: draft.colors,
+            colorId: draft.colorId,
             technique: draft.technique,
             decorations: draft.decorations,
           },
@@ -134,7 +134,7 @@ export function SolicitudApp({
         <Resumen
           locale={locale}
           manifest={manifest}
-          colors={draft.colors}
+          colorId={draft.colorId}
           decorations={draft.decorations}
           technique={draft.technique}
           quantity={quantity}

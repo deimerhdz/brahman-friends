@@ -35,6 +35,7 @@ export function PasoLogo({
   onSelectTechnique,
   onAddDecoration,
   onUpdateDecoration,
+  onRemoveDecoration,
   labels,
 }: {
   locale: Locale;
@@ -47,6 +48,7 @@ export function PasoLogo({
   onSelectTechnique: (techniqueId: string) => void;
   onAddDecoration: (decoration: Decoration) => boolean;
   onUpdateDecoration: (index: number, patch: Partial<Decoration>) => void;
+  onRemoveDecoration: (index: number) => void;
   labels: Record<string, string>;
 }) {
   const availablePositions = POSITION_ORDER.filter((pos) =>
@@ -99,6 +101,7 @@ export function PasoLogo({
         maxZones={maxZones}
         onAdd={onAddDecoration}
         onUpdate={onUpdateDecoration}
+        onRemove={onRemoveDecoration}
         labels={labels}
       />
 

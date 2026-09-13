@@ -79,19 +79,13 @@ describe("lib/design/rules — límites de decoración (RN11, RN12, RN13)", () =
   });
 
   describe("puedeAvanzarPaso — gating del stepper (006-configurador-stepper FR-018)", () => {
-    it("paso 1 exige un color por cada componente personalizable", () => {
-      const draftIncompleto = { colors: { corona: "azul" } };
-      const draftCompleto = { colors: { corona: "azul", visera: "negro" } };
-      expect(puedeAvanzarPaso(1, draftIncompleto, ["corona", "visera"])).toBe(false);
-      expect(puedeAvanzarPaso(1, draftCompleto, ["corona", "visera"])).toBe(true);
-    });
-
-    it("paso 1 no exige nada si no hay componentes personalizables", () => {
-      expect(puedeAvanzarPaso(1, { colors: {} }, [])).toBe(true);
+    it("paso 1 exige haber elegido un color", () => {
+      expect(puedeAvanzarPaso(1, { colorId: null })).toBe(false);
+      expect(puedeAvanzarPaso(1, { colorId: "azul" })).toBe(true);
     });
 
     it("paso 2 nunca bloquea, la decoración es opcional", () => {
-      expect(puedeAvanzarPaso(2, { colors: {} }, ["corona"])).toBe(true);
+      expect(puedeAvanzarPaso(2, { colorId: null })).toBe(true);
     });
   });
 

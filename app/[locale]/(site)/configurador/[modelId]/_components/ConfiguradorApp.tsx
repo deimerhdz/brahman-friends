@@ -26,14 +26,9 @@ import { PasoResumen } from "./PasoResumen";
 
 const TOTAL_STEPS = 3;
 
-function defaultColorsOf(manifest: ModelManifest): Record<string, string> {
-  const colors: Record<string, string> = {};
-  for (const comp of manifest.components) {
-    if (!comp.customizable) continue;
-    const def = comp.colors.find((c) => c.id === comp.defaultColorId) ?? comp.colors[0];
-    if (def) colors[comp.id] = def.id;
-  }
-  return colors;
+function defaultColorOf(manifest: ModelManifest): string | null {
+  const def = manifest.colors.find((c) => c.id === manifest.defaultColorId) ?? manifest.colors[0];
+  return def?.id ?? null;
 }
 
 export function ConfiguradorApp({
@@ -50,39 +45,22 @@ export function ConfiguradorApp({
   const router = useRouter();
   const [draft, setDraft] = useState<Draft>(() => {
     const existing = loadDraft(manifest.model.id);
-    return existing ?? createEmptyDraft(manifest.model.id, defaultColorsOf(manifest));
+    return existing ?? createEmptyDraft(manifest.model.id, defaultColorOf(manifest));
   });
   const [view, setView] = useState<DisplayView>("front");
-  const [unavailable, setUnavailable] = useState<string[]>([]);
+  const [unavailable, setUnavailable] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [maxStepReached, setMaxStepReached] = useState(1);
   const [quantity, setQuantity] = useState(() => moqEfectivo(manifest.moq));
   const [modelUnavailable, setModelUnavailable] = useState(false);
 
-  const customizableComponentIds = useMemo(
-    () => manifest.components.filter((c) => c.customizable).map((c) => c.id),
-    [manifest],
-  );
-
-  // Al abrir, valida que los colores del borrador sigan disponibles (FR-033
-  // de 001-configurador-gorras).
+  // Al abrir, valida que el color del borrador siga disponible (FR-033 de
+  // 001-configurador-gorras).
   useEffect(() => {
-    const defaults = defaultColorsOf(manifest);
-    const fixed: string[] = [];
-    const nextColors = { ...draft.colors };
-    for (const comp of manifest.components) {
-      if (!comp.customizable) continue;
-      const colorId = nextColors[comp.id];
-      const color = comp.colors.find((c) => c.id === colorId);
-      if (!colorId || !color) {
-        nextColors[comp.id] = defaults[comp.id];
-        fixed.push(locale === "es" ? comp.nameEs : comp.nameEn);
-      }
-    }
-
-    if (fixed.length > 0) {
-      setUnavailable(fixed);
-      setDraft((d) => ({ ...d, colors: nextColors }));
+    const color = manifest.colors.find((c) => c.id === draft.colorId);
+    if (!draft.colorId || !color) {
+      setUnavailable(true);
+      setDraft((d) => ({ ...d, colorId: defaultColorOf(manifest) }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [manifest.model.id]);
@@ -111,11 +89,9 @@ export function ConfiguradorApp({
 
   const priorityUrls = useMemo(() => {
     const urls: string[] = [];
-    for (const comp of manifest.components) {
-      for (const c of comp.colors) {
-        const url = c.images.front;
-        if (url) urls.push(url);
-      }
+    for (const c of manifest.colors) {
+      const url = c.images.front;
+      if (url) urls.push(url);
     }
     return urls;
   }, [manifest]);
@@ -127,12 +103,12 @@ export function ConfiguradorApp({
       ? manifest.model.imageWidth / manifest.model.imageHeight
       : 1;
 
-  function selectColor(componentId: string, colorId: string) {
-    setDraft((d) => ({ ...d, colors: { ...d.colors, [componentId]: colorId } }));
+  function selectColor(colorId: string) {
+    setDraft((d) => ({ ...d, colorId }));
   }
 
   function reset() {
-    setDraft(createEmptyDraft(manifest.model.id, defaultColorsOf(manifest)));
+    setDraft(createEmptyDraft(manifest.model.id, defaultColorOf(manifest)));
   }
 
   function addDecoration(decoration: Decoration): boolean {
@@ -162,7 +138,7 @@ export function ConfiguradorApp({
     }));
   }
 
-  const canAdvance = puedeAvanzarPaso(currentStep, draft, customizableComponentIds);
+  const canAdvance = puedeAvanzarPaso(currentStep, draft);
 
   function goToStep(step: number) {
     if (step < 1 || step > maxStepReached) return;
@@ -185,12 +161,12 @@ export function ConfiguradorApp({
     <div className="flex flex-col gap-4 pb-4 lg:flex-row lg:items-start lg:gap-8 lg:px-8 lg:py-6">
       <div className="flex flex-1 flex-col gap-4">
         <AvisoDisponibilidad
-          componentNames={unavailable}
+          show={unavailable}
           labels={{ title: labels.unavailableTitle }}
         />
 
         <div className="relative w-full overflow-hidden rounded lg:bg-inverse-surface" style={{ aspectRatio }}>
-          <CapasGorra manifest={manifest} colors={draft.colors} view={view} />
+          <CapasGorra manifest={manifest} colorId={draft.colorId} view={view} />
           <Decoracion
             manifest={manifest}
             view={view}
@@ -242,7 +218,7 @@ export function ConfiguradorApp({
             <PasoColores
               locale={locale}
               manifest={manifest}
-              colors={draft.colors}
+              colorId={draft.colorId}
               onSelect={selectColor}
               labels={{ approximate: labels.approximateColor }}
             />
@@ -261,6 +237,7 @@ export function ConfiguradorApp({
               }
               onAddDecoration={addDecoration}
               onUpdateDecoration={updateDecoration}
+              onRemoveDecoration={removeDecoration}
               labels={labels}
             />
           )}

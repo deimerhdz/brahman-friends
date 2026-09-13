@@ -10,7 +10,7 @@ import type { Decoration } from "@/lib/design/borrador";
 export function Resumen({
   locale,
   manifest,
-  colors,
+  colorId,
   decorations,
   technique,
   quantity,
@@ -18,13 +18,14 @@ export function Resumen({
 }: {
   locale: Locale;
   manifest: ModelManifest;
-  colors: Record<string, string>;
+  colorId: string | null;
   decorations: Decoration[];
   technique: string | null;
   quantity: number;
   labels: Record<string, string>;
 }) {
   const techniqueLabel = manifest.techniques.find((t) => t.id === technique);
+  const color = manifest.colors.find((c) => c.id === colorId);
 
   return (
     <div className="flex flex-col gap-3 rounded border border-gray-200 p-4 text-sm">
@@ -32,22 +33,10 @@ export function Resumen({
         {locale === "es" ? manifest.model.nameEs : manifest.model.nameEn}
       </p>
 
-      <div>
-        <p className="text-gray-500">{labels.colors}</p>
-        <ul className="list-inside list-disc">
-          {manifest.components
-            .filter((c) => c.customizable)
-            .map((c) => {
-              const color = c.colors.find((col) => col.id === colors[c.id]);
-              return (
-                <li key={c.id}>
-                  {locale === "es" ? c.nameEs : c.nameEn}:{" "}
-                  {color ? (locale === "es" ? color.nameEs : color.nameEn) : "—"}
-                </li>
-              );
-            })}
-        </ul>
-      </div>
+      <p>
+        <span className="text-gray-500">{labels.colorLabel}: </span>
+        {color ? (locale === "es" ? color.nameEs : color.nameEn) : "—"}
+      </p>
 
       {decorations.length > 0 && (
         <div>

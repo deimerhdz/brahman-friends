@@ -96,18 +96,14 @@ export default async function SolicitudDetallePage({
                 {locale === "es" ? snapshot.technique.nameEs : snapshot.technique.nameEn}
               </p>
             )}
-            <ul className="list-inside list-disc">
-              {snapshot.components.map((c) => (
-                <li key={c.id}>
-                  {locale === "es" ? c.nameEs : c.nameEn}:{" "}
-                  {c.color
-                    ? locale === "es"
-                      ? c.color.nameEs
-                      : c.color.nameEn
-                    : "—"}
-                </li>
-              ))}
-            </ul>
+            <p>
+              {t("solicitud.color")}:{" "}
+              {snapshot.color
+                ? locale === "es"
+                  ? snapshot.color.nameEs
+                  : snapshot.color.nameEn
+                : "—"}
+            </p>
             {snapshot.decorations.length > 0 && (
               <ul className="list-inside list-disc">
                 {snapshot.decorations.map((d, i) => (

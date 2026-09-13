@@ -21,11 +21,9 @@ export function usePrecarga(
     for (const url of Object.values(manifest.baseImages)) {
       if (url) all.add(url);
     }
-    for (const comp of manifest.components) {
-      for (const color of comp.colors) {
-        for (const url of Object.values(color.images)) {
-          if (url) all.add(url);
-        }
+    for (const color of manifest.colors) {
+      for (const url of Object.values(color.images)) {
+        if (url) all.add(url);
       }
     }
 
@@ -61,11 +59,7 @@ export function usePrecarga(
 
   const total =
     Object.values(manifest.baseImages).filter(Boolean).length +
-    manifest.components.reduce(
-      (sum, c) =>
-        sum + c.colors.reduce((s, col) => s + Object.keys(col.images).length, 0),
-      0,
-    );
+    manifest.colors.reduce((sum, c) => sum + Object.keys(c.images).length, 0);
 
   return { readyUrls, loaded: readyUrls.size, total };
 }

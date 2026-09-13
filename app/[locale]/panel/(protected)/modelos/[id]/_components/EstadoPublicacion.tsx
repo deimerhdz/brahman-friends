@@ -96,17 +96,12 @@ export function EstadoPublicacion({
               {(result as PublicacionResultado).missingBaseViews.join(", ")}
             </p>
           )}
-          {(result as PublicacionResultado).componentsWithoutColors.length > 0 && (
-            <p>
-              {labels.componentsWithoutColors}:{" "}
-              {(result as PublicacionResultado).componentsWithoutColors.join(", ")}
-            </p>
-          )}
+          {(result as PublicacionResultado).noColors && <p>{labels.noColors}</p>}
           {(result as PublicacionResultado).missing.length > 0 && (
             <ul className="mt-1 list-inside list-disc">
               {(result as PublicacionResultado).missing.map((m, i) => (
                 <li key={i}>
-                  {m.component} · {m.color} · {m.view}
+                  {m.color} · {m.view}
                 </li>
               ))}
             </ul>

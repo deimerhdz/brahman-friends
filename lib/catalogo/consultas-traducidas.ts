@@ -6,8 +6,6 @@ import {
   capModelTranslation,
   color,
   colorTranslation,
-  component,
-  componentTranslation,
   technique,
   techniqueTranslation,
   modelView,
@@ -108,32 +106,6 @@ export function colorConNombre() {
     .innerJoin(
       colorEn,
       and(eq(colorEn.colorId, color.id), eq(colorEn.locale, "en")),
-    );
-}
-
-const componentEs = alias(componentTranslation, "component_translation_es");
-const componentEn = alias(componentTranslation, "component_translation_en");
-
-export function componentConNombre() {
-  return db
-    .select({
-      id: component.id,
-      modelId: component.modelId,
-      material: component.material,
-      customizable: component.customizable,
-      layerOrder: component.layerOrder,
-      defaultColorId: component.defaultColorId,
-      nameEs: componentEs.name,
-      nameEn: componentEn.name,
-    })
-    .from(component)
-    .innerJoin(
-      componentEs,
-      and(eq(componentEs.componentId, component.id), eq(componentEs.locale, "es")),
-    )
-    .innerJoin(
-      componentEn,
-      and(eq(componentEn.componentId, component.id), eq(componentEn.locale, "en")),
     );
 }
 

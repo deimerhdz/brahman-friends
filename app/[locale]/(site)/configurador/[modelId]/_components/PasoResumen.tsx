@@ -27,16 +27,8 @@ export function PasoResumen({
   onQuantityChange: (quantity: number) => void;
   labels: Record<string, string>;
 }) {
-  const componentSummaries = manifest.components
-    .filter((c) => c.customizable)
-    .map((comp) => {
-      const color = comp.colors.find((c) => c.id === draft.colors[comp.id]);
-      return {
-        id: comp.id,
-        componentName: locale === "es" ? comp.nameEs : comp.nameEn,
-        colorName: color ? (locale === "es" ? color.nameEs : color.nameEn) : "—",
-      };
-    });
+  const color = manifest.colors.find((c) => c.id === draft.colorId);
+  const colorName = color ? (locale === "es" ? color.nameEs : color.nameEn) : "—";
 
   return (
     <div className="flex flex-col gap-6">
@@ -45,11 +37,9 @@ export function PasoResumen({
           {labels.title}
         </h3>
         <ul className="space-y-2 text-sm text-on-surface-variant">
-          {componentSummaries.map((c) => (
-            <li key={c.id}>
-              <strong>{c.componentName}:</strong> {c.colorName}
-            </li>
-          ))}
+          <li>
+            <strong>{labels.colorLabel}:</strong> {colorName}
+          </li>
           <li>
             <strong>{labels.decoration}:</strong>{" "}
             {draft.decorations.length === 0

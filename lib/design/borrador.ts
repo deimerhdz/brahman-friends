@@ -6,7 +6,9 @@
  */
 
 export const STORAGE_KEY = "bf.design.v1";
-export const DESIGN_VERSION = 1;
+// v2: `colors` (un color por componente) pasó a ser `colorId` (un solo
+// color para toda la gorra) al eliminar el modelo por "partes".
+export const DESIGN_VERSION = 2;
 
 export interface DecorationLogo {
   zone: "front" | "left" | "right" | "back";
@@ -40,10 +42,10 @@ export interface DecorationText {
 export type Decoration = DecorationLogo | DecorationText;
 
 export interface Draft {
-  version: 1;
+  version: 2;
   modelId: string;
   submissionId: string;
-  colors: Record<string, string>;
+  colorId: string | null;
   technique: string | null;
   decorations: Decoration[];
   updatedAt: string;
@@ -57,13 +59,13 @@ function generateId(): string {
 
 export function createEmptyDraft(
   modelId: string,
-  defaultColors: Record<string, string>,
+  defaultColorId: string | null,
 ): Draft {
   return {
     version: DESIGN_VERSION,
     modelId,
     submissionId: generateId(),
-    colors: { ...defaultColors },
+    colorId: defaultColorId,
     technique: null,
     decorations: [],
     updatedAt: new Date().toISOString(),
