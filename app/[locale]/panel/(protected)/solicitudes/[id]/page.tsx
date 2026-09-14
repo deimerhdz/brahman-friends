@@ -124,7 +124,7 @@ export default async function SolicitudDetallePage({
             {t("panel.solicitudes.contact")}
           </h2>
           <p>{req.contactName}</p>
-          <p>{req.contactEmail}</p>
+          {req.contactEmail && <p>{req.contactEmail}</p>}
           <p>{req.contactPhone}</p>
           {req.comments && <p>{req.comments}</p>}
           {logos.length > 0 && (

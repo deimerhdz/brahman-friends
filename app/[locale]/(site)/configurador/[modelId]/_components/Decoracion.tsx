@@ -4,7 +4,13 @@ import { useEffect, useRef } from "react";
 import type { ModelManifest } from "@/lib/catalogo/model-manifest";
 import type { Decoration } from "@/lib/design/borrador";
 import { drawWarped } from "@/lib/design/warp";
-import { loadImage, renderTextSource, VIEW_FOR_ZONE } from "@/lib/design/compose";
+import {
+  loadImage,
+  renderTextSource,
+  isEmbroideryTechnique,
+  VIEW_FOR_ZONE,
+} from "@/lib/design/compose";
+import { renderEmbroideredText, renderEmbroideredLogo } from "@/lib/design/embroidery";
 import type { DisplayView } from "./CapasGorra";
 import { useArrastrarElemento } from "./ArrastrarElemento";
 import { useRedimensionarPellizco, useRedimensionarBorde } from "./RedimensionarElemento";
@@ -27,17 +33,20 @@ export function Decoracion({
   manifest,
   view,
   decorations,
+  technique,
   onChange,
   labels,
 }: {
   manifest: ModelManifest;
   view: DisplayView;
   decorations: Decoration[];
+  technique: string | null;
   onChange: (index: number, patch: Partial<Decoration>) => void;
   labels: Record<string, string>;
 }) {
   const imageWidth = manifest.model.imageWidth ?? 1;
   const imageHeight = manifest.model.imageHeight ?? 1;
+  const embroidery = isEmbroideryTechnique(manifest, technique);
 
   return (
     <>
@@ -54,6 +63,7 @@ export function Decoracion({
             imageWidth={imageWidth}
             imageHeight={imageHeight}
             logoUrl={decoration.kind === "logo" ? decoration.url : undefined}
+            embroidery={embroidery}
             onChange={(patch) => onChange(index, patch)}
             labels={labels}
           />
@@ -69,6 +79,7 @@ function ElementoDecorativo({
   imageWidth,
   imageHeight,
   logoUrl,
+  embroidery,
   onChange,
   labels,
 }: {
@@ -77,6 +88,7 @@ function ElementoDecorativo({
   imageWidth: number;
   imageHeight: number;
   logoUrl: string | undefined;
+  embroidery: boolean;
   onChange: (patch: Partial<Decoration>) => void;
   labels: Record<string, string>;
 }) {
@@ -126,9 +138,14 @@ function ElementoDecorativo({
         if (!logoUrl) return;
         const img = await loadImage(logoUrl);
         if (cancelled) return;
-        drawWarped(ctx, img, box, warpParams);
+        const source = embroidery
+          ? renderEmbroideredLogo(img, img.naturalWidth, img.naturalHeight)
+          : img;
+        drawWarped(ctx, source, box, warpParams);
       } else {
-        const source = renderTextSource(decoration.content, decoration.font, decoration.color);
+        const source = embroidery
+          ? renderEmbroideredText(decoration.content, decoration.font, decoration.color)
+          : renderTextSource(decoration.content, decoration.font, decoration.color);
         drawWarped(ctx, source, box, warpParams);
       }
     }
@@ -137,7 +154,7 @@ function ElementoDecorativo({
     return () => {
       cancelled = true;
     };
-  }, [decoration, zone, logoUrl, destW, destH]);
+  }, [decoration, zone, logoUrl, embroidery, destW, destH]);
 
   return (
     <div

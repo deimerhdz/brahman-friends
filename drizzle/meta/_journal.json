@@ -127,6 +127,13 @@
       "when": 1789319019918,
       "tag": "0017_soft_rumiko_fujikawa",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1789321431046,
+      "tag": "0018_bizarre_victor_mancha",
+      "breakpoints": true
     }
   ]
 }

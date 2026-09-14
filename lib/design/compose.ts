@@ -2,6 +2,18 @@ import type { ModelManifest } from "@/lib/catalogo/model-manifest";
 import type { Decoration } from "@/lib/design/borrador";
 import { drawWarped, type WarpParams } from "@/lib/design/warp";
 import { fontCss } from "@/lib/design/fonts";
+import { renderEmbroideredText, renderEmbroideredLogo } from "@/lib/design/embroidery";
+
+/** La técnica es global al diseño (`Draft.technique`), no por decoración. */
+export function isEmbroideryTechnique(
+  manifest: ModelManifest,
+  techniqueId: string | null,
+): boolean {
+  return (
+    manifest.techniques.find((t) => t.id === techniqueId)?.renderStyle ===
+    "embroidery"
+  );
+}
 
 export type ComposableView = "front" | "left" | "right" | "back";
 
@@ -21,14 +33,17 @@ export const VIEW_FOR_ZONE: Record<Decoration["zone"], ComposableView> = {
  * Composición a imagen en el navegador (FR-053, decisión 9): el navegador
  * del cliente toma exactamente lo que hay en pantalla —capas de la gorra más
  * elementos decorativos ya deformados— y lo convierte en un PNG por vista.
- * Requiere que las imágenes se sirvan con permiso de origen cruzado
- * (`crossOrigin="anonymous"`), o el canvas queda "manchado" y no exporta.
+ * `loadImage` reenvía cada URL por `/api/imagenes-proxy` (mismo origen que
+ * el sitio) en vez de pedirla directo a R2: el bucket es público pero no
+ * manda cabeceras CORS, así que un `crossOrigin="anonymous"` directo a R2
+ * nunca carga y el canvas queda "manchado" (no se puede exportar).
  */
 export async function composeView(
   manifest: ModelManifest,
   colorId: string | null,
   decorations: Decoration[],
   view: ComposableView,
+  techniqueId: string | null,
 ): Promise<Blob> {
   const width = manifest.model.imageWidth ?? 1000;
   const height = manifest.model.imageHeight ?? 1000;
@@ -51,6 +66,7 @@ export async function composeView(
     ctx.drawImage(img, 0, 0, width, height);
   }
 
+  const embroidery = isEmbroideryTechnique(manifest, techniqueId);
   const visibleDecorations = decorations.filter(
     (d) => VIEW_FOR_ZONE[d.zone] === view,
   );
@@ -62,9 +78,14 @@ export async function composeView(
 
     if (decoration.kind === "logo") {
       const img = await loadImage(decoration.url);
-      drawWarped(ctx, img, box, warpParams);
+      const source = embroidery
+        ? renderEmbroideredLogo(img, img.naturalWidth, img.naturalHeight)
+        : img;
+      drawWarped(ctx, source, box, warpParams);
     } else {
-      const source = renderTextSource(decoration.content, decoration.font, decoration.color);
+      const source = embroidery
+        ? renderEmbroideredText(decoration.content, decoration.font, decoration.color)
+        : renderTextSource(decoration.content, decoration.font, decoration.color);
       drawWarped(ctx, source, box, warpParams);
     }
   }
@@ -80,10 +101,9 @@ export async function composeView(
 export function loadImage(src: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const img = new Image();
-    img.crossOrigin = "anonymous";
     img.onload = () => resolve(img);
     img.onerror = () => reject(new Error(`No se pudo cargar la imagen: ${src}`));
-    img.src = src;
+    img.src = `/api/imagenes-proxy?url=${encodeURIComponent(src)}`;
   });
 }
 

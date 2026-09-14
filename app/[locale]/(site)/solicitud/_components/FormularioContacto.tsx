@@ -3,7 +3,6 @@ import type { Locale } from "@/lib/i18n/t";
 
 export interface ContactValue {
   name: string;
-  email: string;
   phone: string;
   comments: string;
   privacyAccepted: boolean;
@@ -33,16 +32,6 @@ export function FormularioContacto({
           required
           value={value.name}
           onChange={(e) => onChange({ name: e.target.value })}
-          className="rounded border border-gray-300 px-3 py-2"
-        />
-      </label>
-      <label className="flex flex-col gap-1">
-        <span>{labels.email}</span>
-        <input
-          type="email"
-          required
-          value={value.email}
-          onChange={(e) => onChange({ email: e.target.value })}
           className="rounded border border-gray-300 px-3 py-2"
         />
       </label>

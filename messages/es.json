@@ -41,7 +41,7 @@
     "modelo_no_disponible": "Este modelo ya no está disponible.",
     "color_no_disponible": "Alguno de los colores elegidos ya no está disponible.",
     "cantidad_invalida": "La cantidad debe ser un número entero mayor o igual a 1.",
-    "datos_contacto_invalidos": "Revisá el correo y la aceptación del tratamiento de datos.",
+    "datos_contacto_invalidos": "Revisá el nombre y la aceptación del tratamiento de datos.",
     "decoracion_invalida": "Alguno de los elementos decorativos no es válido.",
     "publicacion_incompleta": "Faltan imágenes para publicar este modelo.",
     "transicion_no_permitida": "Ese cambio de estado no está permitido.",
@@ -339,6 +339,12 @@
       "anonymize": "Anonimizar",
       "anonymizeConfirm": "Esta acción borra el nombre, correo y teléfono, y el logotipo. No se puede deshacer. ¿Confirmás?",
       "anonymized": "Esta solicitud fue anonimizada. Se conservan el código, el diseño y la ficha técnica."
+    },
+    "tecnicas": {
+      "renderStyle": "Estilo de render",
+      "renderStyleHint": "Cómo se ve el texto o logo con esta técnica en el configurador y en la solicitud congelada.",
+      "flat": "Plano",
+      "embroidery": "Bordado"
     },
     "ajustes": {
       "title": "Ajustes",

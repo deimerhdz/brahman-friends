@@ -36,7 +36,6 @@ export function ProductoApp({
   const [modalOpen, setModalOpen] = useState(false);
   const [contact, setContact] = useState<ContactValue>({
     name: "",
-    email: "",
     phone: "",
     comments: "",
     privacyAccepted: false,
@@ -55,7 +54,7 @@ export function ProductoApp({
           submissionId: crypto.randomUUID(),
           design: { kind: "fixed_product", modelId },
           quantity,
-          contact: { name: contact.name, email: contact.email, phone: contact.phone },
+          contact: { name: contact.name, phone: contact.phone },
           comments: contact.comments || undefined,
           privacyAccepted: contact.privacyAccepted,
           viewImages: [],
@@ -78,8 +77,7 @@ export function ProductoApp({
   }
 
   const quantityOk = Number.isInteger(quantity) && quantity >= 1;
-  const contactOk =
-    contact.name && contact.email && contact.phone && contact.privacyAccepted;
+  const contactOk = contact.name && contact.phone && contact.privacyAccepted;
 
   return (
     <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 px-4 py-8 md:grid-cols-2">

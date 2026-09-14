@@ -77,18 +77,30 @@ export async function POST(
       .limit(1);
 
     if (existing) {
-      if (
-        baseImageUrl &&
-        existing.baseImageUrl &&
-        existing.baseImageUrl !== baseImageUrl
-      ) {
-        await deletePublicFile(existing.baseImageUrl).catch(() => {});
-      }
       const [updated] = await db
         .update(modelView)
         .set({ baseImageUrl: baseImageUrl ?? existing.baseImageUrl, active: true })
         .where(and(eq(modelView.modelId, modelId), eq(modelView.view, view)))
         .returning();
+      if (
+        baseImageUrl &&
+        existing.baseImageUrl &&
+        existing.baseImageUrl !== baseImageUrl
+      ) {
+        // Actualiza primero y borra después (en vez de al revés) para poder
+        // chequear si el archivo viejo sigue en uso por OTRA fila: dos
+        // modelos, o "left"/"right" de un backfill (ver
+        // scripts/migrar-vista-lateral-izq-der.ts), pueden compartir el mismo
+        // archivo mientras se sube la foto real de cada uno.
+        const [stillUsed] = await db
+          .select({ modelId: modelView.modelId })
+          .from(modelView)
+          .where(eq(modelView.baseImageUrl, existing.baseImageUrl))
+          .limit(1);
+        if (!stillUsed) {
+          await deletePublicFile(existing.baseImageUrl).catch(() => {});
+        }
+      }
       return NextResponse.json(updated);
     }
 

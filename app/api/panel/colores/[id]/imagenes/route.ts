@@ -6,6 +6,22 @@ import { getSession } from "@/lib/auth/session";
 import { errors, handleApiError } from "@/lib/http/errors";
 import { deletePublicFile } from "@/lib/media/storage";
 
+// Borra el archivo en R2 solo si ninguna otra fila de `color_image` todavía
+// lo referencia. Necesario porque scripts de backfill (p. ej.
+// scripts/migrar-vista-lateral-izq-der.ts) pueden dejar dos filas apuntando
+// al mismo archivo mientras se sube la foto real de cada una: sin este
+// chequeo, reemplazar una borra el archivo que la otra todavía necesita.
+async function deleteIfUnused(imageUrl: string): Promise<void> {
+  const [stillUsed] = await db
+    .select({ id: colorImage.id })
+    .from(colorImage)
+    .where(eq(colorImage.imageUrl, imageUrl))
+    .limit(1);
+  if (!stillUsed) {
+    await deletePublicFile(imageUrl).catch(() => {});
+  }
+}
+
 // Sube (o reemplaza) la foto de un color para una vista puntual (FR-009,
 // FR-010): la gorra entera en ese color, no una pieza suelta.
 export async function POST(
@@ -69,7 +85,7 @@ export async function POST(
       .returning();
 
     if (previous && previous.imageUrl !== url) {
-      await deletePublicFile(previous.imageUrl).catch(() => {});
+      await deleteIfUnused(previous.imageUrl);
     }
 
     return NextResponse.json(inserted, { status: 201 });
@@ -108,7 +124,7 @@ export async function DELETE(
       return NextResponse.json({ error: "no_encontrado" }, { status: 404 });
     }
 
-    await deletePublicFile(deleted.imageUrl).catch(() => {});
+    await deleteIfUnused(deleted.imageUrl);
 
     return new NextResponse(null, { status: 204 });
   } catch (error) {

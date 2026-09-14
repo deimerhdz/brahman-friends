@@ -73,6 +73,32 @@ export default async function ConfiguradorPage({
         quantity: t("solicitud.quantity"),
         colorLabel: t("solicitud.color"),
         modelUnavailable: t("errors.modelo_no_disponible"),
+        // Modal de "Solicitar cotización" (reusa Resumen/FormularioContacto/
+        // BotonEnviar de /solicitud — ver SolicitudModal.tsx). Los campos
+        // `request*` evitan pisar `decoration`/`logo`, que el paso 3 del
+        // configurador ya usa con otro texto para lo mismo.
+        close: t("producto.close"),
+        requestDecorations: t("solicitud.decorations"),
+        requestLogo: t("solicitud.logo"),
+        requestText: t("solicitud.text"),
+        requestTechnique: t("solicitud.technique"),
+        noPriceWarning: t("solicitud.noPriceWarning"),
+        name: t("solicitud.name"),
+        phone: t("solicitud.phone"),
+        comments: t("solicitud.comments"),
+        optional: t("common.optional"),
+        privacyPrefix: t("solicitud.privacyPrefix"),
+        privacyLink: t("solicitud.privacyLink"),
+        submitRequest: t("solicitud.submit"),
+        submittingRequest: t("solicitud.submitting"),
+        retry: t("common.retry"),
+        genericError: t("errors.generic"),
+        networkError: t("solicitud.networkError"),
+        modelo_no_disponible: t("errors.modelo_no_disponible"),
+        color_no_disponible: t("errors.color_no_disponible"),
+        cantidad_invalida: t("errors.cantidad_invalida"),
+        datos_contacto_invalidos: t("errors.datos_contacto_invalidos"),
+        decoracion_invalida: t("errors.decoracion_invalida"),
       }}
     />
   );

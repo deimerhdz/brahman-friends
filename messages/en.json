@@ -41,7 +41,7 @@
     "modelo_no_disponible": "This model is no longer available.",
     "color_no_disponible": "One of the chosen colors is no longer available.",
     "cantidad_invalida": "Quantity must be an integer greater than or equal to 1.",
-    "datos_contacto_invalidos": "Check the email address and the data-processing acceptance.",
+    "datos_contacto_invalidos": "Check the name and the data-processing acceptance.",
     "decoracion_invalida": "One of the decoration elements isn't valid.",
     "publicacion_incompleta": "Images are missing to publish this model.",
     "transicion_no_permitida": "That status change isn't allowed.",
@@ -339,6 +339,12 @@
       "anonymize": "Anonymize",
       "anonymizeConfirm": "This deletes the name, email, phone, and the logo. It can't be undone. Confirm?",
       "anonymized": "This request was anonymized. The code, design, and technical sheet are kept."
+    },
+    "tecnicas": {
+      "renderStyle": "Render style",
+      "renderStyleHint": "How text or a logo looks with this technique in the configurator and in the frozen request.",
+      "flat": "Flat",
+      "embroidery": "Embroidery"
     },
     "ajustes": {
       "title": "Settings",

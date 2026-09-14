@@ -22,8 +22,6 @@ import type { Decoration } from "@/lib/design/borrador";
 import { sendRequestNotifications } from "@/lib/email/enviar";
 import { env } from "@/lib/config/env";
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
 interface Body {
   submissionId: string;
   design: {
@@ -34,7 +32,7 @@ interface Body {
     decorations: Decoration[];
   };
   quantity: number;
-  contact: { name: string; email: string; phone: string };
+  contact: { name: string; phone: string };
   comments?: string;
   privacyAccepted: boolean;
   viewImages: { view: string; url: string }[];
@@ -65,13 +63,8 @@ export async function POST(request: NextRequest) {
     if (!Number.isInteger(body.quantity) || body.quantity < 1) {
       return errors.cantidadInvalida();
     }
-    // Correo válido y aceptación del tratamiento de datos.
-    if (
-      !body.contact?.email ||
-      !EMAIL_RE.test(body.contact.email) ||
-      !body.contact?.name ||
-      body.privacyAccepted !== true
-    ) {
+    // Nombre y aceptación del tratamiento de datos.
+    if (!body.contact?.name || body.privacyAccepted !== true) {
       return errors.datosContactoInvalidos();
     }
 
@@ -209,7 +202,7 @@ async function writeRequestAndRespond(input: {
   snapshot: DesignSnapshot;
   quantity: number;
   comments?: string;
-  contact: { name: string; email: string; phone: string };
+  contact: { name: string; phone: string };
   viewImages?: { view: string; url: string }[];
   logoIds?: string[];
 }) {
@@ -241,7 +234,7 @@ async function writeRequestAndRespond(input: {
             quantity: input.quantity,
             comments: input.comments ?? null,
             contactName: input.contact.name,
-            contactEmail: input.contact.email,
+            contactEmail: null,
             contactPhone: input.contact.phone ?? null,
             privacyAcceptedAt: new Date(),
             notificationStatus: "pending",

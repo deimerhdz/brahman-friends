@@ -6,7 +6,7 @@ import Link from "next/link";
 import type { Locale } from "@/lib/i18n/t";
 import type { ModelManifest } from "@/lib/catalogo/model-manifest";
 import { loadDraft, clearDraft } from "@/lib/design/borrador";
-import { subirVistas } from "../_lib/subir-vistas";
+import { enviarSolicitud } from "@/lib/solicitud/enviar";
 import { Resumen } from "./Resumen";
 import { FormularioContacto, type ContactValue } from "./FormularioContacto";
 import { BotonEnviar } from "./BotonEnviar";
@@ -31,7 +31,6 @@ export function SolicitudApp({
   });
   const [contact, setContact] = useState<ContactValue>({
     name: "",
-    email: "",
     phone: "",
     comments: "",
     privacyAccepted: false,
@@ -75,36 +74,25 @@ export function SolicitudApp({
     setSubmitting(true);
     setSubmitError(null);
     try {
-      const viewImages = await subirVistas(manifest, draft.colorId, draft.decorations);
-      const response = await fetch("/api/solicitudes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          submissionId: draft.submissionId,
-          design: {
-            modelId: manifest.model.id,
-            colorId: draft.colorId,
-            technique: draft.technique,
-            decorations: draft.decorations,
-          },
-          quantity,
-          contact: { name: contact.name, email: contact.email, phone: contact.phone },
-          comments: contact.comments || undefined,
-          privacyAccepted: contact.privacyAccepted,
-          viewImages,
-          locale,
-        }),
+      const result = await enviarSolicitud({
+        manifest,
+        submissionId: draft.submissionId,
+        colorId: draft.colorId,
+        technique: draft.technique,
+        decorations: draft.decorations,
+        quantity,
+        contact,
+        locale,
       });
-
-      const body = await response.json();
-      if (!response.ok) {
-        setSubmitError(labels[body.error] ?? labels.genericError);
+      if (!result.ok) {
+        setSubmitError(labels[result.errorCode] ?? labels.genericError);
         return;
       }
 
       clearDraft();
-      router.push(`/${locale}/solicitud/${body.code}?pending=${body.notificationPending}`);
-    } catch {
+      router.push(`/${locale}/solicitud/${result.code}?pending=${result.notificationPending}`);
+    } catch (error) {
+      console.error("enviarSolicitud falló:", error);
       setSubmitError(labels.networkError);
     } finally {
       setSubmitting(false);
@@ -112,8 +100,7 @@ export function SolicitudApp({
   }
 
   const quantityOk = Number.isInteger(quantity) && quantity >= 1;
-  const contactOk =
-    contact.name && contact.email && contact.phone && contact.privacyAccepted;
+  const contactOk = contact.name && contact.phone && contact.privacyAccepted;
 
   return (
     <div className="mx-auto flex max-w-lg flex-col gap-6 px-4 py-8">

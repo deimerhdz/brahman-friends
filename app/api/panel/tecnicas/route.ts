@@ -17,8 +17,12 @@ export async function POST(request: NextRequest) {
     if (!name) {
       return NextResponse.json({ error: "datos_invalidos" }, { status: 400 });
     }
+    const renderStyle = body.renderStyle === "embroidery" ? "embroidery" : "flat";
 
-    const [created] = await db.insert(technique).values({}).returning();
+    const [created] = await db
+      .insert(technique)
+      .values({ renderStyle })
+      .returning();
 
     await db.insert(techniqueTranslation).values([
       { techniqueId: created.id, locale: "es", name: name.es },

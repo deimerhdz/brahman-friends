@@ -256,10 +256,24 @@ export const decorationZone = pgTable(
   ],
 );
 
+// Cómo se dibuja una decoración con esta técnica (010-lateral-real): "flat"
+// es el relleno plano de siempre (estampado/vinil/sublimado...); "embroidery"
+// agrega relieve + contorno de puntada + textura de hilo (lib/design/embroidery.ts)
+// para simular bordado. Las técnicas las crea el admin con nombre libre — no
+// hay forma de inferir el estilo por nombre, así que queda como un campo
+// explícito que se marca al crear/editar la técnica.
+export const techniqueRenderStyleEnum = pgEnum("technique_render_style", [
+  "flat",
+  "embroidery",
+]);
+
 // technique / model_technique — FR-036, FR-047
 export const technique = pgTable("technique", {
   id: uuid("id").primaryKey().defaultRandom(),
   active: boolean("active").notNull().default(true),
+  renderStyle: techniqueRenderStyleEnum("render_style")
+    .notNull()
+    .default("flat"),
 });
 
 // technique_translation — nombre de la técnica por idioma (FR-011)

@@ -24,6 +24,10 @@ export default async function TecnicasPage({
           switchEn: t("panel.switchIdioma.en"),
           add: t("common.save"),
           error: t("errors.generic"),
+          renderStyle: t("panel.tecnicas.renderStyle"),
+          renderStyleHint: t("panel.tecnicas.renderStyleHint"),
+          flat: t("panel.tecnicas.flat"),
+          embroidery: t("panel.tecnicas.embroidery"),
         }}
       />
     </div>

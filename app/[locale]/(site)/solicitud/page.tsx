@@ -28,7 +28,6 @@ export default async function SolicitudPage({
           zone_right: t("panel.modelos.zone.right"),
           zone_back: t("panel.modelos.zone.back"),
           name: t("solicitud.name"),
-          email: t("auth.email"),
           phone: t("solicitud.phone"),
           comments: t("solicitud.comments"),
           optional: t("common.optional"),

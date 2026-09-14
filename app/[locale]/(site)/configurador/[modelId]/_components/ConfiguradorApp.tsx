@@ -8,10 +8,12 @@ import {
   createEmptyDraft,
   loadDraft,
   saveDraft,
+  clearDraft,
   type Decoration,
   type Draft,
 } from "@/lib/design/borrador";
 import { canPlaceDecoration, puedeAvanzarPaso, moqEfectivo } from "@/lib/design/rules";
+import { enviarSolicitud } from "@/lib/solicitud/enviar";
 import { CapasGorra, type DisplayView } from "./CapasGorra";
 import { Decoracion } from "./Decoracion";
 import { Vistas } from "./Vistas";
@@ -23,6 +25,8 @@ import { Stepper } from "./Stepper";
 import { PasoColores } from "./PasoColores";
 import { PasoLogo } from "./PasoLogo";
 import { PasoResumen } from "./PasoResumen";
+import { SolicitudModal } from "./SolicitudModal";
+import type { ContactValue } from "../../../solicitud/_components/FormularioContacto";
 
 const TOTAL_STEPS = 3;
 
@@ -53,6 +57,15 @@ export function ConfiguradorApp({
   const [maxStepReached, setMaxStepReached] = useState(1);
   const [quantity, setQuantity] = useState(() => moqEfectivo(manifest.moq));
   const [modelUnavailable, setModelUnavailable] = useState(false);
+  const [showSolicitud, setShowSolicitud] = useState(false);
+  const [contact, setContact] = useState<ContactValue>({
+    name: "",
+    phone: "",
+    comments: "",
+    privacyAccepted: false,
+  });
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   // Al abrir, valida que el color del borrador siga disponible (FR-033 de
   // 001-configurador-gorras).
@@ -154,8 +167,39 @@ export function ConfiguradorApp({
       return;
     }
     if (modelUnavailable) return;
-    router.push(`/${locale}/solicitud?qty=${quantity}`);
+    setSubmitError(null);
+    setShowSolicitud(true);
   }
+
+  async function submitSolicitud() {
+    setSubmitting(true);
+    setSubmitError(null);
+    try {
+      const result = await enviarSolicitud({
+        manifest,
+        submissionId: draft.submissionId,
+        colorId: draft.colorId,
+        technique: draft.technique,
+        decorations: draft.decorations,
+        quantity,
+        contact,
+        locale,
+      });
+      if (!result.ok) {
+        setSubmitError(labels[result.errorCode] ?? labels.genericError);
+        return;
+      }
+      clearDraft();
+      router.push(`/${locale}/solicitud/${result.code}?pending=${result.notificationPending}`);
+    } catch (error) {
+      console.error("enviarSolicitud falló:", error);
+      setSubmitError(labels.networkError);
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  const contactOk = Boolean(contact.name && contact.phone && contact.privacyAccepted);
 
   return (
     <div className="flex flex-col gap-4 pb-4 lg:flex-row lg:items-start lg:gap-8 lg:px-8 lg:py-6">
@@ -177,6 +221,7 @@ export function ConfiguradorApp({
               manifest={manifest}
               view={view}
               decorations={draft.decorations}
+              technique={draft.technique}
               onChange={updateDecoration}
               labels={{ resize: labels.resize }}
             />
@@ -275,6 +320,25 @@ export function ConfiguradorApp({
           />
         </BarraControles>
       </div>
+
+      {showSolicitud && (
+        <SolicitudModal
+          locale={locale}
+          manifest={manifest}
+          colorId={draft.colorId}
+          decorations={draft.decorations}
+          technique={draft.technique}
+          quantity={quantity}
+          contact={contact}
+          onChangeContact={(p) => setContact((c) => ({ ...c, ...p }))}
+          onClose={() => setShowSolicitud(false)}
+          onSubmit={submitSolicitud}
+          submitting={submitting}
+          submitError={submitError}
+          disabled={!contactOk}
+          labels={labels}
+        />
+      )}
     </div>
   );
 }

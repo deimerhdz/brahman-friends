@@ -49,7 +49,6 @@ export default async function ProductoPage({
         buyNow: t("producto.buyNow"),
         close: t("producto.close"),
         name: t("solicitud.name"),
-        email: t("auth.email"),
         phone: t("solicitud.phone"),
         comments: t("solicitud.comments"),
         optional: t("common.optional"),

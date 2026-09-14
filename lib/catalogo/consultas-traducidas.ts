@@ -117,6 +117,7 @@ export function techniqueConNombre() {
     .select({
       id: technique.id,
       active: technique.active,
+      renderStyle: technique.renderStyle,
       nameEs: techniqueEs.name,
       nameEn: techniqueEn.name,
     })
