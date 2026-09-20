@@ -34,3 +34,8 @@ npm-debug.log*
 .yarn/*
 !.yarn/releases
 !.yarn/patches
+
+# OpenNext / Cloudflare
+.open-next/
+.wrangler/
+.dev.vars
