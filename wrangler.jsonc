@@ -5,6 +5,10 @@
   "name": "brahman-friends",
   "compatibility_date": "2026-08-01",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  // Evita que cada deploy borre las variables de entorno creadas en el dashboard.
+  "keep_vars": true,
+  // Habilita la pestaña "Logs" del Worker para ver el error real detrás del digest.
+  "observability": { "enabled": true },
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
