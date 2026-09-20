@@ -3,6 +3,11 @@ import { isLocale, type Locale } from "@/lib/i18n/t";
 import { NavBar } from "@/app/_components/landing/NavBar";
 import { obtenerAjustesSitio } from "@/lib/ajustes/consultas";
 
+// Estos layouts leen los ajustes del sitio (nombre y logo) de la base de datos: sin esto Next
+// intenta prerenderizar las páginas hijas en el build, donde DATABASE_URL puede no existir, y
+// además congelaría el nombre/logo en el momento del despliegue.
+export const dynamic = "force-dynamic";
+
 export default async function SiteLayout({
   children,
   params,
