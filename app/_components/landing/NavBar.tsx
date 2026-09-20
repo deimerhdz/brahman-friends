@@ -19,14 +19,8 @@ export function NavBar({
     <nav className="fixed left-0 top-0 z-50 flex h-20 w-full items-center justify-center border-b border-outline-variant bg-surface/80 px-margin-mobile backdrop-blur-md md:px-margin-desktop">
       <div className="mx-auto flex w-full max-w-[1440px] items-center justify-between">
         <Link href={`/${locale}`} className="flex items-center">
-          {logoUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={logoUrl} alt={siteName} className="h-10 w-auto object-contain" />
-          ) : (
-            <span className="text-headline-md font-headline-md font-bold tracking-tighter text-on-surface">
-              {siteName}
-            </span>
-          )}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={logoUrl ?? "/logotipo.jpeg"} alt={siteName} className="h-10 w-auto object-contain" />
         </Link>
 
         <div className="hidden items-center gap-6 md:flex">

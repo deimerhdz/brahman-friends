@@ -3,6 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Brahman Friends",
+  icons: { icon: "/favicon.png" },
 };
 
 export default function RootLayout({

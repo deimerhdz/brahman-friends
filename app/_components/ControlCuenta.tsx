@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { getCustomerSession } from "@/lib/auth/customer-session";
 import { getT, type Locale } from "@/lib/i18n/t";
 import { CerrarSesionCliente } from "./CerrarSesionCliente";
@@ -18,14 +17,5 @@ export async function ControlCuenta({ locale }: { locale: Locale }) {
     );
   }
 
-  return (
-    <div className="flex items-center gap-3 text-sm">
-      <Link href={`/${locale}/cuenta/ingresar`} className="text-brand hover:underline">
-        {t("cuenta.loginLink")}
-      </Link>
-      <Link href={`/${locale}/cuenta/registro`} className="text-brand hover:underline">
-        {t("cuenta.registerLink")}
-      </Link>
-    </div>
-  );
+  return null;
 }
