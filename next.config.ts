@@ -7,7 +7,6 @@ const r2Hostname = process.env.R2_PUBLIC_BASE_URL
   : undefined;
 
 const nextConfig: NextConfig = {
-  output: "export",
   images: {
     remotePatterns: [
       // Vercel Blob: archivos subidos antes de la migración a R2 (FR-011), se conserva mientras
