@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { FaAlignCenter, FaAlignLeft, FaListUl } from "react-icons/fa6";
 
 const ACCENT_COLOR = "#b45309";
 const ACCENT_COLOR_RGB = "rgb(180, 83, 9)";
@@ -92,13 +93,13 @@ export function RichTextEditor({
         </ToolbarButton>
         <span className="mx-1 h-4 w-px bg-gray-200" />
         <ToolbarButton onClick={() => exec("justifyLeft")} title="Align left">
-          <span className="material-symbols-outlined text-base">format_align_left</span>
+          <FaAlignLeft className="text-base shrink-0" aria-hidden="true" />
         </ToolbarButton>
         <ToolbarButton onClick={() => exec("justifyCenter")} title="Align center">
-          <span className="material-symbols-outlined text-base">format_align_center</span>
+          <FaAlignCenter className="text-base shrink-0" aria-hidden="true" />
         </ToolbarButton>
         <ToolbarButton onClick={() => exec("insertUnorderedList")} title="Bulleted list">
-          <span className="material-symbols-outlined text-base">format_list_bulleted</span>
+          <FaListUl className="text-base shrink-0" aria-hidden="true" />
         </ToolbarButton>
       </div>
       <div

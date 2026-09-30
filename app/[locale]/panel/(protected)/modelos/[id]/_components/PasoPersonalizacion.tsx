@@ -1,6 +1,14 @@
 "use client";
 
 import type { Locale } from "@/lib/i18n/t";
+import {
+  FaLayerGroup,
+  FaPaintbrush,
+  FaPrint,
+  FaShirt,
+  FaSliders,
+  FaTag,
+} from "react-icons/fa6";
 
 export type Position = "front" | "left" | "right" | "back";
 
@@ -18,7 +26,7 @@ export interface ZonaValue {
   maxTextChars: number;
 }
 
-const TECHNIQUE_ICONS = ["print", "sell", "style", "brush", "texture"];
+const TECHNIQUE_ICONS = [FaPrint, FaTag, FaShirt, FaPaintbrush, FaLayerGroup];
 
 /**
  * Paso 3 del wizard: dimensiones y técnicas permitidas para la zona de
@@ -63,7 +71,7 @@ export function PasoPersonalizacion({
             {labels.stepPersonalizationHint}
           </p>
         </div>
-        <span className="material-symbols-outlined text-lg text-on-surface-variant">tune</span>
+        <FaSliders className="text-lg text-on-surface-variant shrink-0" aria-hidden="true" />
       </div>
 
       <span className="inline-flex w-fit items-center rounded-full bg-surface-container-low px-3 py-1 font-label-caps text-label-caps text-on-surface-variant">
@@ -99,6 +107,7 @@ export function PasoPersonalizacion({
         </span>
         {techniques.map((tech, i) => {
           const checked = enabledTechniqueIds.includes(tech.id);
+          const Icono = TECHNIQUE_ICONS[i % TECHNIQUE_ICONS.length];
           return (
             <label
               key={tech.id}
@@ -106,9 +115,7 @@ export function PasoPersonalizacion({
             >
               <div className="flex items-center gap-2.5">
                 <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                  <span className="material-symbols-outlined text-base">
-                    {TECHNIQUE_ICONS[i % TECHNIQUE_ICONS.length]}
-                  </span>
+                  <Icono className="text-base" aria-hidden="true" />
                 </div>
                 <p className="font-body-md text-xs font-semibold text-on-surface">
                   {locale === "es" ? tech.nameEs : tech.nameEn}

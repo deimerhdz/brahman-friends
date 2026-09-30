@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa6";
 import type { Locale } from "@/lib/i18n/t";
 import {
   CampoTraducible,
@@ -62,9 +63,11 @@ export function EncabezadoModelo({
             className="flex flex-1 items-center gap-2 text-left"
             aria-expanded={open}
           >
-            <span className="material-symbols-outlined shrink-0 text-on-surface-variant">
-              {open ? "expand_less" : "expand_more"}
-            </span>
+            {open ? (
+              <FaChevronUp className="shrink-0 text-2xl text-on-surface-variant" aria-hidden="true" />
+            ) : (
+              <FaChevronDown className="shrink-0 text-2xl text-on-surface-variant" aria-hidden="true" />
+            )}
             {open ? (
               <span className="font-label-caps text-label-caps uppercase text-on-surface-variant">
                 {labels.name}

@@ -80,52 +80,10 @@
     "empty": "No models published yet. Check back soon."
   },
   "landing": {
-    "hero": {
-      "title": "Architectural Precision.",
-      "subtitle": "Design and manufacture premium custom headwear with our bespoke 3D configurator. For discerning collectors and corporate clients.",
-      "ctaPrimary": "Start Designing",
-      "ctaSecondary": "View Collections",
-      "dragToRotate": "DRAG TO ROTATE"
-    },
     "collection": {
       "eyebrow": "SILHOUETTES",
-      "title": "The Collection",
-      "exploreAll": "Explore All",
       "viewDetails": "View details",
       "customize": "Customize"
-    },
-    "b2b": {
-      "eyebrow": "ENTERPRISE",
-      "title": "B2B Services & Bulk Orders",
-      "description": "Elevate your brand with uncompromising quality. Our dedicated B2B portal offers streamlined bulk ordering, custom labeling, and dedicated account management for professional volume requirements.",
-      "feature1Title": "Minimum Order Quantity: 50 units",
-      "feature1Body": "Scale your production efficiently without compromising on bespoke details.",
-      "feature2Title": "Wholesale Tier Pricing",
-      "feature2Body": "Transparent, algorithmic volume discounts applied instantly at checkout.",
-      "cta": "Inquire for Wholesale",
-      "embroideryLabel": "PRECISION EMBROIDERY",
-      "embroideryBody": "Industry-leading stitch density for flawless brand reproduction on every piece."
-    },
-    "process": {
-      "eyebrow": "METHODOLOGY",
-      "title": "The Process",
-      "description": "A streamlined, technically robust progression from concept to physical manifestation, utilizing our proprietary 3D rendering engine.",
-      "step1Title": "Select Base",
-      "step1Body": "Choose your silhouette, fabric weight, and base color from our premium catalog.",
-      "step2Title": "Configure 3D",
-      "step2Body": "Upload assets, define embroidery coordinates, and preview in real-time 3D space.",
-      "step3Title": "Precision Build",
-      "step3Body": "Order submitted to our facility for exacting manufacture and quality assurance.",
-      "cta": "Launch Configurator"
-    },
-    "footer": {
-      "support": "Support",
-      "trackOrder": "Track Order",
-      "b2bBulk": "B2B Bulk",
-      "sustainability": "Sustainability",
-      "terms": "Terms",
-      "tagline": "ARCHITECTURAL PRECISION IN EVERY STITCH",
-      "copyright": "© {{year}} {{siteName}}. {{tagline}}"
     }
   },
   "configurador": {
@@ -435,5 +393,156 @@
     "sortRecent": "Recent",
     "sortAlpha": "A-Z",
     "sortPriceDesc": "Price: high to low"
+  },
+  "inicio": {
+    "anuncio": {
+      "envios": "Shipping nationwide and to rural areas",
+      "bordado": "Long-lasting 3D embroidery"
+    },
+    "nav": {
+      "colecciones": "Collections",
+      "personaliza": "Customize with your brand",
+      "mayor": "Bulk orders",
+      "comunidad": "Community",
+      "youtube": "YouTube community",
+      "buscar": "Search products",
+      "whatsapp": "Ask on WhatsApp",
+      "abrirCarrito": "Open cart, {{count}} items",
+      "abrirMenu": "Open menu",
+      "cerrarMenu": "Close menu",
+      "irInicio": "{{siteName}}, go to home",
+      "principal": "Main navigation",
+      "movil": "Mobile navigation"
+    },
+    "hero": {
+      "eyebrow": "Made for those who live the ranch life",
+      "titulo": "The official cap of cattle ranching passion",
+      "subtitulo": "Built to withstand ranch work. Customized with your ranch's brand or your passion for the best genetics.",
+      "ctaPersonalizar": "Customize with my brand",
+      "ctaColeccion": "See the official collection",
+      "explora": "Explore the collection",
+      "altImagen": "Rancher wearing a cap next to Brahman cattle in the field"
+    },
+    "beneficios": {
+      "etiqueta": "Benefits",
+      "bordado": "3D embroidery",
+      "bordadoSub": "Details that last",
+      "sol": "Ready for the sun",
+      "solSub": "Cool, comfortable mesh",
+      "envios": "Rural shipping",
+      "enviosSub": "Wherever you are",
+      "durar": "Built to last",
+      "durarSub": "Ranch-grade quality"
+    },
+    "coleccion": {
+      "eyebrow": "Pick your ranch companion",
+      "titulo": "Our collection",
+      "subtitulo": "Designs that carry ranching pride everywhere.",
+      "contador": "01 / Ranch pieces",
+      "filtros": "Filter collection",
+      "filtroTodos": "All",
+      "filtroPersonalizables": "Customizable",
+      "filtroListos": "Ready-made",
+      "buscarPlaceholder": "Search caps...",
+      "buscarEtiqueta": "Search caps",
+      "cerrarBusqueda": "Close search",
+      "sinResultados": "We couldn't find caps matching that search.",
+      "vacia": "No models have been published yet. Come back soon.",
+      "etiquetaPersonalizable": "Customizable",
+      "etiquetaListo": "Ready-made",
+      "cotizar": "Get a quote",
+      "personalizar": "Customize",
+      "anadir": "Add to cart",
+      "aviso": "Prices and availability are confirmed on WhatsApp.",
+      "colores": "{{name}} colors",
+      "colorDe": "{{name}} in {{color}}",
+      "altGorra": "{{name}} cap"
+    },
+    "personaliza": {
+      "eyebrow": "Your story, your brand",
+      "titulo": "Your brand. Your cap",
+      "subtitulo": "Every ranch has a story. Wear yours embroidered wherever you go.",
+      "vistaPrevia": "Preview · {{color}}",
+      "altVistaPrevia": "Preview of the {{color}} cap",
+      "paso1": "Choose the style",
+      "paso2": "Choose the color",
+      "paso3": "Add your brand",
+      "paso3Sub": "Upload your ranch brand or choose a house design.",
+      "subir": "Upload my brand",
+      "casa": "House design",
+      "enConfigurador": "You do this in the configurator when you customize your cap.",
+      "cta": "Customize my cap",
+      "estilos": {
+        "trucker": "Mesh Trucker",
+        "cuero": "Leather Strap",
+        "curva": "Curved Visor"
+      },
+      "colores": {
+        "azulRojo": "Navy / Red",
+        "arenaCafe": "Sand / Brown",
+        "negro": "Black",
+        "camo": "Camo"
+      }
+    },
+    "mayor": {
+      "eyebrow": "For those who make ranching great",
+      "titulo": "Do you run a ranch, auction or event",
+      "texto": "Outfit your foremen, partners and clients with caps customized with your ranch's brand. Ask about options for orders of 12 units or more.",
+      "unidades": "12+",
+      "unidadesTexto": "Units for bulk orders",
+      "cta": "Get a quote for my ranch",
+      "etiquetaFoto": "Pride you can wear",
+      "altFoto": "Ranch team next to a Brahman bull",
+      "mensaje": "Hi, I'd like a quote for customized caps for my ranch, auction or event. I'm interested in 12 or more units."
+    },
+    "comunidad": {
+      "eyebrow": "More than a cap",
+      "titulo": "We are ranch people",
+      "subtitulo": "The work, the tradition and the people who inspire us.",
+      "youtube": "Watch {{siteName}} on YouTube",
+      "lema1": "Made from the same land.",
+      "lema2": "United by the same passion.",
+      "firma": "{{siteName}} · Ranching community",
+      "alt": {
+        "potrero": "Rancher with Brahman cattle in the pasture",
+        "subasta": "Ranchers at an auction",
+        "ganadera": "Smiling rancher in a corral",
+        "montura": "Ranch cap next to a saddle"
+      }
+    },
+    "carrito": {
+      "eyebrow": "Your selection",
+      "titulo": "My cart",
+      "etiqueta": "Your cart",
+      "cerrar": "Close cart",
+      "vacio": "Your cart is empty",
+      "vacioSub": "Find your next ranch companion.",
+      "verColeccion": "See collection",
+      "precioPorConfirmar": "Price to be confirmed",
+      "quitarUno": "Remove one {{name}}",
+      "anadirUno": "Add one {{name}}",
+      "eliminar": "Remove {{name}}",
+      "aviso": "Final price, availability and shipping are confirmed directly on WhatsApp.",
+      "enviar": "Ask about my order on WhatsApp",
+      "sinWhatsapp": "We can't take orders on WhatsApp right now. Please try again later.",
+      "mensaje": "Hi, I'd like to ask about this {{siteName}} order:"
+    },
+    "pie": {
+      "proposito": "For those who rise early for the ranch and carry the passion everywhere.",
+      "explora": "Explore",
+      "contacto": "Contact",
+      "hablarWhatsapp": "Chat on WhatsApp",
+      "verYoutube": "Watch on YouTube",
+      "tuPedido": "Your order",
+      "tuPedidoTexto": "Check availability, price, shipping and payment methods before confirming your purchase.",
+      "atencion": "Direct support for your order",
+      "derechos": "© {{year}} {{siteName}}. Made for the ranch.",
+      "volverArriba": "Back to top"
+    },
+    "whatsapp": {
+      "general": "Hi, I'd like to know more about {{siteName}}.",
+      "flotante": "Hi, I'd like to know more about {{siteName}} caps.",
+      "etiqueta": "Message us on WhatsApp"
+    }
   }
 }

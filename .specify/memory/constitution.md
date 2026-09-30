@@ -1,20 +1,27 @@
 <!--
 Sync Impact Report
-- Version change: 1.0.0 → 2.0.0
-- Motivo del MAJOR: redefinición del alcance de la versión 1. Se retiran carrito, pago en línea y
-  confirmación de pedido, y se sustituyen por configurador y solicitud de cotización, para que la
-  constitution deje de contradecir la especificación 001-configurador-gorras.
-- Principios modificados:
-  - II. Idioma y mercado — las reglas de moneda quedan condicionadas a que existan precios en el
-    producto; la versión 1 no muestra ninguno. Las reglas de idioma no cambian.
-- Principios sin cambios: I, III, IV, V
-- Secciones modificadas: Alcance del Producto (v1), Flujo de Trabajo (paso 4)
+- Version change: 2.0.0 → 2.1.0
+- Motivo del MINOR: se amplía el alcance de la versión 1 con un carrito de consulta por WhatsApp
+  para productos fijos, sin pago en línea, pedido por la especificación
+  011-rediseno-paleta-inicio. Ninguna regla existente se elimina ni se redefine: el pago en línea,
+  las cuentas obligatorias y el cálculo de precio siguen fuera.
+- Principios modificados: ninguno
+- Principios sin cambios: I, II, III, IV, V
+- Secciones modificadas: Alcance del Producto (v1) (se reemplaza "NO incluye carrito" por las
+  reglas del carrito de consulta)
 - Secciones añadidas: ninguna
 - Secciones eliminadas: ninguna
-- TODOs pendientes: ninguno
+- Plantillas revisadas: plan-template.md, spec-template.md y tasks-template.md no nombran el
+  carrito ni el alcance de la v1; no requieren cambios.
+- TODOs pendientes:
+  - Principio II dice "La versión 1 no muestra ninguno [precio]", pero los productos fijos
+    (009-modelos-producto-fijo) ya muestran precio. Esta enmienda no lo resuelve; conviene una
+    enmienda aparte que alinee el Principio II con 009.
 
 Historial
 - 1.0.0 (2026-08-12): ratificación inicial con los cinco principios.
+- 2.0.0 (2026-08-12): se retiran carrito, pago en línea y confirmación de pedido; la v1 pasa a
+  configurador y solicitud de cotización.
 -->
 
 # Brahman Friends Constitution
@@ -112,9 +119,18 @@ Razón: pedir de menos protege al cliente y reduce lo que el proyecto tiene que 
 
 - La versión 1 cubre: elegir un modelo de gorra, personalizarlo, ver el resultado y enviar una
   solicitud de cotización con la información que producción necesita.
-- La versión 1 NO incluye carrito, pago en línea ni cálculo de precio. El precio depende de la
-  cantidad, la técnica y la disponibilidad del material, y lo establece el equipo comercial por
-  fuera del sistema.
+- La versión 1 NO incluye pago en línea ni cálculo de precio. El precio depende de la cantidad,
+  la técnica y la disponibilidad del material, y lo establece el equipo comercial por fuera del
+  sistema.
+- La versión 1 incluye un carrito de consulta, con estos límites:
+  - Solo admite productos fijos. Una gorra personalizada pasa por el configurador y termina en
+    solicitud de cotización, no en el carrito.
+  - Su contenido vive en el navegador del cliente durante la visita. No exige cuenta, no se
+    sincroniza entre dispositivos y el sistema no lo guarda.
+  - Enviar el carrito solo abre WhatsApp con un mensaje que lista los productos y cantidades. No
+    cobra, no confirma el pedido y no crea registros en el sistema.
+  - El precio final, la disponibilidad y el envío se confirman por WhatsApp, y la página DEBE
+    decirlo junto al botón de envío.
 - El cliente DEBE poder ver su gorra antes de enviar la solicitud. Lo que ve es lo que se cotiza y
   se produce.
 - Cada solicitud enviada DEBE quedar congelada: los cambios posteriores en el catálogo no la
@@ -149,4 +165,4 @@ herramienta, una guía o una preferencia personal la contradice, gana la constit
   acepta solo si queda escrita en el plan de la funcionalidad, con su motivo y su fecha de
   revisión.
 
-**Version**: 2.0.0 | **Ratified**: 2026-08-12 | **Last Amended**: 2026-08-12
+**Version**: 2.1.0 | **Ratified**: 2026-08-12 | **Last Amended**: 2026-09-30

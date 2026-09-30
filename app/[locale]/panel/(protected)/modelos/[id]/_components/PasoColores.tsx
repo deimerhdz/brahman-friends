@@ -8,6 +8,7 @@ import {
   type ValorTraducido,
 } from "@/app/[locale]/panel/_components/CampoTraducible";
 import { ColorImagenes } from "./ColorImagenes";
+import { FaEye, FaPalette, FaPlus, FaStar, FaTrashCan } from "react-icons/fa6";
 
 type View = "front" | "left" | "right" | "back";
 
@@ -111,15 +112,11 @@ export function PasoColores({
             {labels.stepColorsHint}
           </p>
         </div>
-        <span className="material-symbols-outlined text-lg text-on-surface-variant">
-          palette
-        </span>
+        <FaPalette className="text-lg text-on-surface-variant shrink-0" aria-hidden="true" />
       </div>
 
       <div className="flex items-start gap-2.5 rounded-xl border border-[#F5E39A] bg-[#FFF8E1] p-3">
-        <span className="material-symbols-outlined mt-0.5 shrink-0 text-base text-[#8D6E00]">
-          star
-        </span>
+        <FaStar className="mt-0.5 shrink-0 text-base text-[#8D6E00]" aria-hidden="true" />
         <div className="text-xs leading-relaxed text-on-surface">
           <p className="flex items-center gap-1 font-bold text-[#8D6E00]">
             {labels.defaultVariant}
@@ -161,9 +158,7 @@ export function PasoColores({
                         : "flex h-7 w-7 items-center justify-center rounded-full border border-outline-variant text-on-surface-variant transition-colors hover:border-primary hover:text-primary"
                     }
                   >
-                    <span className="material-symbols-outlined text-[16px]">
-                      visibility
-                    </span>
+                    <FaEye className="text-[16px] shrink-0" aria-hidden="true" />
                   </button>
                   <label className="font-body-md text-body-md font-bold text-on-surface">
                     {name}
@@ -172,9 +167,7 @@ export function PasoColores({
                 <div className="flex items-center gap-2">
                   {isDefault ? (
                     <span className="flex items-center gap-0.5 rounded-full border border-[#F5E39A] bg-[#FFF8E1] px-2 py-0.5 text-[10px] font-bold text-[#8D6E00]">
-                      <span className="material-symbols-outlined text-[11px]">
-                        grade
-                      </span>
+                      <FaStar className="text-[11px] shrink-0" aria-hidden="true" />
                       {labels.defaultVariant}
                     </span>
                   ) : (
@@ -183,9 +176,7 @@ export function PasoColores({
                       onClick={() => setDefaultVariant(c.id)}
                       className="flex items-center gap-1 rounded border border-outline-variant px-2 py-1 font-label-caps text-label-caps text-on-surface-variant transition-colors hover:border-primary hover:text-primary"
                     >
-                      <span className="material-symbols-outlined text-[16px]">
-                        grade
-                      </span>
+                      <FaStar className="text-[16px] shrink-0" aria-hidden="true" />
                       {labels.markDefault}
                     </button>
                   )}
@@ -194,7 +185,7 @@ export function PasoColores({
                     onClick={() => deleteColor(c.id)}
                     className="flex items-center gap-1 rounded border border-outline-variant px-2 py-1 font-label-caps text-label-caps text-error transition-colors hover:border-error"
                   >
-                    <span className="material-symbols-outlined text-[16px]">delete</span>
+                    <FaTrashCan className="text-[16px] shrink-0" aria-hidden="true" />
                     {labels.deleteColor}
                   </button>
                 </div>
@@ -232,7 +223,7 @@ export function PasoColores({
             disabled={savingColor}
             className="flex items-center gap-1 rounded bg-on-surface px-4 py-2 font-button text-button text-on-primary transition-colors duration-200 hover:bg-primary disabled:opacity-50"
           >
-            <span className="material-symbols-outlined text-[18px]">add</span>
+            <FaPlus className="text-[18px] shrink-0" aria-hidden="true" />
             {labels.addColor}
           </button>
         </form>

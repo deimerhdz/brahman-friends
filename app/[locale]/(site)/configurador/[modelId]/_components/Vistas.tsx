@@ -2,6 +2,7 @@
 
 import type { ModelManifest } from "@/lib/catalogo/model-manifest";
 import type { DisplayView } from "./CapasGorra";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 
 const ALL_VIEWS: DisplayView[] = ["front", "left", "right", "back"];
 
@@ -36,7 +37,7 @@ export function Vistas({
         aria-label={labels.previous}
         className="rounded-full bg-gray-100 px-3 py-2"
       >
-        ‹
+        <FaChevronLeft aria-hidden="true" />
       </button>
       <button
         type="button"
@@ -44,7 +45,7 @@ export function Vistas({
         aria-label={labels.next}
         className="rounded-full bg-gray-100 px-3 py-2"
       >
-        ›
+        <FaChevronRight aria-hidden="true" />
       </button>
     </div>
   );

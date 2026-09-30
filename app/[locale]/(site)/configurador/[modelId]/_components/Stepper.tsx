@@ -1,5 +1,7 @@
 "use client";
 
+import { FaArrowLeft, FaCheck } from "react-icons/fa6";
+
 /**
  * Indicador de progreso por pasos y navegación Atrás/Siguiente
  * (006-configurador-stepper FR-013 a FR-017). Presentacional: el contenido
@@ -62,9 +64,7 @@ export function Stepper({
                 }`}
               >
                 {status === "done" && (
-                  <span className="material-symbols-outlined text-[10px] font-bold text-on-primary">
-                    check
-                  </span>
+                  <FaCheck className="text-[10px] text-on-primary shrink-0" aria-hidden="true" />
                 )}
               </span>
               <button
@@ -98,7 +98,7 @@ export function Stepper({
           disabled={current === 1}
           className="flex flex-1 items-center justify-center gap-2 rounded border border-outline-variant bg-surface-container px-4 py-3 text-button font-button text-on-surface transition-colors hover:bg-surface-variant disabled:opacity-50"
         >
-          <span className="material-symbols-outlined text-sm">arrow_back</span>
+          <FaArrowLeft className="text-sm shrink-0" aria-hidden="true" />
           {backLabel}
         </button>
         <button

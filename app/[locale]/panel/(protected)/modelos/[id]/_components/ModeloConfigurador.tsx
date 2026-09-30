@@ -14,6 +14,17 @@ import {
 } from "./PasoPersonalizacion";
 import { ZonaOverlay, type BoxPx } from "./ZonaOverlay";
 import { ZonaWarpPreview } from "./ZonaWarpPreview";
+import {
+  FaArrowRotateLeft,
+  FaArrowRotateRight,
+  FaArrowsRotate,
+  FaCheck,
+  FaCircleCheck,
+  FaCube,
+  FaEye,
+  FaImage,
+  FaUpDownLeftRight,
+} from "react-icons/fa6";
 
 // Las fotos del modelo (front/left/right/back) y las zonas decorables usan
 // el mismo catálogo de 4 posiciones: cada lado tiene su propia foto real,
@@ -276,9 +287,7 @@ export function ModeloConfigurador({
               />
             </div>
             <div className="flex items-center gap-1 rounded-lg border border-outline-variant/60 bg-surface-container-lowest px-2.5 py-1 text-xs text-on-surface-variant shadow-xs">
-              <span className="material-symbols-outlined text-base text-primary">
-                drag_pan
-              </span>
+              <FaUpDownLeftRight className="text-base text-primary shrink-0" aria-hidden="true" />
             </div>
           </div>
         )}
@@ -304,9 +313,7 @@ export function ModeloConfigurador({
               />
             ) : (
               <div className="flex h-full w-full flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-outline-variant text-on-surface-variant">
-                <span className="material-symbols-outlined text-3xl">
-                  image
-                </span>
+                <FaImage className="text-3xl shrink-0" aria-hidden="true" />
                 <span className="font-label-caps text-label-caps">
                   {labels.noImage}
                 </span>
@@ -356,20 +363,20 @@ export function ModeloConfigurador({
           <div className="flex items-center gap-1.5 rounded-full border border-outline-variant/60 bg-surface-container-lowest p-1.5 shadow-md">
             {(
               [
-                { position: "front", icon: "view_in_ar", label: labels.zone_front },
+                { position: "front", icon: FaCube, label: labels.zone_front },
                 {
                   position: "left",
-                  icon: "rotate_90_degrees_ccw",
+                  icon: FaArrowRotateLeft,
                   label: labels.zone_left,
                 },
                 {
                   position: "right",
-                  icon: "rotate_90_degrees_cw",
+                  icon: FaArrowRotateRight,
                   label: labels.zone_right,
                 },
                 {
                   position: "back",
-                  icon: "flip_camera_android",
+                  icon: FaArrowsRotate,
                   label: labels.zone_back,
                 },
               ] as const
@@ -384,9 +391,7 @@ export function ModeloConfigurador({
                     : "flex items-center gap-2 rounded-full px-5 py-2 text-xs font-semibold text-on-surface-variant transition-all hover:bg-surface-container-low hover:text-on-surface"
                 }
               >
-                <span className="material-symbols-outlined text-sm">
-                  {p.icon}
-                </span>
+                <p.icon className="shrink-0 text-sm" aria-hidden="true" />
                 {p.label}
               </button>
             ))}
@@ -486,9 +491,7 @@ export function ModeloConfigurador({
                 onClick={openPreview}
                 className="flex w-1/2 items-center justify-center gap-1.5 rounded-lg border border-outline-variant px-3 py-2.5 text-xs font-semibold text-on-surface transition-colors hover:bg-surface-container-low"
               >
-                <span className="material-symbols-outlined text-base">
-                  visibility
-                </span>
+                <FaEye className="text-base shrink-0" aria-hidden="true" />
                 {labels.preview}
               </button>
             )}
@@ -500,7 +503,7 @@ export function ModeloConfigurador({
                 type === "configurable" ? "w-1/2" : "w-full"
               }`}
             >
-              <span className="material-symbols-outlined text-base">check</span>
+              <FaCheck className="text-base shrink-0" aria-hidden="true" />
               {labels.saveChanges}
             </button>
           </div>
@@ -515,9 +518,7 @@ export function ModeloConfigurador({
           toast ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       >
-        <span className="material-symbols-outlined text-base text-[#7CE0A0]">
-          check_circle
-        </span>
+        <FaCircleCheck className="text-base text-[#7CE0A0] shrink-0" aria-hidden="true" />
         {labels.changesSaved}
       </div>
     </div>

@@ -25,7 +25,7 @@ export function BotonEnviar({
         type="button"
         onClick={onSubmit}
         disabled={disabled || submitting}
-        className="w-full rounded bg-brand px-4 py-3 text-white disabled:opacity-50"
+        className="w-full rounded bg-primary px-4 py-3 text-white disabled:opacity-50"
       >
         {submitting ? labels.submitting : error ? labels.retry : labels.submit}
       </button>

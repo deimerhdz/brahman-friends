@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n/t";
+import { FaBars, FaXmark } from "react-icons/fa6";
 
 export function MobileNavPanel({
   locale,
@@ -28,9 +29,11 @@ export function MobileNavPanel({
         aria-label={open ? closeLabel : openLabel}
         className="flex h-10 w-10 items-center justify-center text-on-surface"
       >
-        <span className="material-symbols-outlined">
-          {open ? "close" : "menu"}
-        </span>
+        {open ? (
+          <FaXmark className="text-2xl" aria-hidden="true" />
+        ) : (
+          <FaBars className="text-2xl" aria-hidden="true" />
+        )}
       </button>
 
       {open && (

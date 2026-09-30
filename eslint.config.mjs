@@ -13,6 +13,7 @@ const eslintConfig = [
       "drizzle/meta/**",
       "coverage/**",
       "next-env.d.ts",
+      ".open-next/**",
     ],
   },
 ];

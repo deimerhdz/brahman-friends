@@ -89,11 +89,10 @@ export default async function CatalogoPage({
       <div className="mx-auto w-full max-w-[1440px] px-margin-mobile md:px-margin-desktop">
         <div className="mb-10 flex flex-col gap-6 sm:mb-16 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <span className="mb-4 block text-label-caps font-label-caps tracking-[0.2em] text-primary">
-              {t("landing.collection.eyebrow")}
-            </span>
-            <h1 className="text-headline-md font-headline-md text-on-surface">
+            <p className="eyebrow mb-3">{t("landing.collection.eyebrow")}</p>
+            <h1 className="section-title text-on-surface">
               {t("catalogo.title")}
+              <span className="text-primary">.</span>
             </h1>
           </div>
 

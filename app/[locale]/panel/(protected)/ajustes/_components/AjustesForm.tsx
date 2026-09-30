@@ -3,6 +3,7 @@
 import { useState, type FormEvent, type ReactNode } from "react";
 import { SubidaArchivo } from "@/app/[locale]/panel/_components/SubidaArchivo";
 import { SeccionAjustes } from "./SeccionAjustes";
+import { FaImage } from "react-icons/fa6";
 
 export interface AjustesFormValue {
   siteName: { es: string; en: string };
@@ -82,9 +83,7 @@ function UploadBox({
       <div className="flex flex-col items-center gap-3 rounded-lg border-2 border-dashed border-outline-variant bg-surface p-6 text-center">
         {!currentUrl && (
           <>
-            <span className="material-symbols-outlined text-[32px] text-on-surface-variant">
-              image
-            </span>
+            <FaImage className="text-[32px] text-on-surface-variant shrink-0" aria-hidden="true" />
             <p className="font-body-md text-body-md text-on-surface-variant">{emptyText}</p>
           </>
         )}
@@ -367,9 +366,7 @@ export function AjustesForm({
                       className="h-full w-full object-cover"
                     />
                   ) : (
-                    <span className="material-symbols-outlined text-on-surface-variant">
-                      image
-                    </span>
+                    <FaImage className="shrink-0 text-2xl text-on-surface-variant" aria-hidden="true" />
                   )}
                 </div>
                 <div className="min-w-0">

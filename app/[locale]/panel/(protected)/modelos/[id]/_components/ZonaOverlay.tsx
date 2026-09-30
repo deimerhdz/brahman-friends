@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
+import { FaVectorSquare } from "react-icons/fa6";
 
 export interface BoxPx {
   x: number;
@@ -122,7 +123,7 @@ export function ZonaOverlay({
         }}
       >
         <div className="absolute -top-7 left-1/2 flex -translate-x-1/2 items-center gap-1 whitespace-nowrap rounded bg-primary px-2 py-0.5 text-[10px] font-semibold tracking-wider text-on-primary shadow-sm">
-          <span className="material-symbols-outlined text-xs">select_all</span>
+          <FaVectorSquare className="text-xs shrink-0" aria-hidden="true" />
           {label}
         </div>
 

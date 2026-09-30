@@ -5,6 +5,7 @@ import { capModelConNombre } from "@/lib/catalogo/consultas-traducidas";
 import { getT, type Locale } from "@/lib/i18n/t";
 import { PanelHeader } from "../_PanelHeader";
 import { EstadoBadge } from "../_EstadoBadge";
+import { FaPen, FaPlus } from "react-icons/fa6";
 
 export default async function ModelosPage({
   params,
@@ -23,7 +24,7 @@ export default async function ModelosPage({
         primaryAction={{
           label: t("panel.modelos.new"),
           href: `/${locale}/panel/modelos/nuevo`,
-          icon: "add",
+          icon: FaPlus,
         }}
       />
 
@@ -87,9 +88,7 @@ export default async function ModelosPage({
                         title={t("common.edit")}
                         aria-label={t("common.edit")}
                       >
-                        <span className="material-symbols-outlined" aria-hidden="true">
-                          edit
-                        </span>
+                        <FaPen className="shrink-0 text-2xl" aria-hidden="true" />
                       </Link>
                     </td>
                   </tr>

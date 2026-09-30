@@ -80,52 +80,10 @@
     "empty": "Todavía no hay modelos publicados. Volvé pronto."
   },
   "landing": {
-    "hero": {
-      "title": "Precisión Arquitectónica.",
-      "subtitle": "Diseñá y fabricá gorras premium personalizadas con nuestro configurador 3D a medida. Para coleccionistas exigentes y clientes corporativos.",
-      "ctaPrimary": "Empezar a diseñar",
-      "ctaSecondary": "Ver colecciones",
-      "dragToRotate": "ARRASTRÁ PARA ROTAR"
-    },
     "collection": {
       "eyebrow": "SILUETAS",
-      "title": "La Colección",
-      "exploreAll": "Ver todo",
       "viewDetails": "Ver detalles",
       "customize": "Personalizar"
-    },
-    "b2b": {
-      "eyebrow": "EMPRESAS",
-      "title": "Servicios B2B y pedidos al por mayor",
-      "description": "Elevá tu marca con una calidad sin concesiones. Nuestro portal B2B dedicado ofrece pedidos al por mayor simplificados, etiquetado personalizado y gestión de cuenta dedicada para necesidades de volumen profesional.",
-      "feature1Title": "Cantidad mínima de pedido: 50 unidades",
-      "feature1Body": "Escalá tu producción de forma eficiente sin resignar los detalles a medida.",
-      "feature2Title": "Precios por niveles al por mayor",
-      "feature2Body": "Descuentos por volumen transparentes y automáticos, aplicados al instante.",
-      "cta": "Consultar por mayoristas",
-      "embroideryLabel": "BORDADO DE PRECISIÓN",
-      "embroideryBody": "Densidad de puntada líder en la industria para una reproducción impecable de tu marca en cada pieza."
-    },
-    "process": {
-      "eyebrow": "METODOLOGÍA",
-      "title": "El Proceso",
-      "description": "Un recorrido simplificado y técnicamente robusto desde el concepto hasta la pieza física, usando nuestro motor propio de renderizado 3D.",
-      "step1Title": "Elegí la base",
-      "step1Body": "Elegí tu silueta, el peso de la tela y el color base de nuestro catálogo premium.",
-      "step2Title": "Configurá en 3D",
-      "step2Body": "Subí tus archivos, definí las coordenadas del bordado y previsualizá en 3D en tiempo real.",
-      "step3Title": "Fabricación de precisión",
-      "step3Body": "Tu pedido se envía a nuestra planta para una fabricación exacta y control de calidad.",
-      "cta": "Abrir el configurador"
-    },
-    "footer": {
-      "support": "Soporte",
-      "trackOrder": "Seguir pedido",
-      "b2bBulk": "Mayoristas B2B",
-      "sustainability": "Sustentabilidad",
-      "terms": "Términos",
-      "tagline": "PRECISIÓN ARQUITECTÓNICA EN CADA PUNTADA",
-      "copyright": "© {{year}} {{siteName}}. {{tagline}}"
     }
   },
   "configurador": {
@@ -435,5 +393,156 @@
     "sortRecent": "Recientes",
     "sortAlpha": "A-Z",
     "sortPriceDesc": "Precio: mayor a menor"
+  },
+  "inicio": {
+    "anuncio": {
+      "envios": "Envíos a todo el país y zonas rurales",
+      "bordado": "Bordado 3D de alta durabilidad"
+    },
+    "nav": {
+      "colecciones": "Colecciones",
+      "personaliza": "Personaliza tu hierro",
+      "mayor": "Pedidos por mayor",
+      "comunidad": "Comunidad",
+      "youtube": "Comunidad YouTube",
+      "buscar": "Buscar productos",
+      "whatsapp": "Consultar por WhatsApp",
+      "abrirCarrito": "Abrir carrito, {{count}} productos",
+      "abrirMenu": "Abrir menú",
+      "cerrarMenu": "Cerrar menú",
+      "irInicio": "{{siteName}}, ir al inicio",
+      "principal": "Navegación principal",
+      "movil": "Navegación móvil"
+    },
+    "hero": {
+      "eyebrow": "Hechas para quienes viven el campo",
+      "titulo": "La gorra oficial de la pasión ganadera",
+      "subtitulo": "Diseñadas para la resistencia del campo. Personalizadas con el hierro de tu ganadería o la pasión por la mejor genética.",
+      "ctaPersonalizar": "Personalizar con mi hierro",
+      "ctaColeccion": "Ver colección oficial",
+      "explora": "Explora la colección",
+      "altImagen": "Ganadero con gorra junto a ganado Brahman en el campo"
+    },
+    "beneficios": {
+      "etiqueta": "Beneficios",
+      "bordado": "Bordado 3D",
+      "bordadoSub": "Detalles que perduran",
+      "sol": "Lista para el sol",
+      "solSub": "Malla fresca y cómoda",
+      "envios": "Envíos rurales",
+      "enviosSub": "Hasta donde estés",
+      "durar": "Hecha para durar",
+      "durarSub": "Calidad de campo"
+    },
+    "coleccion": {
+      "eyebrow": "Elige tu compañera de campo",
+      "titulo": "Nuestra colección",
+      "subtitulo": "Diseños que llevan el orgullo ganadero a todas partes.",
+      "contador": "01 / Piezas de campo",
+      "filtros": "Filtrar colección",
+      "filtroTodos": "Todos",
+      "filtroPersonalizables": "Personalizables",
+      "filtroListos": "Productos listos",
+      "buscarPlaceholder": "Buscar gorras...",
+      "buscarEtiqueta": "Buscar gorras",
+      "cerrarBusqueda": "Cerrar búsqueda",
+      "sinResultados": "No encontramos gorras con esa búsqueda.",
+      "vacia": "Todavía no hay modelos publicados. Vuelve pronto.",
+      "etiquetaPersonalizable": "Personalizable",
+      "etiquetaListo": "Producto listo",
+      "cotizar": "Cotizar",
+      "personalizar": "Personalizar",
+      "anadir": "Añadir al carrito",
+      "aviso": "Precios y disponibilidad sujetos a confirmación por WhatsApp.",
+      "colores": "Colores de {{name}}",
+      "colorDe": "{{name}} color {{color}}",
+      "altGorra": "Gorra {{name}}"
+    },
+    "personaliza": {
+      "eyebrow": "Tu historia, tu marca",
+      "titulo": "Tu hierro. Tu gorra",
+      "subtitulo": "Cada ganadería tiene una historia. Lleva la tuya bordada a donde vayas.",
+      "vistaPrevia": "Vista previa · {{color}}",
+      "altVistaPrevia": "Vista previa de gorra {{color}}",
+      "paso1": "Elige el estilo",
+      "paso2": "Elige el color",
+      "paso3": "Añade tu hierro",
+      "paso3Sub": "Sube tu marca o elige un diseño de la casa.",
+      "subir": "Subir mi hierro",
+      "casa": "Diseño de la casa",
+      "enConfigurador": "Lo haces en el configurador, al personalizar tu gorra.",
+      "cta": "Personalizar mi gorra",
+      "estilos": {
+        "trucker": "Trucker Malla",
+        "cuero": "Cierre de Cuero",
+        "curva": "Visera Curva"
+      },
+      "colores": {
+        "azulRojo": "Azul / Rojo",
+        "arenaCafe": "Arena / Café",
+        "negro": "Negro",
+        "camo": "Camo"
+      }
+    },
+    "mayor": {
+      "eyebrow": "Para los que hacen grande el campo",
+      "titulo": "¿Tienes una ganadería, subasta o evento",
+      "texto": "Equipa a tus mayordomos, socios y clientes con gorras personalizadas con la marca de tu finca. Consulta opciones para pedidos desde 12 unidades.",
+      "unidades": "12+",
+      "unidadesTexto": "Unidades para pedidos por mayor",
+      "cta": "Cotizar pedido para mi finca",
+      "etiquetaFoto": "Orgullo que se lleva puesto",
+      "altFoto": "Equipo ganadero junto a un ejemplar Brahman",
+      "mensaje": "Hola, quiero cotizar gorras personalizadas para mi ganadería, subasta o evento. Me interesan 12 o más unidades."
+    },
+    "comunidad": {
+      "eyebrow": "Más que una gorra",
+      "titulo": "Somos de campo",
+      "subtitulo": "El trabajo, la tradición y la gente que nos inspira.",
+      "youtube": "Ver {{siteName}} en YouTube",
+      "lema1": "Hechos de la misma tierra.",
+      "lema2": "Unidos por la misma pasión.",
+      "firma": "{{siteName}} · Comunidad ganadera",
+      "alt": {
+        "potrero": "Ganadero con ganado Brahman en el potrero",
+        "subasta": "Ganaderos en una subasta",
+        "ganadera": "Ganadera sonriente en un corral",
+        "montura": "Gorra de campo junto a una montura"
+      }
+    },
+    "carrito": {
+      "eyebrow": "Tu selección",
+      "titulo": "Mi carrito",
+      "etiqueta": "Tu carrito",
+      "cerrar": "Cerrar carrito",
+      "vacio": "Tu carrito está vacío",
+      "vacioSub": "Encuentra tu próxima compañera de campo.",
+      "verColeccion": "Ver colección",
+      "precioPorConfirmar": "Precio por confirmar",
+      "quitarUno": "Quitar una unidad de {{name}}",
+      "anadirUno": "Añadir una unidad de {{name}}",
+      "eliminar": "Eliminar {{name}}",
+      "aviso": "Precio final, disponibilidad y envío se confirman directamente por WhatsApp.",
+      "enviar": "Consultar pedido por WhatsApp",
+      "sinWhatsapp": "Por ahora no podemos recibir pedidos por WhatsApp. Vuelve a intentarlo más tarde.",
+      "mensaje": "Hola, quiero consultar este pedido de {{siteName}}:"
+    },
+    "pie": {
+      "proposito": "Para quienes madrugan por el campo y llevan la pasión ganadera a todas partes.",
+      "explora": "Explora",
+      "contacto": "Contacto",
+      "hablarWhatsapp": "Hablar por WhatsApp",
+      "verYoutube": "Ver en YouTube",
+      "tuPedido": "Tu pedido",
+      "tuPedidoTexto": "Consulta disponibilidad, precio, envío y métodos de pago antes de confirmar tu compra.",
+      "atencion": "Atención directa para tu pedido",
+      "derechos": "© {{year}} {{siteName}}. Hecho para el campo.",
+      "volverArriba": "Volver arriba"
+    },
+    "whatsapp": {
+      "general": "Hola, quiero saber más sobre {{siteName}}.",
+      "flotante": "Hola, quiero saber más sobre las gorras {{siteName}}.",
+      "etiqueta": "Escribir por WhatsApp"
+    }
   }
 }

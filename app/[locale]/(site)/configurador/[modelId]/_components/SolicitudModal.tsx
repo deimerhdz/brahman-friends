@@ -9,6 +9,7 @@ import {
   type ContactValue,
 } from "../../../solicitud/_components/FormularioContacto";
 import { BotonEnviar } from "../../../solicitud/_components/BotonEnviar";
+import { FaXmark } from "react-icons/fa6";
 
 /**
  * "Solicitar cotización" abre esto en vez de navegar a `/solicitud`
@@ -79,14 +80,7 @@ export function SolicitudModal({
             aria-label={labels.close}
             className="text-gray-500 hover:text-gray-800"
           >
-            <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5">
-              <path
-                d="M6 6l12 12M18 6L6 18"
-                stroke="currentColor"
-                strokeWidth={2}
-                strokeLinecap="round"
-              />
-            </svg>
+            <FaXmark className="h-5 w-5" aria-hidden="true" />
           </button>
         </div>
 

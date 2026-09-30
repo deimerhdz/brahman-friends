@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { SOCIAL_PLATFORM_ICONS, SOCIAL_PLATFORMS, type SocialPlatform } from "@/lib/ajustes/iconos-redes";
 import { SeccionAjustes } from "./SeccionAjustes";
+import { FaPen, FaPlus, FaTrashCan } from "react-icons/fa6";
 
 export interface RedSocial {
   id: string;
@@ -96,7 +97,7 @@ export function RedesSociales({
             onClick={onAdd}
             className="flex items-center gap-1.5 rounded bg-on-surface px-4 py-2 font-button text-button text-on-primary transition-colors duration-200 hover:bg-primary"
           >
-            <span className="material-symbols-outlined text-[18px]">add</span>
+            <FaPlus className="text-[18px] shrink-0" aria-hidden="true" />
             {labels.add}
           </button>
         </div>
@@ -157,7 +158,7 @@ export function RedesSociales({
                         title={labels.edit}
                         className="flex h-8 w-8 items-center justify-center rounded text-on-surface-variant transition-colors hover:text-primary"
                       >
-                        <span className="material-symbols-outlined text-[18px]">edit</span>
+                        <FaPen className="text-[18px] shrink-0" aria-hidden="true" />
                       </button>
                     )}
                     <button
@@ -167,7 +168,7 @@ export function RedesSociales({
                       title={labels.remove}
                       className="flex h-8 w-8 items-center justify-center rounded text-on-surface-variant transition-colors hover:text-error"
                     >
-                      <span className="material-symbols-outlined text-[18px]">delete</span>
+                      <FaTrashCan className="text-[18px] shrink-0" aria-hidden="true" />
                     </button>
                   </div>
                 </li>

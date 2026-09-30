@@ -107,6 +107,137 @@
   --radius-lg: 0.25rem;
   --radius-xl: 0.5rem;
   --radius-full: 0.75rem;
+
+  /* Tokens nuevos de la paleta del sitio público (011-rediseno-paleta-inicio,
+     research.md #1). Solo los usa el contenido dentro de .tema-campo. */
+  --color-deep: oklch(0.19 0.035 254);
+  --color-on-deep: oklch(0.985 0.004 85);
+  --color-gold: oklch(0.77 0.11 76);
+  --color-preview: oklch(0.88 0.02 75);
+  --color-whatsapp: oklch(0.66 0.19 150);
+  --font-display: "Barlow Condensed", sans-serif;
+}
+
+/* Paleta y tipografía del sitio público (diseño de ../brahman-threads).
+   Redefine los tokens existentes para que todas las páginas del grupo (site)
+   cambien sin editarlas; el panel queda fuera de esta clase y conserva los
+   valores de @theme (FR-001 a FR-003, research.md #1 y #2). */
+.tema-campo {
+  --color-surface: oklch(0.978 0.006 85);
+  --color-background: oklch(0.978 0.006 85);
+  --color-surface-bright: oklch(0.978 0.006 85);
+  --color-surface-container-lowest: oklch(0.993 0.003 85);
+  --color-surface-container: oklch(0.95 0.012 78);
+  --color-surface-container-low: oklch(0.95 0.012 78);
+  --color-surface-variant: oklch(0.95 0.012 78);
+  --color-on-surface: oklch(0.22 0.036 252);
+  --color-on-background: oklch(0.22 0.036 252);
+  --color-brand: oklch(0.22 0.036 252);
+  --color-on-surface-variant: oklch(0.47 0.017 252);
+  --color-on-secondary-container: oklch(0.47 0.017 252);
+  --color-outline-variant: oklch(0.87 0.012 80);
+  --color-outline: oklch(0.87 0.012 80);
+  --color-primary: oklch(0.55 0.22 27);
+  --color-brand-accent: oklch(0.55 0.22 27);
+  --color-on-primary: oklch(1 0 0);
+  --color-on-secondary: oklch(1 0 0);
+
+  --font-body-md: "DM Sans", sans-serif;
+  --font-body-lg: "DM Sans", sans-serif;
+  --font-button: "DM Sans", sans-serif;
+  --font-display-lg: "Barlow Condensed", sans-serif;
+  --font-display-lg-mobile: "Barlow Condensed", sans-serif;
+  --font-headline-md: "Barlow Condensed", sans-serif;
+
+  font-family: "DM Sans", sans-serif;
+}
+
+/* Clases auxiliares copiadas de ../brahman-threads/src/styles.css */
+.tema-campo .hero-shade {
+  background: linear-gradient(
+    90deg,
+    oklch(0.14 0.035 254 / 94%) 0%,
+    oklch(0.14 0.035 254 / 73%) 37%,
+    oklch(0.14 0.035 254 / 19%) 78%
+  );
+}
+.tema-campo .eyebrow {
+  color: var(--color-primary);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+.tema-campo .section-title {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: clamp(40px, 5vw, 68px);
+  line-height: 1;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+.tema-campo .step-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  background: var(--color-deep);
+  color: var(--color-on-deep);
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 17px;
+}
+.tema-campo .footer-heading {
+  color: var(--color-gold);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+.tema-campo .swatch-navy {
+  background: linear-gradient(135deg, oklch(0.25 0.048 255) 50%, oklch(0.48 0.16 27) 50%);
+}
+.tema-campo .swatch-sand {
+  background: linear-gradient(135deg, oklch(0.79 0.036 80) 50%, oklch(0.38 0.051 60) 50%);
+}
+.tema-campo .swatch-black {
+  background: oklch(0.2 0.01 250);
+}
+.tema-campo .swatch-camo {
+  background: linear-gradient(
+    135deg,
+    oklch(0.34 0.045 125) 35%,
+    oklch(0.54 0.045 80) 35%,
+    oklch(0.54 0.045 80) 65%,
+    oklch(0.25 0.022 98) 65%
+  );
+}
+@media (max-width: 640px) {
+  .tema-campo .hero-shade {
+    background:
+      linear-gradient(90deg, oklch(0.14 0.035 254 / 88%), oklch(0.14 0.035 254 / 53%)),
+      linear-gradient(0deg, oklch(0.14 0.035 254 / 60%), transparent 50%);
+  }
+}
+/* El azul fijo del mockup anterior pasa al rojo de acción en el sitio público */
+.tema-campo .electric-hover:hover {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+}
+.tema-campo .text-electric-hover:hover {
+  color: var(--color-primary);
+}
+html:has(.tema-campo) {
+  scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+  html:has(.tema-campo) {
+    scroll-behavior: auto;
+  }
+  .tema-campo *,
+  .tema-campo *::before,
+  .tema-campo *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 .ambient-shadow {
@@ -150,20 +281,6 @@
 }
 .animate-spin-slow {
   animation: landing-spin-slow 3s linear infinite;
-}
-
-.material-symbols-outlined {
-  font-family: "Material Symbols Outlined";
-  font-weight: normal;
-  font-style: normal;
-  line-height: 1;
-  letter-spacing: normal;
-  text-transform: none;
-  display: inline-block;
-  white-space: nowrap;
-  word-wrap: normal;
-  direction: ltr;
-  -webkit-font-smoothing: antialiased;
 }
 
 html,

@@ -3,6 +3,7 @@
 import type { Locale } from "@/lib/i18n/t";
 import type { ModelManifest } from "@/lib/catalogo/model-manifest";
 import type { Draft } from "@/lib/design/borrador";
+import { FaMinus, FaPlus } from "react-icons/fa6";
 
 /**
  * Último paso del configurador: resumen de color por componente y
@@ -61,7 +62,7 @@ export function PasoResumen({
             onClick={() => onQuantityChange(Math.max(minQuantity, quantity - 1))}
             className="flex items-center justify-center border-r border-outline-variant p-2 transition-colors hover:bg-surface-variant"
           >
-            <span className="material-symbols-outlined text-sm">remove</span>
+            <FaMinus className="text-sm shrink-0" aria-hidden="true" />
           </button>
           <input
             type="number"
@@ -78,7 +79,7 @@ export function PasoResumen({
             onClick={() => onQuantityChange(quantity + 1)}
             className="flex items-center justify-center border-l border-outline-variant p-2 transition-colors hover:bg-surface-variant"
           >
-            <span className="material-symbols-outlined text-sm">add</span>
+            <FaPlus className="text-sm shrink-0" aria-hidden="true" />
           </button>
         </div>
       </div>

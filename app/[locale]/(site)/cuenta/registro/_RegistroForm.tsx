@@ -88,7 +88,7 @@ export function RegistroForm({
       <button
         type="submit"
         disabled={loading}
-        className="rounded bg-brand px-4 py-2 text-white disabled:opacity-50"
+        className="rounded bg-primary px-4 py-2 text-white disabled:opacity-50"
       >
         {labels.submit}
       </button>

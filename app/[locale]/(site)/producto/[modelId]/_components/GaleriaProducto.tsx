@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 
 /**
  * Galería de fotos del producto fijo (009-modelos-producto-fijo): una imagen
@@ -49,15 +50,7 @@ export function GaleriaProducto({
               aria-label="Anterior"
               className="absolute left-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-gray-800 shadow hover:bg-white"
             >
-              <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5">
-                <path
-                  d="M15 18l-6-6 6-6"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <FaChevronLeft className="h-5 w-5" aria-hidden="true" />
             </button>
             <button
               type="button"
@@ -65,15 +58,7 @@ export function GaleriaProducto({
               aria-label="Siguiente"
               className="absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-gray-800 shadow hover:bg-white"
             >
-              <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5">
-                <path
-                  d="M9 6l6 6-6 6"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <FaChevronRight className="h-5 w-5" aria-hidden="true" />
             </button>
           </>
         )}

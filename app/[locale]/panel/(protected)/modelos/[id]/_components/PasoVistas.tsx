@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { SubidaArchivo } from "@/app/[locale]/panel/_components/SubidaArchivo";
 import { leerDimensiones } from "@/lib/media/leer-dimensiones";
+import { FaImages } from "react-icons/fa6";
 
 const VIEWS = ["front", "left", "right", "back"] as const;
 type View = (typeof VIEWS)[number];
@@ -92,9 +93,7 @@ export function PasoVistas({
             {labels.stepViewsHint}
           </p>
         </div>
-        <span className="material-symbols-outlined text-lg text-on-surface-variant">
-          photo_library
-        </span>
+        <FaImages className="text-lg text-on-surface-variant shrink-0" aria-hidden="true" />
       </div>
 
       {VIEWS.map((view) => {

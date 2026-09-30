@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { getT, type Locale } from "@/lib/i18n/t";
 import { PANEL_NAV_LINKS } from "./_PanelNav";
 import { LogoutButton } from "./_LogoutButton";
+import { FaBars, FaXmark } from "react-icons/fa6";
 
 export function MobilePanelNav({
   locale,
@@ -41,9 +42,11 @@ export function MobilePanelNav({
           aria-label={open ? t("nav.closeMenu") : t("nav.openMenu")}
           className="flex h-10 w-10 items-center justify-center text-on-surface"
         >
-          <span className="material-symbols-outlined">
-            {open ? "close" : "menu"}
-          </span>
+          {open ? (
+          <FaXmark className="text-2xl" aria-hidden="true" />
+        ) : (
+          <FaBars className="text-2xl" aria-hidden="true" />
+        )}
         </button>
       </div>
 
@@ -63,9 +66,7 @@ export function MobilePanelNav({
                     : "flex items-center gap-3 rounded px-4 py-3 font-body-md text-body-md text-on-surface-variant hover:bg-surface-container-low"
                 }
               >
-                <span className="material-symbols-outlined text-[20px]">
-                  {link.icon}
-                </span>
+                <link.icon className="shrink-0 text-[20px]" aria-hidden="true" />
                 {link.label}
               </Link>
             );

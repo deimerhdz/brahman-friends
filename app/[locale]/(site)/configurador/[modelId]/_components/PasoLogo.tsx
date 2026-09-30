@@ -1,5 +1,12 @@
 "use client";
 
+import type { IconType } from "react-icons";
+import {
+  FaArrowRotateLeft,
+  FaArrowRotateRight,
+  FaArrowsRotate,
+  FaCircleDot,
+} from "react-icons/fa6";
 import type { Locale } from "@/lib/i18n/t";
 import type { ModelManifest } from "@/lib/catalogo/model-manifest";
 import type { Decoration } from "@/lib/design/borrador";
@@ -9,11 +16,11 @@ import { PanelDecoracion } from "./PanelDecoracion";
 import { SelectorTecnica } from "./SelectorTecnica";
 
 const POSITION_ORDER: Decoration["zone"][] = ["front", "left", "right", "back"];
-const POSITION_ICON: Record<Decoration["zone"], string> = {
-  front: "front_hand",
-  left: "swipe_right",
-  right: "swipe_left",
-  back: "back_hand",
+const POSITION_ICON: Record<Decoration["zone"], IconType> = {
+  front: FaCircleDot,
+  left: FaArrowRotateLeft,
+  right: FaArrowRotateRight,
+  back: FaArrowsRotate,
 };
 
 /**
@@ -65,6 +72,7 @@ export function PasoLogo({
           <div className="grid grid-cols-3 gap-2">
             {availablePositions.map((pos) => {
               const active = VIEW_FOR_ZONE[pos] === view;
+              const Icono = POSITION_ICON[pos];
               return (
                 <button
                   key={pos}
@@ -76,11 +84,10 @@ export function PasoLogo({
                       : "border border-outline-variant bg-surface hover:border-primary"
                   }`}
                 >
-                  <span
-                    className={`material-symbols-outlined text-xl ${active ? "text-primary" : "text-on-surface-variant"}`}
-                  >
-                    {POSITION_ICON[pos]}
-                  </span>
+                  <Icono
+                    className={`text-xl ${active ? "text-primary" : "text-on-surface-variant"}`}
+                    aria-hidden="true"
+                  />
                   <span
                     className={`text-[10px] font-medium ${active ? "text-primary" : "text-on-surface"}`}
                   >

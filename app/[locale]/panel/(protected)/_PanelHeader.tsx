@@ -1,4 +1,6 @@
 import Link from "next/link";
+import type { IconType } from "react-icons";
+import { FaArrowLeft } from "react-icons/fa6";
 
 export function PanelHeader({
   eyebrow,
@@ -10,7 +12,7 @@ export function PanelHeader({
 }: {
   eyebrow?: string;
   title: string;
-  primaryAction?: { label: string; href: string; icon?: string };
+  primaryAction?: { label: string; href: string; icon?: IconType };
   backHref?: string;
   backLabel?: string;
   children?: React.ReactNode;
@@ -23,7 +25,7 @@ export function PanelHeader({
             href={backHref}
             className="mb-2 flex w-fit items-center gap-1 font-label-caps text-label-caps text-on-surface-variant transition-colors hover:text-primary"
           >
-            <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+            <FaArrowLeft className="text-[18px] shrink-0" aria-hidden="true" />
             {backLabel}
           </Link>
         )}
@@ -42,9 +44,7 @@ export function PanelHeader({
             className="flex items-center gap-2 rounded bg-on-surface px-6 py-2 font-button text-button text-on-primary transition-colors duration-200 hover:bg-primary"
           >
             {primaryAction.icon && (
-              <span className="material-symbols-outlined text-[18px]">
-                {primaryAction.icon}
-              </span>
+              <primaryAction.icon className="shrink-0 text-[18px]" aria-hidden="true" />
             )}
             {primaryAction.label}
           </Link>

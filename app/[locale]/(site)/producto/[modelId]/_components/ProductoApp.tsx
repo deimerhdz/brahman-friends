@@ -127,7 +127,7 @@ export function ProductoApp({
           type="button"
           onClick={() => setModalOpen(true)}
           disabled={!quantityOk}
-          className="w-full rounded bg-brand px-4 py-3 font-semibold text-white disabled:opacity-50"
+          className="w-full rounded bg-primary px-4 py-3 font-semibold text-white disabled:opacity-50"
         >
           {labels.buyNow}
         </button>
